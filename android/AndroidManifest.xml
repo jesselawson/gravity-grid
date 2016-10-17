@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016 Jesse Lawson. All Rights Reserved. No part of this code may be redistributed, reused, or otherwise used in any way, shape, or form without written permission from the author.
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.turkey.gravitygrid"
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="24" />
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="24" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +18,7 @@
         <activity
             android:name="com.turkey.gravitygrid.AndroidLauncher"
             android:label="@string/app_name" 
-            android:screenOrientation="landscape"
+            android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

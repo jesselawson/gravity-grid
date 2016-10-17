@@ -16,11 +16,15 @@ android {
     }
     defaultConfig {
         applicationId "com.turkey.gravitygrid"
-        minSdkVersion 8
+        minSdkVersion 9
         targetSdkVersion 24
     }
 }
 
+
+/*
+ * Copyright (c) 2016 Jesse Lawson. All Rights Reserved. No part of this code may be redistributed, reused, or otherwise used in any way, shape, or form without written permission from the author.
+ */
 
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
