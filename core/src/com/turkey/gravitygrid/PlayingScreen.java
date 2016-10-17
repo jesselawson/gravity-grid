@@ -138,12 +138,15 @@ public class PlayingScreen implements Screen {
     // diagonally.
     // IN THE FUTURE, I may change this so that reds behave like bishops that must always be in sight of one another,
     // blues behave like rooks with the same condition, and greens are queens with the same conditions.
+
     public boolean canMoveAccordingToRules(int tileNum) {
 
         // First determine the select tile's tileNum so we can get it's TileType
         TileType selectedType = TileType.NONE; // init'd
         int selectedNum = 0; // init'd
 
+        // This `outcome` is what is returned by this function. If outcome = true, then the function has determined
+        // that the tile in question "can move according to rules"
         boolean outcome = false;
 
 
@@ -185,7 +188,7 @@ public class PlayingScreen implements Screen {
                     // 18-Aug: Discovered an awkward error that occurs when computing the values for cells that are on the
                     // edges. Fixed this by segregating the checks by sides (top, left, bottom, right) and then by body
 
-                    // If a red planet is seleted, can they move to tileNum?
+                    // If a red planet is selected, can they move to tileNum?
 
                     // Check edges:
                     if(
@@ -659,23 +662,23 @@ public class PlayingScreen implements Screen {
             camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
             if(readyForInput) {
-
+                // Only process input if the game state is READY
                 if(theGameState == gameState.READY) {
-                    // Process one iteration of this each touch
-
-
 
                     //game.font.setColor(1f,1f,1f,1f); 
                     //game.font.draw(game.batch, ""+finger.x + ","+finger.y, 240,30); 
 
-                    // If we touched the screen during READY state, check to see if we touched a planet and if we did,
-                    // mark it as selected.
+                    // If we touched the screen during READY state, check to see if we touched a planet.
+                    // If we did, mark it as selected.
+                    // The `checkTiles` below is how you add a break in Java.
                     checkTiles:
                     for (Tile tile : this.tile) {
-                        // We only care about tiles that are planets. Anything else is a non-toucher (so far).
+                        // We only care about tiles that are planets. Anything else can't be touched (for now).
+                        // TODO: Add logic for handling input of MENU and HELP buttons outside of the checkTiles section below.
                         if(tile.type == TileType.REDPLANET || tile.type == TileType.BLUEPLANET || tile.type == TileType.GREENPLANET) {
                             if(pointInRectangle(tile.rect, finger.x, finger.y)) {
 
+                                // DEBUG:
                                 //game.font.setColor(1f,1f,1f,1f); 
                                 //game.font.draw(game.batch, "Tile "+tile.value, 240,60); 
 
@@ -689,6 +692,8 @@ public class PlayingScreen implements Screen {
                                     tileSelectSound.play();
 
                                     readyForInput = false;
+
+                                    // If we've found our tile, there's no sense in looping through the rest of them so we break the loop here.
                                     break checkTiles;
                                 }
 
@@ -699,7 +704,7 @@ public class PlayingScreen implements Screen {
 
                     // Check to see if our gamestate is still ready. if it is, that means we didn't touch a tile.
                     // We can now go ahead and check to see if the player pressed any UI elements.
-                    // TODO: See above
+                    // TODO: See above. Add logic here to check for UI element presses
                 }
             }
 
