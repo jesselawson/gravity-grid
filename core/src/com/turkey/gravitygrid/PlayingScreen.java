@@ -136,9 +136,6 @@ public class PlayingScreen implements Screen {
     // As of August 2015, the rules are that each planet type must move to a tile according to its rules that touches
     // another planet of the same type. Greens can be touching any way, blues only top,bottom,or size, and red only
     // diagonally.
-    // IN THE FUTURE, I may change this so that reds behave like bishops that must always be in sight of one another,
-    // blues behave like rooks with the same condition, and greens are queens with the same conditions.
-
     public boolean canMoveAccordingToRules(int tileNum) {
 
         // First determine the select tile's tileNum so we can get it's TileType
@@ -164,10 +161,6 @@ public class PlayingScreen implements Screen {
 
         }
 
-
-
-
-
         for(Tile tile : this.tile) {
 
             // Now we're in the meat and potatoes. The function seeks to answer: can a tile of type selectedType move to
@@ -191,11 +184,7 @@ public class PlayingScreen implements Screen {
                     // If a red planet is selected, can they move to tileNum?
 
                     // Check edges:
-                    if(
-                            (tileNum == 0 && tile.tileNum == 8) ||
-                                    (tileNum == 42 && tile.tileNum == 36) ||
-                                    (tileNum == 48 && tile.tileNum == 40) ||
-                                    (tileNum == 6 && tile.tileNum == 12)) {
+                    if( (tileNum == 0 && tile.tileNum == 8) || (tileNum == 42 && tile.tileNum == 36) || (tileNum == 48 && tile.tileNum == 40) || (tileNum == 6 && tile.tileNum == 12) ) {
                         if(tile.type == selectedType && tile.tileNum != selectedNum) {
                             outcome = true;
                         }
@@ -479,13 +468,14 @@ public class PlayingScreen implements Screen {
         }
 
         // Load the sounds before the textures so the assetmanager isn't busy by the time we're clicking things
+        restartLevelSound = Gdx.audio.newSound(Gdx.files.internal("startup.wav"));
         tileSelectSound = Gdx.audio.newSound(Gdx.files.internal("consoleBeep.wav"));
         tileDeselectSound = Gdx.audio.newSound(Gdx.files.internal("tileDeselectSound.wav"));
         goodMoveAttemptSound = Gdx.audio.newSound(Gdx.files.internal("goodMoveAttempt.ogg"));
         cannotMoveSound = Gdx.audio.newSound(Gdx.files.internal("cannotMoveSound.wav"));
         outOfMovesSound = Gdx.audio.newSound(Gdx.files.internal("outOfMovesSound.wav"));
         levelCompleteSound = Gdx.audio.newSound(Gdx.files.internal("levelCompleteSound.wav"));
-        restartLevelSound = Gdx.audio.newSound(Gdx.files.internal("startup.wav"));
+
 
 
         // Load the textures
