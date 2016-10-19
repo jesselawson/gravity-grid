@@ -161,13 +161,14 @@ public class PlayingScreen implements Screen {
 
         }
 
+        // Read this as "for each 'tile' that exists in the arraylist 'this.tile'. This is how Java does foreach loops.
         for(Tile tile : this.tile) {
 
             // Now we're in the meat and potatoes. The function seeks to answer: can a tile of type selectedType move to
             // the tile where tileNum = tileNum?
 
             // We'll have to switch the selected type so we can apply the appropriate rules.
-            // Tthere will be at least four possible places to move. Red can move to, say, 36 as long as
+            // There will be at least four possible places to move. Red can move to, say, 36 as long as
             // there is another red in either 42, 44, 28, or 30.
             // (13-Aug-2015 Jesse) I'm running into a problem where the rules are checking against the selected tile,
             // because technically that is a tile that is next to the next tile. In other words, I can click a blue
@@ -177,41 +178,49 @@ public class PlayingScreen implements Screen {
 
             switch(selectedType) {
 
+                // Use the following grid of tileNum values for reference:
+                //
+                // 42 43 44 45 46 47 48
+                // 35 36 37 38 39 40 41
+                // 28 29 30 31 32 33 34
+                // 21 22 23 24 25 26 27
+                // 14 15 16 17 18 19 20
+                // 07 08 09 10 11 12 13
+                // 00 01 02 03 04 05 06
+
                 case REDPLANET:
+
                     // 18-Aug: Discovered an awkward error that occurs when computing the values for cells that are on the
                     // edges. Fixed this by segregating the checks by sides (top, left, bottom, right) and then by body
 
-                    // If a red planet is selected, can they move to tileNum?
+                    // The logic seeks to answer the question: If a red planet is selected, can they move to tileNum?
 
-                    // Check edges:
-                    if( (tileNum == 0 && tile.tileNum == 8) || (tileNum == 42 && tile.tileNum == 36) || (tileNum == 48 && tile.tileNum == 40) || (tileNum == 6 && tile.tileNum == 12) ) {
+                    // Check corners:
+                    if( (tileNum == 0 && tile.tileNum == 8)
+                         || (tileNum == 42 && tile.tileNum == 36)
+                         || (tileNum == 48 && tile.tileNum == 40)
+                         || (tileNum == 6 && tile.tileNum == 12)
+                       ) {
                         if(tile.type == selectedType && tile.tileNum != selectedNum) {
                             outcome = true;
                         }
                     } else if( // check left side
-                            tile.tileNum == 35 ||
-                                    tile.tileNum == 28 ||
-                                    tile.tileNum == 21 ||
-                                    tile.tileNum == 14 ||
-                                    tile.tileNum == 7 )
+                            (tile.tileNum == 35 && (tileNum == 43 || tileNum == 29))
+                            || (tile.tileNum == 28 && (tileNum == 36 || tileNum == 22))
+                            || (tile.tileNum == 21 && (tileNum == 29 || tileNum == 22))
+                            || (tile.tileNum == 14 && (tileNum == 22 || tileNum == 8))
+                            || (tile.tileNum == 7 && (tileNum == 15 || tileNum == 1)) )
+                        //TODO: CONTINUE REWRITING TILE MOVE LOGIC
                     {
-                        if(
-                            // If this is a tile that we can move to (i.e., one of the diagonal ones)
-                            // This checks whether the selectedType, being a red planet, is moving to a tile.tileNum where either -6,+6,-8, or +8 is also a
-                            // red planet.
-                                tile.tileNum == tileNum-6 ||
-                                        tile.tileNum == tileNum+8) {
-
                             // If the tile that we found that is around us is one of the selectedType planets (i.e., if we selected a red planet, is the surrounding tile that we found also a red planet?), then yes, we can move here.
                             // Additionally, let's make sure that even though this has an adjacent tiletype, that adjacent
                             // tile type is not our selected tile.
-                            if(tile.type == selectedType && tile.tileNum != selectedNum) {
-                                outcome = true;
-                            }
+                        if(tile.type == selectedType && tile.tileNum != selectedNum) {
+                            outcome = true;
                         }
                     } else if( // check top side
                             tile.tileNum == 43 ||
-                                    tile.tileNum == 44 ||
+                            tile.tileNum == 44 ||
                                     tile.tileNum == 45 ||
                                     tile.tileNum == 46 ||
                                     tile.tileNum == 47 )
@@ -254,9 +263,9 @@ public class PlayingScreen implements Screen {
                     } else { // we can assume a tile not on the sides or corners is inside the middle, which can check for four corners
                         if( // check bottom side
                                 tile.tileNum == tileNum-6 ||
-                                        tile.tileNum == tileNum+6 ||
-                                        tile.tileNum == tileNum-8 ||
-                                        tile.tileNum == tileNum+8 )
+                                tile.tileNum == tileNum+6 ||
+                                tile.tileNum == tileNum-8 ||
+                                tile.tileNum == tileNum+8 )
                         {
                             if(tile.type == selectedType && tile.tileNum != selectedNum) {
                                 outcome = true;
@@ -303,27 +312,27 @@ public class PlayingScreen implements Screen {
         return outcome;
     }
 
-    public ArrayList<Tile> tile; // Single array of tiles, instead of multidimensional
+    private ArrayList<Tile> tile; // Single array of tiles, instead of multidimensional
 
 
 
-    public int tileWidth;
+    private int tileWidth;
 
-    public int tileHeight;
+    private int tileHeight;
 
-    int whiteSpace;
+    private int whiteSpace;
 
-    int headSpace; // This accounts for the header column numbers
-    int leftSpace; // This accounts for the left column numbers
+    private int headSpace; // This accounts for the header column numbers
+    private int leftSpace; // This accounts for the left column numbers
 
-    public int screenWidth = 480;//Gdx.graphics.getWidth();
-    public int screenHeight = 800;//Gdx.graphics.getHeight();
+    private int screenWidth = 480;//Gdx.graphics.getWidth();
+    private int screenHeight = 800;//Gdx.graphics.getHeight();
 
     // All the textures we use
-    Texture tileBlankImage;
-    Texture[] tilePlanetImage;
-    TextureRegion[] tilePlanetRegion;
-    Texture[] backgroundImage;
+    private Texture tileBlankImage;
+    private Texture[] tilePlanetImage;
+    private TextureRegion[] tilePlanetRegion;
+    private Texture[] backgroundImage;
     Texture tileSunImage;
     Texture tileSunFlareImage;
     TextureRegion tileSunFlareRegion;
@@ -388,14 +397,15 @@ public class PlayingScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 480, 800);
 
-        // The amount of space we want for the top of the grid where the numbers will be displayed
+        // The amount of space we want for the top of the grid where the numbers will be displayed.
+        // This comes out to one half of the width (or height) of one tile.
         this.headSpace = (int)(0.5*(screenWidth/7));
 
         // The space we want on the left where the numbers will be displayed
         this.leftSpace = this.headSpace;
 
         // This constructor function will allow us to get screen width to determine our tile width (and subsequently, our tile height)
-        this.tileWidth = (screenWidth - leftSpace) / 7;
+        this.tileWidth = (screenWidth - leftSpace) / 7; // So it's 7 segments of our screenwidth minus the space we've reserved for the tile labels.
         this.tileHeight = (screenWidth - headSpace) / 7;
 
         // The whitespace variable sets a modifier for the rect.x values of each tile so that the grid is in the center of the screen.
