@@ -34,7 +34,8 @@ public class GravityGrid extends Game {
 	public int currentLevel;
 	
 	// This is 20 minutes
-	public static final long darkMatterCooldown = 1000000L * 1000 * 60 * 20;
+	// TRANSITION PLAN BEFORE WE get rid of dark matter entirely: set timer to 1 second
+	public static final long darkMatterCooldown = 1000000L * 1000; //* 60 * 20;
 	
 	// Explicitly set our colors for consistency
 	Color colorDarkBlue = new Color(.38f,.57f,.80f,0.75f);
