@@ -146,6 +146,8 @@ public class PlayingScreen implements Screen {
         // that the tile in question "can move according to rules"
         boolean outcome = false;
 
+        // TODO: First thing this should check is whether destinationTileNum is an illegal space (asteroid, sun, etc). If it is, we can return false right here and skip all the logic.
+
 
         // Loop through tiles and find the selected one
         findSelected:
@@ -165,11 +167,9 @@ public class PlayingScreen implements Screen {
         for(Tile tile : this.tile) {
 
             // Now we're in the meat and potatoes. The function seeks to answer: can a tile of type selectedType move to
-            // the tile where tileNum = tileNum?
+            // the destinationTileNum type?
 
             // We'll have to switch the selected type so we can apply the appropriate rules.
-            // There will be at least four possible places to move. Red can move to, say, 36 as long as
-            // there is another red in either 42, 44, 28, or 30.
             // (13-Aug-2015 Jesse) I'm running into a problem where the rules are checking against the selected tile,
             // because technically that is a tile that is next to the next tile. In other words, I can click a blue
             // planet along a straight path away from other planets because the tile I am moving to is next to a blue
@@ -187,8 +187,6 @@ public class PlayingScreen implements Screen {
                 // 14 15 16 17 18 19 20
                 // 07 08 09 10 11 12 13
                 // 00 01 02 03 04 05 06
-
-
 
                 case REDPLANET:
 
@@ -262,10 +260,11 @@ public class PlayingScreen implements Screen {
                         }
                     }
 
-                    break;
+                break;
+
                 case BLUEPLANET:
-                    // Check the corners
-                    if(
+
+                    if( // Check the corners
                             (destinationTileNum == 42 && ( tile.tileNum == 35 || tile.tileNum == 43 ) )
                          || (destinationTileNum == 48 && ( tile.tileNum == 47 || tile.tileNum == 41 ) )
                          || (destinationTileNum == 0  && ( tile.tileNum == 7  || tile.tileNum == 1  ) )
@@ -275,33 +274,132 @@ public class PlayingScreen implements Screen {
                             outcome = true;
                         }
                     } else if( // check left side
-                        (tile.tileNum == 35 && (destinationTileNum == 43 || destinationTileNum == 29))
-                        || (tile.tileNum == 28 && (destinationTileNum == 36 || destinationTileNum == 22))
-                        || (tile.tileNum == 21 && (destinationTileNum == 29 || destinationTileNum == 22))
-                        || (tile.tileNum == 14 && (destinationTileNum == 22 || destinationTileNum == 8))
-                        || (tile.tileNum == 7 && (destinationTileNum == 15 || destinationTileNum == 1)) ) {
+                           ( tile.tileNum == 35 && (destinationTileNum == 42 || destinationTileNum == 36 || destinationTileNum == 28 ) )
+                        || ( tile.tileNum == 28 && (destinationTileNum == 35 || destinationTileNum == 29 || destinationTileNum == 21 ) )
+                        || ( tile.tileNum == 21 && (destinationTileNum == 28 || destinationTileNum == 22 || destinationTileNum == 14 ) )
+                        || ( tile.tileNum == 14 && (destinationTileNum == 21 || destinationTileNum == 15 || destinationTileNum ==  7 ) )
+                        || ( tile.tileNum ==  7 && (destinationTileNum == 14 || destinationTileNum ==  8 || destinationTileNum ==  0 ) ) ) {
+
                         // If the tile that we found that is around us is one of the selectedType planets (i.e., if we selected a red planet, is the surrounding tile that we found also a red planet?), then yes, we can move here.
                         // Additionally, let's make sure that even though this has an adjacent tiletype, that adjacent
                         // tile type is not our selected tile.
                         if(tile.type == selectedType && tile.tileNum != selectedNum) {
                             outcome = true;
                         }
-                    }
-                }
+                    } else if ( // check top side
+                           ( tile.tileNum == 43 && (destinationTileNum == 42 || destinationTileNum == 36 || destinationTileNum == 44 ) )
+                        || ( tile.tileNum == 44 && (destinationTileNum == 43 || destinationTileNum == 37 || destinationTileNum == 45 ) )
+                        || ( tile.tileNum == 45 && (destinationTileNum == 44 || destinationTileNum == 38 || destinationTileNum == 46 ) )
+                        || ( tile.tileNum == 46 && (destinationTileNum == 45 || destinationTileNum == 39 || destinationTileNum == 47 ) )
+                        || ( tile.tileNum == 47 && (destinationTileNum == 46 || destinationTileNum == 40 || destinationTileNum == 48 ) ) ) {
 
-                    break;
-
-                case GREENPLANET:
-                    if( tile.tileNum == tileNum-6 ||
-                            tile.tileNum == tileNum-7 ||
-                            tile.tileNum == tileNum-8 ||
-                            tile.tileNum == tileNum-1 ||
-                            tile.tileNum == tileNum+1 ||
-                            tile.tileNum == tileNum+6 ||
-                            tile.tileNum == tileNum+7 ||
-                            tile.tileNum == tileNum+8) {
                         if(tile.type == selectedType && tile.tileNum != selectedNum) {
                             outcome = true;
+                        }
+                    } else if ( // check right side
+                           ( tile.tileNum == 41 && (destinationTileNum == 48 || destinationTileNum == 40 || destinationTileNum == 34 ) )
+                        || ( tile.tileNum == 34 && (destinationTileNum == 41 || destinationTileNum == 33 || destinationTileNum == 27 ) )
+                        || ( tile.tileNum == 27 && (destinationTileNum == 34 || destinationTileNum == 26 || destinationTileNum == 20 ) )
+                        || ( tile.tileNum == 20 && (destinationTileNum == 27 || destinationTileNum == 19 || destinationTileNum == 13 ) )
+                        || ( tile.tileNum == 13 && (destinationTileNum == 20 || destinationTileNum == 12 || destinationTileNum ==  6 ) ) ) {
+
+                        if(tile.type == selectedType && tile.tileNum != selectedNum) {
+                            outcome = true;
+                        }
+                    } else if( // check bottom side
+                           ( tile.tileNum == 1 && (destinationTileNum ==  0 || destinationTileNum ==  8 || destinationTileNum ==  2 ) )
+                        || ( tile.tileNum == 2 && (destinationTileNum ==  1 || destinationTileNum ==  9 || destinationTileNum ==  3 ) )
+                        || ( tile.tileNum == 3 && (destinationTileNum ==  2 || destinationTileNum == 10 || destinationTileNum ==  4 ) )
+                        || ( tile.tileNum == 4 && (destinationTileNum ==  3 || destinationTileNum == 11 || destinationTileNum ==  5 ) )
+                        || ( tile.tileNum == 5 && (destinationTileNum ==  4 || destinationTileNum == 12 || destinationTileNum ==  6 ) ) ) {
+
+                        if(tile.type == selectedType && tile.tileNum != selectedNum) {
+                            outcome = true;
+                        }
+                    } else {
+                        if( // check the rest of the grid
+                           tile.tileNum == destinationTileNum-6
+                        || tile.tileNum == destinationTileNum+6
+                        || tile.tileNum == destinationTileNum-8
+                        || tile.tileNum == destinationTileNum+8 )  {
+
+                            if(tile.type == selectedType && tile.tileNum != selectedNum) {
+                                outcome = true;
+                            }
+                        }
+                    }
+
+                break;
+
+                case GREENPLANET:
+                    if( // Check the corners
+                           ( destinationTileNum == 42 && ( tile.tileNum == 43 || tile.tileNum == 36 || tile.tileNum == 35 ) )
+                        || ( destinationTileNum == 48 && ( tile.tileNum == 47 || tile.tileNum == 40 || tile.tileNum == 41 ) )
+                        || ( destinationTileNum == 0  && ( tile.tileNum == 7  || tile.tileNum ==  8 || tile.tileNum ==  1 ) )
+                        || ( destinationTileNum == 6  && ( tile.tileNum == 5  || tile.tileNum == 12 || tile.tileNum == 13 ) ) ) {
+
+                        if(tile.type == selectedType && tile.tileNum != selectedNum) {
+                            outcome = true;
+                        }
+                    } else if( // check left side
+                           ( tile.tileNum == 35 && (destinationTileNum == 42 || destinationTileNum == 43 || destinationTileNum == 36 || destinationTileNum == 29 || destinationTileNum == 28 ) )
+                        || ( tile.tileNum == 28 && (destinationTileNum == 35 || destinationTileNum == 36 || destinationTileNum == 29 || destinationTileNum == 22 || destinationTileNum == 21 ) )
+                        || ( tile.tileNum == 21 && (destinationTileNum == 28 || destinationTileNum == 29 || destinationTileNum == 22 || destinationTileNum == 15 || destinationTileNum == 14 ) )
+                        || ( tile.tileNum == 14 && (destinationTileNum == 21 || destinationTileNum == 22 || destinationTileNum == 15 || destinationTileNum ==  8 || destinationTileNum ==  7 ) )
+                        || ( tile.tileNum ==  7 && (destinationTileNum == 14 || destinationTileNum == 15 || destinationTileNum ==  8 || destinationTileNum ==  1 || destinationTileNum ==  0 ) ) ) {
+
+                        // If the tile that we found that is around us is one of the selectedType planets (i.e., if we selected a red planet, is the surrounding tile that we found also a red planet?), then yes, we can move here.
+                        // Additionally, let's make sure that even though this has an adjacent tiletype, that adjacent
+                        // tile type is not our selected tile.
+                        if(tile.type == selectedType && tile.tileNum != selectedNum) {
+                            outcome = true;
+                        }
+                    } else if( // check top side
+                           ( tile.tileNum == 43 && (destinationTileNum == 42 || destinationTileNum == 35 || destinationTileNum == 36 || destinationTileNum == 37 || destinationTileNum == 44 ) )
+                        || ( tile.tileNum == 44 && (destinationTileNum == 43 || destinationTileNum == 36 || destinationTileNum == 37 || destinationTileNum == 38 || destinationTileNum == 45 ) )
+                        || ( tile.tileNum == 45 && (destinationTileNum == 44 || destinationTileNum == 37 || destinationTileNum == 38 || destinationTileNum == 39 || destinationTileNum == 46 ) )
+                        || ( tile.tileNum == 46 && (destinationTileNum == 45 || destinationTileNum == 38 || destinationTileNum == 37 || destinationTileNum == 40 || destinationTileNum == 47 ) )
+                        || ( tile.tileNum == 47 && (destinationTileNum == 46 || destinationTileNum == 39 || destinationTileNum == 40 || destinationTileNum == 41 || destinationTileNum == 48 ) ) ) {
+
+                        // If the tile that we found that is around us is one of the selectedType planets (i.e., if we selected a red planet, is the surrounding tile that we found also a red planet?), then yes, we can move here.
+                        // Additionally, let's make sure that even though this has an adjacent tiletype, that adjacent
+                        // tile type is not our selected tile.
+                        if(tile.type == selectedType && tile.tileNum != selectedNum) {
+                            outcome = true;
+                        }
+                    } else if ( // check right side
+                           ( tile.tileNum == 41 && (destinationTileNum == 48 || destinationTileNum == 47 || destinationTileNum == 40 || destinationTileNum == 33 || destinationTileNum == 34 ) )
+                        || ( tile.tileNum == 34 && (destinationTileNum == 41 || destinationTileNum == 40 || destinationTileNum == 33 || destinationTileNum == 26 || destinationTileNum == 27 ) )
+                        || ( tile.tileNum == 27 && (destinationTileNum == 34 || destinationTileNum == 33 || destinationTileNum == 26 || destinationTileNum == 19 || destinationTileNum == 20 ) )
+                        || ( tile.tileNum == 20 && (destinationTileNum == 27 || destinationTileNum == 26 || destinationTileNum == 19 || destinationTileNum == 12 || destinationTileNum == 13 ) )
+                        || ( tile.tileNum == 13 && (destinationTileNum == 20 || destinationTileNum == 19 || destinationTileNum == 12 || destinationTileNum ==  5 || destinationTileNum ==  6 ) ) ) {
+
+                        if(tile.type == selectedType && tile.tileNum != selectedNum) {
+                            outcome = true;
+                        }
+                    } else if( // check bottom side
+                           ( tile.tileNum == 1 && (destinationTileNum ==  0 || destinationTileNum ==  7 || destinationTileNum ==  8 || destinationTileNum ==  9 || destinationTileNum ==  2 ) )
+                        || ( tile.tileNum == 2 && (destinationTileNum ==  1 || destinationTileNum ==  8 || destinationTileNum ==  9 || destinationTileNum == 10 || destinationTileNum ==  3 ) )
+                        || ( tile.tileNum == 3 && (destinationTileNum ==  2 || destinationTileNum ==  9 || destinationTileNum == 10 || destinationTileNum == 11 || destinationTileNum ==  4 ) )
+                        || ( tile.tileNum == 4 && (destinationTileNum ==  3 || destinationTileNum == 10 || destinationTileNum == 11 || destinationTileNum == 12 || destinationTileNum ==  5 ) )
+                        || ( tile.tileNum == 5 && (destinationTileNum ==  4 || destinationTileNum == 11 || destinationTileNum == 12 || destinationTileNum == 13 || destinationTileNum ==  6 ) ) ) {
+
+                        if(tile.type == selectedType && tile.tileNum != selectedNum) {
+                            outcome = true;
+                        }
+                    } else { // check rest of board
+                        if (
+                           tile.tileNum == destinationTileNum - 6
+                        || tile.tileNum == destinationTileNum - 7
+                        || tile.tileNum == destinationTileNum - 8
+                        || tile.tileNum == destinationTileNum - 1
+                        || tile.tileNum == destinationTileNum + 1
+                        || tile.tileNum == destinationTileNum + 6
+                        || tile.tileNum == destinationTileNum + 7
+                        || tile.tileNum == destinationTileNum + 8) {
+                            if (tile.type == selectedType && tile.tileNum != selectedNum) {
+                                outcome = true;
+                            }
                         }
                     }
 
@@ -482,10 +580,11 @@ public class PlayingScreen implements Screen {
         }
 
         // Load the sounds before the textures so the assetmanager isn't busy by the time we're clicking things
-        restartLevelSound = Gdx.audio.newSound(Gdx.files.internal("startup.wav"));
+        //restartLevelSound = Gdx.audio.newSound(Gdx.files.internal("startup.wav"));
         tileSelectSound = Gdx.audio.newSound(Gdx.files.internal("consoleBeep.wav"));
         tileDeselectSound = Gdx.audio.newSound(Gdx.files.internal("tileDeselectSound.wav"));
         goodMoveAttemptSound = Gdx.audio.newSound(Gdx.files.internal("goodMoveAttempt.ogg"));
+        restartLevelSound = goodMoveAttemptSound;
         cannotMoveSound = Gdx.audio.newSound(Gdx.files.internal("cannotMoveSound.wav"));
         outOfMovesSound = Gdx.audio.newSound(Gdx.files.internal("outOfMovesSound.wav"));
         levelCompleteSound = Gdx.audio.newSound(Gdx.files.internal("levelCompleteSound.wav"));
@@ -757,7 +856,9 @@ public class PlayingScreen implements Screen {
                                 readyForInput = false;
                                 break markDestinationTile;
 
-                                //} else if(tile.type == TileType.REDPLANET || tile.type == //TileType.BLUEPLANET || tile.type == TileType.GREENPLANET) {
+                            // Don't need the below, since the else {} will cover everyone else
+                            // } else if(tile.type == TileType.REDPLANET || tile.type == //TileType.BLUEPLANET || tile.type == TileType.GREENPLANET) {
+
                             } else {	// This should cover PLANET, ASTEROID, SUN, and BLOCKED types. (anyone not BLANK)
                                 // (21-Aug-2015 Jesse) Display cannot move animation on any tile
                                 // we try to move to that we can't move to.
