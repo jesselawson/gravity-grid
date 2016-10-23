@@ -188,6 +188,11 @@ public class PlayingScreen implements Screen {
                 // 07 08 09 10 11 12 13
                 // 00 01 02 03 04 05 06
 
+
+                // Maybe we can use ArrayUtils.contains??
+
+
+
                 case REDPLANET:
 
                     // 18-Aug: Discovered an awkward error that occurs when computing the values for cells that are on the
@@ -200,13 +205,19 @@ public class PlayingScreen implements Screen {
                            (destinationTileNum == 0  && tile.tileNum == 8)
                         || (destinationTileNum == 42 && tile.tileNum == 36)
                         || (destinationTileNum == 48 && tile.tileNum == 40)
-                        || (destinationTileNum == 6  && tile.tileNum == 12) ) {
+                        || (destinationTileNum == 6  && tile.tileNum == 12)
+                        || (tile.tileNum == 0  && destinationTileNum == 8)
+                        || (tile.tileNum == 42 && destinationTileNum == 36)
+                        || (tile.tileNum == 48 && destinationTileNum == 40)
+                        || (tile.tileNum == 6  && destinationTileNum == 12)
+
+                            ) {
 
                         if(tile.type == selectedType && tile.tileNum != selectedNum) {
                             outcome = true;
                         }
                     } else if( // check left side
-                        (tile.tileNum == 35 && (destinationTileNum == 43 || destinationTileNum == 29))
+                           (tile.tileNum == 35 && (destinationTileNum == 43 || destinationTileNum == 29))
                         || (tile.tileNum == 28 && (destinationTileNum == 36 || destinationTileNum == 22))
                         || (tile.tileNum == 21 && (destinationTileNum == 29 || destinationTileNum == 22))
                         || (tile.tileNum == 14 && (destinationTileNum == 22 || destinationTileNum == 8))
@@ -525,6 +536,7 @@ public class PlayingScreen implements Screen {
         // Load the Map
         // Loop through the tiles and assign rect values, load values from the values table, and
         // also load the tile type from the levels tables.
+        // Below, r is "row" and c is "column"
         for(int r = 6; r > -1; r--) {
             for(int c = 0; c < 7; c++) {
 
