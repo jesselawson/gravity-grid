@@ -112,6 +112,21 @@ public class GravityGrid extends Game {
 			0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,
 			*/
+
+	/* Board components. Helps differentiate between edges/corners and middle of board. */
+	public static final int[] boardMiddle = new int[] { 36,37,38,39,40,29,30,31,32,33,22,23,24,25,26,15,16,17,18,19,8,9,10,11,12 };
+	public static final int[] boardEdge = new int[] { 42,43,44,45,46,47,48,35,28,21,14,7,0,1,2,3,4,5,6,13,20,27,34,41 };
+
+	// IntArrayContains is used specifically for the above boardMiddle and boardEdge arrays and in the canMoveAccordingToLogic function
+	public boolean IntArrayContains(int[] list, int number) {
+
+		for(int i=0; i<list.length; i++) {
+			if(list[i] == number) {
+				return true;
+			}
+		}
+		return false;
+	}
 			
 	/* Level messages. Displayed at the bottom of each grid for its associated level */ 
 	public static final String[] levelMessage = new String[] {
