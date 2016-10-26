@@ -451,7 +451,7 @@ public class PlayingScreen implements Screen {
 
         // The amount of space we want for the top of the grid where the numbers will be displayed.
         // This comes out to one half of the width (or height) of one tile.
-        this.headSpace = (int)(0.5*(screenWidth/7));
+        this.headSpace = 0;//(int)(0.5*(screenWidth/7));
 
         // The space we want on the left where the numbers will be displayed
         this.leftSpace = this.headSpace;
@@ -934,6 +934,9 @@ public class PlayingScreen implements Screen {
 
             // Always draw the tile border
             game.batch.setColor(1f,1f,1f,1f);
+
+            // Draw the value (which are just numbers) image, then the border image (tileBlankImage)
+            game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
             game.batch.draw(tileBlankImage, tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
 
             // (22-Aug-2015 Jesse) Sami had an idea to have the planets sized according to their
@@ -1077,7 +1080,10 @@ public class PlayingScreen implements Screen {
         // Last but not least, draw any UI elements (or ads if you're an asshat [hint: don't be an asshat, Jesse])
 
         // Draw the row and col headers
-        game.font.setColor(1f,1f,1f,1.0f);
+        /* (26-Oct-2016 Lawson) Get rid of the left and top value borders
+            since we're drawing the tile values directly onto the board.
+            game.font.setColor(1f,1f,1f,1.0f);
+
         int s = (int)(0.5*leftSpace);
         int s2 = (int)(0.5*tileWidth) + s;
         game.font.draw(game.batch, "0", s, whiteSpace+(tileHeight*6));
@@ -1094,7 +1100,9 @@ public class PlayingScreen implements Screen {
         game.font.draw(game.batch, "3", leftSpace + s + (tileWidth*2), screenHeight - whiteSpace - s2);
         game.font.draw(game.batch, "1", leftSpace + s + (tileWidth*1), screenHeight - whiteSpace - s2);
         game.font.draw(game.batch, "0", leftSpace + s + (tileWidth*0), screenHeight - whiteSpace - s2);
-		
+
+		*/
+
 		/*
 		Level %num%: %name%
 		#/# | #/# | #/#

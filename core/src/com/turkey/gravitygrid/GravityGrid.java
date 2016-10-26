@@ -462,7 +462,7 @@ public class GravityGrid extends Game {
 		font = new BitmapFont();
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("turkey.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 22; 
+		parameter.size = 25; //22
 		font = generator.generateFont(parameter);
 		generator.dispose(); 
 		
