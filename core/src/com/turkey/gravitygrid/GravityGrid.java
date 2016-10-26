@@ -47,6 +47,8 @@ public class GravityGrid extends Game {
 	
 	SpriteBatch batch;
 	BitmapFont font;
+
+	public static int fontSize = 60;
 	
 	
 	// This array holds the values of each tile
@@ -462,7 +464,7 @@ public class GravityGrid extends Game {
 		font = new BitmapFont();
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("turkey.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 25; //22
+		parameter.size = this.fontSize; //22
 		font = generator.generateFont(parameter);
 		generator.dispose(); 
 		

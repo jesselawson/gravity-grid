@@ -377,13 +377,19 @@ public class PlayingScreen implements Screen {
     private int headSpace; // This accounts for the header column numbers
     private int leftSpace; // This accounts for the left column numbers
 
-    private int screenWidth = 480;//Gdx.graphics.getWidth();
-    private int screenHeight = 800;//Gdx.graphics.getHeight();
+    private int screenWidth = Gdx.graphics.getWidth();
+    private int screenHeight = Gdx.graphics.getHeight();
 
     // All the textures we use
     private Texture tileBlankImage;
-    private Texture[] tilePlanetImage;
-    private TextureRegion[] tilePlanetRegion;
+    private Texture tileRedPlanetImage;
+    private Texture tileBluePlanetImage;
+    private Texture tileGreenPlanetImage;
+
+    private TextureRegion tileRedPlanetRegion;
+    private TextureRegion tileBluePlanetRegion;
+    private TextureRegion tileGreenPlanetRegion;
+
     private Texture[] backgroundImage;
     Texture tileSunImage;
     Texture tileSunFlareImage;
@@ -447,7 +453,7 @@ public class PlayingScreen implements Screen {
 
         // create the camera
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 480, 800);
+        camera.setToOrtho(false, screenWidth, screenHeight);
 
         // The amount of space we want for the top of the grid where the numbers will be displayed.
         // This comes out to one half of the width (or height) of one tile.
@@ -539,20 +545,24 @@ public class PlayingScreen implements Screen {
         outOfMovesSound = Gdx.audio.newSound(Gdx.files.internal("outOfMovesSound.wav"));
         levelCompleteSound = Gdx.audio.newSound(Gdx.files.internal("levelCompleteSound.wav"));
 
-
+       /* 0 = blank
+        1 = red
+        2 = blue
+        3 = green
+        4 = asteroid
+        5 = sun
+        9 = blocked*/
 
         // Load the textures
         tileBlankImage = new Texture(Gdx.files.internal("tileBlankImage.png"));
-        tilePlanetImage = new Texture[4]; // remember: [4] = [0,1,2,3].
-        tilePlanetRegion = new TextureRegion[4];
-        tilePlanetImage[0] = new Texture(Gdx.files.internal("planet0.png"));
-        tilePlanetRegion[0] = new TextureRegion(tilePlanetImage[0]);
-        tilePlanetImage[1] = new Texture(Gdx.files.internal("planet1.png"));
-        tilePlanetRegion[1] = new TextureRegion(tilePlanetImage[1]);
-        tilePlanetImage[2] = new Texture(Gdx.files.internal("planet2.png"));
-        tilePlanetRegion[2] = new TextureRegion(tilePlanetImage[2]);
-        tilePlanetImage[3] = new Texture(Gdx.files.internal("planet3.png"));
-        tilePlanetRegion[3] = new TextureRegion(tilePlanetImage[3]);
+        //tilePlanetImage = new Texture[4]; // remember: [4] = [0,1,2,3].
+        //tilePlanetRegion = new TextureRegion[4];
+        tileRedPlanetImage = new Texture(Gdx.files.internal("planet-red.png"));
+        tileRedPlanetRegion = new TextureRegion(tileRedPlanetImage);
+        tileBluePlanetImage = new Texture(Gdx.files.internal("planet-blue.png"));
+        tileBluePlanetRegion = new TextureRegion(tileBluePlanetImage);
+        tileGreenPlanetImage = new Texture(Gdx.files.internal("planet-green.png"));
+        tileGreenPlanetRegion = new TextureRegion(tileGreenPlanetImage);
         tileSunImage = new Texture(Gdx.files.internal("sun.png"));
         tileSunRegion = new TextureRegion(tileSunImage);
         tileSunFlareImage = new Texture(Gdx.files.internal("sunflare0.png"));
@@ -953,22 +963,22 @@ public class PlayingScreen implements Screen {
                     //game.font.draw(game.batch, ""+tile.value, tile.rect.x+18, tile.rect.y+38);
                     break;
                 case REDPLANET:
-                    game.batch.setColor(game.colorRed);
-                    game.batch.draw(tilePlanetRegion[tile.rand], tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
+                    //game.batch.setColor(game.colorRed);
+                    game.batch.draw(tileRedPlanetRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
 
                     //game.batch.draw(tilePlanetImage[tile.rand], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     game.batch.setColor(1f,1f,1f,1f);
                     game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     break;
                 case BLUEPLANET:
-                    game.batch.setColor(game.colorBlue);
-                    game.batch.draw(tilePlanetRegion[tile.rand], tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
+                    //game.batch.setColor(game.colorBlue);
+                    game.batch.draw(tileBluePlanetRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
                     game.batch.setColor(1f,1f,1f,1f);
                     game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     break;
                 case GREENPLANET:
-                    game.batch.setColor(game.colorGreen);
-                    game.batch.draw(tilePlanetRegion[tile.rand], tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
+                    //game.batch.setColor(game.colorGreen);
+                    game.batch.draw(tileGreenPlanetRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
                     game.batch.setColor(1f,1f,1f,1f);
                     game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     break;
@@ -1109,17 +1119,17 @@ public class PlayingScreen implements Screen {
 		*/
 
         game.font.setColor(1f,1f,1f,1f);
-        game.font.draw(game.batch, "Level "+(game.currentLevel+1)+": "+game.levelName[game.currentLevel], 5, 771);
+        game.font.draw(game.batch, "Level "+(game.currentLevel+1)+": "+game.levelName[game.currentLevel], 5, screenHeight-this.game.fontSize);
         game.font.setColor(game.colorRed);
-        game.font.draw(game.batch, "<"+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+">", 5, 747);
+        game.font.draw(game.batch, "<"+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+">", 5, screenHeight-(2*this.game.fontSize));
         game.font.setColor(game.colorBlue);
-        game.font.draw(game.batch, "<"+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+">", 101, 747);
+        game.font.draw(game.batch, "<"+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+">", 300, screenHeight-(2*this.game.fontSize));
         game.font.setColor(game.colorGreen);
-        game.font.draw(game.batch, "<"+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+">", 197, 747);
+        game.font.draw(game.batch, "<"+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+">", 600, screenHeight-(2*this.game.fontSize));
         game.font.setColor(1f,1f,1f,1f);
-        game.font.draw(game.batch, "Moves Left: "+(thisLevelMaxMoves - thisLevelCurrentMoves), 5, 727);
+        game.font.draw(game.batch, "Moves Left: "+(thisLevelMaxMoves - thisLevelCurrentMoves), 5, screenHeight-(3*this.game.fontSize));
         game.font.setColor(1f,0f,1f,1f);
-        game.font.draw(game.batch, "ALPHA RELEASE - THANKS FOR HELPING!", 5, 707);
+        game.font.draw(game.batch, "ALPHA RELEASE - THANKS FOR HELPING!", 5, screenHeight-(4*this.game.fontSize));
 
         // Display the dark matter (lives) at the top of the screen
         if(game.darkMatterCount > 0) {
@@ -1296,10 +1306,9 @@ public class PlayingScreen implements Screen {
     @Override
     public void dispose() {
         tileBlankImage.dispose();
-        tilePlanetImage[0].dispose();
-        tilePlanetImage[1].dispose();
-        tilePlanetImage[2].dispose();
-        tilePlanetImage[3].dispose();
+        tileRedPlanetImage.dispose();
+        tileBluePlanetImage.dispose();
+        tileGreenPlanetImage.dispose();
 
         tileSunImage.dispose();
         tileSunFlareImage.dispose();
