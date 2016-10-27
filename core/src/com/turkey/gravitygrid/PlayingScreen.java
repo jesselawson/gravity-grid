@@ -1118,18 +1118,28 @@ public class PlayingScreen implements Screen {
 		#/# | #/# | #/#
 		*/
 
+        // Trick to get accurate lines:
+        // Set the Y value of the rendered fonts to (lineNumberFromTop*(screenHeight-this.game.fontSize))
+
+        // Generate some values for our color indicators, with 5-px padding
+        int halfWidth = Gdx.graphics.getWidth() / 2;
+        int blueScoreY = (int)0.5*halfWidth;
+        int redScoreY = (int)0.2*halfWidth;
+        int greenScoreY = (int)1.2*halfWidth;
+
         game.font.setColor(1f,1f,1f,1f);
         game.font.draw(game.batch, "Level "+(game.currentLevel+1)+": "+game.levelName[game.currentLevel], 5, screenHeight-this.game.fontSize);
         game.font.setColor(game.colorRed);
-        game.font.draw(game.batch, "<"+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+">", 5, screenHeight-(2*this.game.fontSize));
+        game.font.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreY, screenHeight-(2*this.game.fontSize), Gdx.graphics.getWidth()-10, 1, false);
+
         game.font.setColor(game.colorBlue);
-        game.font.draw(game.batch, "<"+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+">", 300, screenHeight-(2*this.game.fontSize));
+        game.font.draw(game.batch, ""+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+"", blueScoreY, screenHeight-(2*this.game.fontSize), Gdx.graphics.getWidth()-10, 1, false);
         game.font.setColor(game.colorGreen);
-        game.font.draw(game.batch, "<"+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+">", 600, screenHeight-(2*this.game.fontSize));
+        game.font.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreY, screenHeight-(2*this.game.fontSize), Gdx.graphics.getWidth()-10, 1, false);
         game.font.setColor(1f,1f,1f,1f);
         game.font.draw(game.batch, "Moves Left: "+(thisLevelMaxMoves - thisLevelCurrentMoves), 5, screenHeight-(3*this.game.fontSize));
         game.font.setColor(1f,0f,1f,1f);
-        game.font.draw(game.batch, "ALPHA RELEASE - THANKS FOR HELPING!", 5, screenHeight-(4*this.game.fontSize));
+        game.font.draw(game.batch, "ALPHA RELEASE-THANKS FOR HELPING!", 5, screenHeight-(4*this.game.fontSize), Gdx.graphics.getWidth(), 1, false);
 
         // Display the dark matter (lives) at the top of the screen
         if(game.darkMatterCount > 0) {
