@@ -1122,27 +1122,32 @@ public class PlayingScreen implements Screen {
         // Set the Y value of the rendered fonts to (lineNumberFromTop*(screenHeight-this.game.fontSize))
 
         // Generate some values for our color indicators, with 5-px padding
-        int halfWidth = Gdx.graphics.getWidth() / 2;
-        int blueScoreY = (int)0.5*halfWidth;
-        int redScoreY = (int)0.2*halfWidth;
-        int greenScoreY = (int)1.2*halfWidth;
+        // NOTE: when using halign=1 in font.draw, you are setting the y value RELATIVE to the center of the screen. Don't forget, dummy!
+        // ALSO: 0-(Gdx.graphics.getWidth()/2); will put the center RIGHT on the edge of the screen, so you'll need to shift (pad) the Y value a bit
+        float blueScoreY = 0; // center
+        float redScoreY = 0-(Gdx.graphics.getWidth()/4); // use 1/4 distance
+        float greenScoreY = (Gdx.graphics.getWidth()/4);
 
         game.font.setColor(1f,1f,1f,1f);
-        game.font.draw(game.batch, "Level "+(game.currentLevel+1)+": "+game.levelName[game.currentLevel], 5, screenHeight-this.game.fontSize);
+        game.font.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
+
+        game.font.setColor(1f,1f,1f,1f);
+        game.font.draw(game.batch, "Level "+(game.currentLevel+1)+": "+game.levelName[game.currentLevel], 5, screenHeight-(1*this.game.fontSize), this.screenWidth-10, 1, false);
+
         game.font.setColor(game.colorRed);
-        game.font.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreY, screenHeight-(2*this.game.fontSize), Gdx.graphics.getWidth()-10, 1, false);
-
+        game.font.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreY, screenHeight-(3*this.game.fontSize), this.screenWidth-10, 1, false);
         game.font.setColor(game.colorBlue);
-        game.font.draw(game.batch, ""+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+"", blueScoreY, screenHeight-(2*this.game.fontSize), Gdx.graphics.getWidth()-10, 1, false);
+        game.font.draw(game.batch, ""+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+"", blueScoreY, screenHeight-(3*this.game.fontSize), this.screenWidth-10, 1, false);
         game.font.setColor(game.colorGreen);
-        game.font.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreY, screenHeight-(2*this.game.fontSize), Gdx.graphics.getWidth()-10, 1, false);
-        game.font.setColor(1f,1f,1f,1f);
-        game.font.draw(game.batch, "Moves Left: "+(thisLevelMaxMoves - thisLevelCurrentMoves), 5, screenHeight-(3*this.game.fontSize));
-        game.font.setColor(1f,0f,1f,1f);
-        game.font.draw(game.batch, "ALPHA RELEASE-THANKS FOR HELPING!", 5, screenHeight-(4*this.game.fontSize), Gdx.graphics.getWidth(), 1, false);
+        game.font.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreY, screenHeight-(3*this.game.fontSize), this.screenWidth-10, 1, false);
 
+        game.font.setColor(1f,1f,1f,1f);
+        game.font.draw(game.batch, "Moves Left: "+(thisLevelMaxMoves - thisLevelCurrentMoves), 5, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
+
+
+        // (27-Oct-2016 Jesse) Removing the dark matter from being displayed at the top
         // Display the dark matter (lives) at the top of the screen
-        if(game.darkMatterCount > 0) {
+        /*if(game.darkMatterCount > 0) {
             game.batch.setColor(1f,1f,1f,1f);
         } else { game.batch.setColor(1f,1f,1f,0.5f); }
         game.batch.draw(singularityImage, (screenWidth/2) -16 -2 -32 -2 -32,767,32,32);
@@ -1166,6 +1171,7 @@ public class PlayingScreen implements Screen {
             game.batch.setColor(1f,1f,1f,1f);
         } else { game.batch.setColor(1f,1f,1f,0.5f); }
         game.batch.draw(singularityImage, (screenWidth/2) +16 +2 +32 +2,767,32,32);
+        */
 
         // Display the level message, if we have one, and only if the gameState is ready or tile selected or good move attempt
         if(theGameState == gameState.READY || theGameState == gameState.TILE_SELECTED || theGameState == gameState.GOOD_MOVE_ATTEMPT) {
@@ -1175,18 +1181,18 @@ public class PlayingScreen implements Screen {
         }
 
 
-
+        // (27-Oct-2016 Jesse) Removing the dark matter from being displayed at the top
         // If we have less than 5 lives, display our timer
-        if(game.darkMatterCount < 5) {
-            long diff = game.darkMatterCooldown - game.timerElapsedTime;
-            game.font.draw(game.batch, ""+game.toPrettyDate(diff)+" > ", 5, 800);
-        }
+        //if(game.darkMatterCount < 5) {
+        //    long diff = game.darkMatterCooldown - game.timerElapsedTime;
+        //    game.font.draw(game.batch, ""+game.toPrettyDate(diff)+" > ", 5, 800);
+        //}
 
         // Another UI element is the button that goes to another level. This is only displayed if 
         // the gamestate is LEVEL_COMPLETE. Alternatively, if we're OUT_OF_MOVES, we'll display a "Restart Level" button.
         if(theGameState == gameState.OUT_OF_MOVES) {
             game.batch.setColor(1f,1f,1f,1f);
-            game.batch.draw(buttonFailImage, 0, 0, 480, this.whiteSpace);
+            game.batch.draw(buttonFailImage, 0, 0, this.screenWidth, this.whiteSpace);
 
             if(Gdx.input.isTouched()) {
                 RestartLevel();
@@ -1198,7 +1204,7 @@ public class PlayingScreen implements Screen {
 
         if(theGameState == gameState.LEVEL_COMPLETE) {
             game.batch.setColor(1f,1f,1f,1f);
-            game.batch.draw(buttonLevelCompleteImage, 0, 0, 480, this.whiteSpace);
+            game.batch.draw(buttonLevelCompleteImage, 0, 0, this.screenWidth, this.whiteSpace);
 
             if(Gdx.input.isTouched()) {
                 // This doesn't work because the restartlevel uses the same Tile()s as the last level. We need to completely rebuild this screen. 
