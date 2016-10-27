@@ -17,7 +17,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.Array;
 
 
 public class PlayingScreen implements Screen {
@@ -728,8 +727,8 @@ public class PlayingScreen implements Screen {
                 // Only process input if the game state is READY
                 if(theGameState == gameState.READY) {
 
-                    //game.font.setColor(1f,1f,1f,1f); 
-                    //game.font.draw(game.batch, ""+finger.x + ","+finger.y, 240,30); 
+                    //game.regularFont.setColor(1f,1f,1f,1f);
+                    //game.regularFont.draw(game.batch, ""+finger.x + ","+finger.y, 240,30);
 
                     // If we touched the screen during READY state, check to see if we touched a planet.
                     // If we did, mark it as selected.
@@ -742,8 +741,8 @@ public class PlayingScreen implements Screen {
                             if(pointInRectangle(tile.rect, finger.x, finger.y)) {
 
                                 // DEBUG:
-                                //game.font.setColor(1f,1f,1f,1f); 
-                                //game.font.draw(game.batch, "Tile "+tile.value, 240,60); 
+                                //game.regularFont.setColor(1f,1f,1f,1f);
+                                //game.regularFont.draw(game.batch, "Tile "+tile.value, 240,60);
 
                                 // if game state is ready and tile status is none, that means we haven't tried to move yet. 
                                 if(tile.status == TileStatus.NONE) {
@@ -959,8 +958,8 @@ public class PlayingScreen implements Screen {
             // First draw the type of tile it is and the value of the tile if it's a planet
             switch(tile.type) {
                 case NONE:
-                    //game.font.setColor(1f,1f,1f,0.5f);
-                    //game.font.draw(game.batch, ""+tile.value, tile.rect.x+18, tile.rect.y+38);
+                    //game.regularFont.setColor(1f,1f,1f,0.5f);
+                    //game.regularFont.draw(game.batch, ""+tile.value, tile.rect.x+18, tile.rect.y+38);
                     break;
                 case REDPLANET:
                     //game.batch.setColor(game.colorRed);
@@ -1015,8 +1014,8 @@ public class PlayingScreen implements Screen {
                     // Rotate that bad boy
                     tile.overlayRotation += 3.0f;
 
-                    //game.font.setColor(1f,1f,1f,0.5f);
-                    //game.font.draw(game.batch, "Tile Selected!", 0,30);
+                    //game.regularFont.setColor(1f,1f,1f,0.5f);
+                    //game.regularFont.draw(game.batch, "Tile Selected!", 0,30);
 
                     break;
 
@@ -1060,7 +1059,7 @@ public class PlayingScreen implements Screen {
                     if(tile.overlayFrameNumber < 6) {
 
                         //game.batch.setColor(game.colorRed);
-                        //game.font.draw(game.batch, "TileNum="+tile.tileNum, 50,600); 
+                        //game.regularFont.draw(game.batch, "TileNum="+tile.tileNum, 50,600);
                         game.batch.draw(tileOverlayRegion[tile.overlayFrameNumber], tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, 1.0f, 1.0f, 0.0f);
 
                         // Add deltatime to our time since last frame
@@ -1092,24 +1091,24 @@ public class PlayingScreen implements Screen {
         // Draw the row and col headers
         /* (26-Oct-2016 Lawson) Get rid of the left and top value borders
             since we're drawing the tile values directly onto the board.
-            game.font.setColor(1f,1f,1f,1.0f);
+            game.regularFont.setColor(1f,1f,1f,1.0f);
 
         int s = (int)(0.5*leftSpace);
         int s2 = (int)(0.5*tileWidth) + s;
-        game.font.draw(game.batch, "0", s, whiteSpace+(tileHeight*6));
-        game.font.draw(game.batch, "1", s, whiteSpace+(tileHeight*5));
-        game.font.draw(game.batch, "3", s, whiteSpace+(tileHeight*4));
-        game.font.draw(game.batch, "5", s, whiteSpace+(tileHeight*3));
-        game.font.draw(game.batch, "3", s, whiteSpace+(tileHeight*2));
-        game.font.draw(game.batch, "1", s, whiteSpace+(tileHeight*1));
-        game.font.draw(game.batch, "0", s, whiteSpace+(tileHeight*0));
-        game.font.draw(game.batch, "0", leftSpace + s + (tileWidth*6), screenHeight - whiteSpace - s2);
-        game.font.draw(game.batch, "1", leftSpace + s + (tileWidth*5), screenHeight - whiteSpace - s2);
-        game.font.draw(game.batch, "3", leftSpace + s + (tileWidth*4), screenHeight - whiteSpace - s2);
-        game.font.draw(game.batch, "5", leftSpace + s + (tileWidth*3), screenHeight - whiteSpace - s2);
-        game.font.draw(game.batch, "3", leftSpace + s + (tileWidth*2), screenHeight - whiteSpace - s2);
-        game.font.draw(game.batch, "1", leftSpace + s + (tileWidth*1), screenHeight - whiteSpace - s2);
-        game.font.draw(game.batch, "0", leftSpace + s + (tileWidth*0), screenHeight - whiteSpace - s2);
+        game.regularFont.draw(game.batch, "0", s, whiteSpace+(tileHeight*6));
+        game.regularFont.draw(game.batch, "1", s, whiteSpace+(tileHeight*5));
+        game.regularFont.draw(game.batch, "3", s, whiteSpace+(tileHeight*4));
+        game.regularFont.draw(game.batch, "5", s, whiteSpace+(tileHeight*3));
+        game.regularFont.draw(game.batch, "3", s, whiteSpace+(tileHeight*2));
+        game.regularFont.draw(game.batch, "1", s, whiteSpace+(tileHeight*1));
+        game.regularFont.draw(game.batch, "0", s, whiteSpace+(tileHeight*0));
+        game.regularFont.draw(game.batch, "0", leftSpace + s + (tileWidth*6), screenHeight - whiteSpace - s2);
+        game.regularFont.draw(game.batch, "1", leftSpace + s + (tileWidth*5), screenHeight - whiteSpace - s2);
+        game.regularFont.draw(game.batch, "3", leftSpace + s + (tileWidth*4), screenHeight - whiteSpace - s2);
+        game.regularFont.draw(game.batch, "5", leftSpace + s + (tileWidth*3), screenHeight - whiteSpace - s2);
+        game.regularFont.draw(game.batch, "3", leftSpace + s + (tileWidth*2), screenHeight - whiteSpace - s2);
+        game.regularFont.draw(game.batch, "1", leftSpace + s + (tileWidth*1), screenHeight - whiteSpace - s2);
+        game.regularFont.draw(game.batch, "0", leftSpace + s + (tileWidth*0), screenHeight - whiteSpace - s2);
 
 		*/
 
@@ -1122,27 +1121,28 @@ public class PlayingScreen implements Screen {
         // Set the Y value of the rendered fonts to (lineNumberFromTop*(screenHeight-this.game.fontSize))
 
         // Generate some values for our color indicators, with 5-px padding
-        // NOTE: when using halign=1 in font.draw, you are setting the y value RELATIVE to the center of the screen. Don't forget, dummy!
+        // NOTE: when using halign=1 in regularFont.draw, you are setting the y value RELATIVE to the center of the screen. Don't forget, dummy!
         // ALSO: 0-(Gdx.graphics.getWidth()/2); will put the center RIGHT on the edge of the screen, so you'll need to shift (pad) the Y value a bit
         float blueScoreY = 0; // center
         float redScoreY = 0-(Gdx.graphics.getWidth()/4); // use 1/4 distance
         float greenScoreY = (Gdx.graphics.getWidth()/4);
 
-        game.font.setColor(1f,1f,1f,1f);
-        game.font.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
+        game.pixelFont.setColor(0.87f,0.84f,0.22f,1f);
+        game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
 
-        game.font.setColor(1f,1f,1f,1f);
-        game.font.draw(game.batch, "Level "+(game.currentLevel+1)+": "+game.levelName[game.currentLevel], 5, screenHeight-(1*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.regularFont.setColor(1f,1f,1f,1f);
+        game.regularFont.draw(game.batch, "Level "+(game.currentLevel+1)+": "+game.levelName[game.currentLevel], 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
 
-        game.font.setColor(game.colorRed);
-        game.font.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreY, screenHeight-(3*this.game.fontSize), this.screenWidth-10, 1, false);
-        game.font.setColor(game.colorBlue);
-        game.font.draw(game.batch, ""+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+"", blueScoreY, screenHeight-(3*this.game.fontSize), this.screenWidth-10, 1, false);
-        game.font.setColor(game.colorGreen);
-        game.font.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreY, screenHeight-(3*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.regularFont.setColor(1f,1f,1f,1f);
+        game.regularFont.draw(game.batch, "Moves Left: "+(thisLevelMaxMoves - thisLevelCurrentMoves), 5, screenHeight-(2.5f*this.game.fontSize), this.screenWidth-10, 1, false);
 
-        game.font.setColor(1f,1f,1f,1f);
-        game.font.draw(game.batch, "Moves Left: "+(thisLevelMaxMoves - thisLevelCurrentMoves), 5, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.pixelFont.setColor(game.colorRed);
+        game.pixelFont.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.pixelFont.setColor(game.colorBlue);
+        game.pixelFont.draw(game.batch, ""+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+"", blueScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.pixelFont.setColor(game.colorGreen);
+        game.pixelFont.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
+
 
 
         // (27-Oct-2016 Jesse) Removing the dark matter from being displayed at the top
@@ -1175,9 +1175,16 @@ public class PlayingScreen implements Screen {
 
         // Display the level message, if we have one, and only if the gameState is ready or tile selected or good move attempt
         if(theGameState == gameState.READY || theGameState == gameState.TILE_SELECTED || theGameState == gameState.GOOD_MOVE_ATTEMPT) {
-            game.font.setColor(1f,0f,1f,1f);
-            game.font.draw(game.batch, ""+game.levelMessage[game.currentLevel], 0, 100, screenWidth, 1, true);
-            game.font.setColor(1f,1f,1f,1f);  //reset the font color to white
+
+            // The location of the top line should be below the last tile. We can find this easily:
+            float tileHeight = Gdx.graphics.getWidth() / 7;
+            float middle = Gdx.graphics.getHeight() / 2;
+            float startLineY = middle - 3.85f*tileHeight; // So we want to start 3.5*tileHeight from center of screen. That should get us to the bottom.
+                                                            // At 3.85f*tileHeight, we give ourselves a little padding between the text and grid
+
+            game.regularFont.setColor(1f,0.5f, 1f, 1f);
+            game.regularFont.draw(game.batch, ""+game.levelMessage[game.currentLevel], 0, startLineY, this.screenWidth, 1, true);
+            game.regularFont.setColor(1f,1f,1f,1f);  //reset the regularFont color to white
         }
 
 
@@ -1185,7 +1192,7 @@ public class PlayingScreen implements Screen {
         // If we have less than 5 lives, display our timer
         //if(game.darkMatterCount < 5) {
         //    long diff = game.darkMatterCooldown - game.timerElapsedTime;
-        //    game.font.draw(game.batch, ""+game.toPrettyDate(diff)+" > ", 5, 800);
+        //    game.regularFont.draw(game.batch, ""+game.toPrettyDate(diff)+" > ", 5, 800);
         //}
 
         // Another UI element is the button that goes to another level. This is only displayed if 
@@ -1239,9 +1246,9 @@ public class PlayingScreen implements Screen {
             }
 
             // For libgdx, the [1, true] part at the end means "Center the text" (1) and "wrap to screenWidth" (true)
-			/*game.font.draw(game.batch, "You're Out of Dark Matter!\nSince this is the FREE version of Gravity Grid, each time you fail a level you spend one Dark Matter point. When you've used up all of your five total Dark Matter points, you have to wait for new Dark Matter to recharge.\nNew dark matter in:\n"+(game.toPrettyDate(game.darkMatterCooldown - game.timerElapsedTime))+"\n\nIf you just want to play the puzzles without all this Dark Matter stuff, the $1.99 version of this game has zero ads, zero in-app purchases, and zero Dark Matter.", 0, (screenHeight/2)+140, screenWidth, 1, true);
+			/*game.regularFont.draw(game.batch, "You're Out of Dark Matter!\nSince this is the FREE version of Gravity Grid, each time you fail a level you spend one Dark Matter point. When you've used up all of your five total Dark Matter points, you have to wait for new Dark Matter to recharge.\nNew dark matter in:\n"+(game.toPrettyDate(game.darkMatterCooldown - game.timerElapsedTime))+"\n\nIf you just want to play the puzzles without all this Dark Matter stuff, the $1.99 version of this game has zero ads, zero in-app purchases, and zero Dark Matter.", 0, (screenHeight/2)+140, screenWidth, 1, true);
 			*/
-            game.font.draw(game.batch, "You're Out of Dark Matter!\nIn the free version of Gravity Grid, each time you fail a level you spend one Dark Matter point. When you've used up all of your five total Dark Matter points, you have to wait for a new Dark Matter to recharge (every twenty minutes).\nNew dark matter in:\n"+(game.toPrettyDate(game.darkMatterCooldown - game.timerElapsedTime))+"\n\nSince I don't like in-app purchases and intrusive ads, this was how I gently encourage people who like the game to purchase the full version. If this is a bad idea, please let me know!\n\nAnd thank you for participating in the alpha release!", 0, (screenHeight/2)+180, screenWidth, 1, true);
+            game.regularFont.draw(game.batch, "You're Out of Dark Matter!\nIn the free version of Gravity Grid, each time you fail a level you spend one Dark Matter point. When you've used up all of your five total Dark Matter points, you have to wait for a new Dark Matter to recharge (every twenty minutes).\nNew dark matter in:\n"+(game.toPrettyDate(game.darkMatterCooldown - game.timerElapsedTime))+"\n\nSince I don't like in-app purchases and intrusive ads, this was how I gently encourage people who like the game to purchase the full version. If this is a bad idea, please let me know!\n\nAnd thank you for participating in the alpha release!", 0, (screenHeight/2)+180, screenWidth, 1, true);
 
 
         }
@@ -1271,19 +1278,19 @@ public class PlayingScreen implements Screen {
         // DEBUG THE GAMESTATE
 		/*switch(theGameState) {
 			case READY:
-				game.font.draw(game.batch, "READY", 0, 250); 
+				game.regularFont.draw(game.batch, "READY", 0, 250);
 				break;
 			case TILE_SELECTED:
-				game.font.draw(game.batch, "TILE_SELECTED", 0, 250); 
+				game.regularFont.draw(game.batch, "TILE_SELECTED", 0, 250);
 				break;
 			case GOOD_MOVE_ATTEMPT:
-				game.font.draw(game.batch, "GOOD_MOVE_ATTEMPT", 0, 250); 
+				game.regularFont.draw(game.batch, "GOOD_MOVE_ATTEMPT", 0, 250);
 				break;
 			case LEVEL_COMPLETE:
-				game.font.draw(game.batch, "LEVEL_COMPLETE", 0, 250); 
+				game.regularFont.draw(game.batch, "LEVEL_COMPLETE", 0, 250);
 				break;
 			case OUT_OF_MOVES:
-				game.font.draw(game.batch, "OUT_OF_MOVES", 0, 250); 
+				game.regularFont.draw(game.batch, "OUT_OF_MOVES", 0, 250);
 				break;
 			
 			default:
@@ -1309,14 +1316,17 @@ public class PlayingScreen implements Screen {
 
     @Override
     public void hide() {
+        // TODO: Switch the gamestate to IN_GAME_MENU
     }
 
     @Override
     public void pause() {
+        // TODO: Switch the gamestate to IN_GAME_MENU
     }
 
     @Override
     public void resume() {
+
     }
 
     @Override

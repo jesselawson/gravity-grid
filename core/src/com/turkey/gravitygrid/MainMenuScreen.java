@@ -6,27 +6,13 @@
 
 package com.turkey.gravitygrid;
 
-import java.util.Iterator;
-
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.Logger;
 
 public class MainMenuScreen implements Screen {
 
@@ -92,9 +78,9 @@ public class MainMenuScreen implements Screen {
 			game.batch.draw(elements, 0,0,sw/2,sh/2,480,800,1.0f,1.0f,0.0f);
 			//game.batch.draw(elements[1], 0,0,sw/2,sh/2,480,800,1.0f,1.0f,0.0f);
 			//game.batch.draw(elements[2], 0,0,sw/2,sh/2,480,800,1.0f,1.0f,0.0f);
-			game.font.setColor(game.colorBlue);
+			game.regularFont.setColor(game.colorBlue);
 				
-			game.font.draw(game.batch, "Touch Anywhere to Start", 50, 50);
+			game.regularFont.draw(game.batch, "Touch Anywhere to Start", 50, 50);
 				
 			game.batch.end();
 				

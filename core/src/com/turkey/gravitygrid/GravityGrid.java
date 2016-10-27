@@ -8,9 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -46,7 +44,8 @@ public class GravityGrid extends Game {
 	Color colorBlue = new Color(.37f,.78f,.93f,1f);
 	
 	SpriteBatch batch;
-	BitmapFont font;
+	BitmapFont regularFont; // The Roboto Slab font called "turkey.ttf"
+	BitmapFont pixelFont; // The big GravityGridder font used for planet gravity values and special things.
 
 	public static int fontSize = 60;
 	
@@ -144,7 +143,7 @@ public class GravityGrid extends Game {
 		"Sometimes you need to move planets of one color out of the way to make room for planets of a different color.",//9
 		"Asteroids mean you can't use that tile. You'll have to work around it.",//10
 		"",//11
-		"",//12
+		"If the planets are aligned, we can save the universe!",//12
 		"Do you see the astronaut on this level? No? That's because there isn't one.",//13
 		"",//14
 		"Suns are just like asteroids, but take up a lot more space. You cannot move a planet into any tile that is under any part of a sun.",//15
@@ -461,14 +460,24 @@ public class GravityGrid extends Game {
 		this.loadSaveState(); 
 		
 		batch = new SpriteBatch();
-		font = new BitmapFont();
+
+		// Generate our regularFont
+		regularFont = new BitmapFont();
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("turkey.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = this.fontSize; //22
-		font = generator.generateFont(parameter);
-		generator.dispose(); 
-		
-		
+		parameter.size = this.fontSize; //used to be 22, but that's too tiny
+		regularFont = generator.generateFont(parameter);
+		generator.dispose();
+
+		// Generate our pixelFont
+		pixelFont = new BitmapFont();
+		generator = new FreeTypeFontGenerator(Gdx.files.internal("OrialBold.ttf"));
+		parameter.size = this.fontSize+8; //used to be 22, but that's too tiny
+		pixelFont = generator.generateFont(parameter);
+		generator.dispose();
+
+
+
 		this.setScreen(new MainMenuScreen(this));
 	}
 
@@ -510,7 +519,7 @@ public class GravityGrid extends Game {
 
 	public void dispose() {
 		batch.dispose();
-		font.dispose();
+		regularFont.dispose();
 		
 	}
 }
