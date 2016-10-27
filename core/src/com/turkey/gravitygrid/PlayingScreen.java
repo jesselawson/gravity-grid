@@ -553,7 +553,7 @@ public class PlayingScreen implements Screen {
         9 = blocked*/
 
         // Load the textures
-        tileBlankImage = new Texture(Gdx.files.internal("tileBlankImage.png"));
+        tileBlankImage = new Texture(Gdx.files.internal("tileBlankImageSquared.png"));
         //tilePlanetImage = new Texture[4]; // remember: [4] = [0,1,2,3].
         //tilePlanetRegion = new TextureRegion[4];
         tileRedPlanetImage = new Texture(Gdx.files.internal("planet-red.png"));
