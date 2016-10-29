@@ -50,7 +50,8 @@ public class PlayingScreen implements Screen {
         GOOD_MOVE_ATTEMPT,			// Player selected a blank tile to move to, all that's left is to ensure rules are followed
         OUT_OF_MOVES, 				// Player has ran out of moves, so the only thing they can do is reset the level
         OUT_OF_LIVES,				// Player has 0 dark matter
-        LEVEL_COMPLETE
+        LEVEL_COMPLETE,             // Displays the "level complete button" that jumps you to the score screen
+        IN_GAME_MENU               // Open the menu when you're playing a level. Will give you "BACK TO LEVEL SELECT", "HOW TO PLAY", "ABOUT", and "QUIT"
     }
 
 
@@ -277,7 +278,7 @@ public class PlayingScreen implements Screen {
                             case 34:
                             case 27:
                             case 20:
-                            case 13: outcome = (GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum)); break;
+                            case 13: outcome = (GoodMoveVerified(destinationTileNum-1,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum)); break;
                             case  6: outcome = ( GoodMoveVerified(5,selectedType,selectedNum) || GoodMoveVerified(13,selectedType,selectedNum) ); break;
                             case  5:
                             case  4:
@@ -365,7 +366,7 @@ public class PlayingScreen implements Screen {
 
     private ArrayList<Tile> tile; // Single array of tiles, instead of multidimensional
 
-
+    private float backgroundStarfieldPosition; // used to keep track of the background spiral that goes over the background images
 
     private int tileWidth;
 
@@ -403,6 +404,8 @@ public class PlayingScreen implements Screen {
     Texture buttonFailImage;
     Texture buttonLevelCompleteImage;
     Texture singularityImage;
+    Texture backgroundStarfieldImage;
+    TextureRegion backgroundStarfieldRegion;
     Sound tileSelectSound;
     Sound tileDeselectSound;
     Sound goodMoveAttemptSound;
@@ -553,14 +556,17 @@ public class PlayingScreen implements Screen {
         9 = blocked*/
 
         // Load the textures
-        tileBlankImage = new Texture(Gdx.files.internal("tileBlankImageSquared.png"));
+        tileBlankImage = new Texture(Gdx.files.internal("tileBlankImage.png"));
         //tilePlanetImage = new Texture[4]; // remember: [4] = [0,1,2,3].
         //tilePlanetRegion = new TextureRegion[4];
-        tileRedPlanetImage = new Texture(Gdx.files.internal("planet-red.png"));
+        tileRedPlanetImage = new Texture(Gdx.files.internal("planet-red.png"), true);
+        tileRedPlanetImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
         tileRedPlanetRegion = new TextureRegion(tileRedPlanetImage);
-        tileBluePlanetImage = new Texture(Gdx.files.internal("planet-blue.png"));
+        tileBluePlanetImage = new Texture(Gdx.files.internal("planet-blue.png"), true);
+        tileBluePlanetImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
         tileBluePlanetRegion = new TextureRegion(tileBluePlanetImage);
-        tileGreenPlanetImage = new Texture(Gdx.files.internal("planet-green.png"));
+        tileGreenPlanetImage = new Texture(Gdx.files.internal("planet-green.png"), true);
+        tileGreenPlanetImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
         tileGreenPlanetRegion = new TextureRegion(tileGreenPlanetImage);
         tileSunImage = new Texture(Gdx.files.internal("sun.png"));
         tileSunRegion = new TextureRegion(tileSunImage);
@@ -578,6 +584,12 @@ public class PlayingScreen implements Screen {
         backgroundImage[3] = new Texture(Gdx.files.internal("bg3.png"));
 
         singularityImage = new Texture(Gdx.files.internal("singularity0.png"));
+
+        backgroundStarfieldImage = new Texture(Gdx.files.internal("starfield.png"), true);
+        backgroundStarfieldImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
+        backgroundStarfieldRegion = new TextureRegion(backgroundStarfieldImage);
+
+
 
         tileValueImage = new Texture[11];
         tileValueImage[0] = new Texture(Gdx.files.internal("tile0.png"));
@@ -932,9 +944,22 @@ public class PlayingScreen implements Screen {
             }
         }
 
-        // First draw the background image
-        game.batch.setColor(1f,1f,1f,.25f);
-        game.batch.draw(backgroundImage[bgRand], 0,0,screenWidth, screenHeight);
+        // Draw a dynamic background. It will have a base layer that rotates one way and a top layer that
+        // rotates the other way
+        game.batch.setColor(1f,1f,1f,0.75f);
+        game.batch.draw(backgroundImage[1], 0,0,screenWidth, screenHeight);
+
+        // Top layer is this alpha-masked image that goes on top
+
+        if(backgroundStarfieldPosition >= 0.0f) {
+            backgroundStarfieldPosition = -1680.0f;
+        }
+
+        game.batch.setColor(1f,1f,1f,0.85f);
+        game.batch.draw(backgroundStarfieldRegion, 0,backgroundStarfieldPosition,screenWidth/2,screenHeight/2, screenWidth, 2*screenHeight, 1.0f, 1.0f, 0.0f);
+
+
+        backgroundStarfieldPosition += 1.0f;
 
         int cellNumber = 0;
 
@@ -1027,14 +1052,11 @@ public class PlayingScreen implements Screen {
                     // the tile status to be NONE
 
                     // If we still have a frame in our animation
-                    if(tile.overlayFrameNumber < 6) {
+                    if(tile.overlayFrameNumber < 12) {
 
+                        game.batch.setColor(1.0f,1.0f,1.0f,1f-(tile.overlayFrameNumber/12.0f));
 
-
-                        game.batch.setColor(game.colorYellow);
-
-                        game.batch.draw(tileOverlayRegion[tile.overlayFrameNumber], tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, 1.5f*(.5f*tile.overlayFrameNumber), 1.5f*(.5f*tile.overlayFrameNumber), 0.0f);
-
+                        game.batch.draw(tileSunFlareRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, 1.5f*(.5f*tile.overlayFrameNumber), 1.5f*(.5f*tile.overlayFrameNumber), tile.overlayFrameNumber*13.0f);
                         // Add deltatime to our time since last frame
                         if (TimeUtils.nanoTime() - tile.timeSinceLastFrame > 25000000) {
                             tile.overlayFrameNumber++;
@@ -1369,6 +1391,7 @@ public class PlayingScreen implements Screen {
 
         buttonLevelCompleteImage.dispose();
         buttonFailImage.dispose();
+        backgroundStarfieldImage.dispose();
 
         singularityImage.dispose();
         blackHoleImage.dispose();

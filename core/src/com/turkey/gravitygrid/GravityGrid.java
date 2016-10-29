@@ -526,6 +526,7 @@ public class GravityGrid extends Game {
 /* BETA RELEASE
 
 	* More levels!
+	* UNDO button
 
 ALPHA RELEASE
 
