@@ -537,6 +537,7 @@ public class PlayingScreen implements Screen {
             worldRow++; // Iterate our row counter
         }
 
+        // TODO: lOAD ALL OF THESE FROM THE ASSET MANAGER
         // Load the sounds before the textures so the assetmanager isn't busy by the time we're clicking things
         //restartLevelSound = Gdx.audio.newSound(Gdx.files.internal("startup.wav"));
         tileSelectSound = Gdx.audio.newSound(Gdx.files.internal("consoleBeep.wav"));
