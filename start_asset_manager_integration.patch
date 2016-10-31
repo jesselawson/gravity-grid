@@ -1,0 +1,174 @@
+Index: core/src/com/turkey/gravitygrid/GravityGrid.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/src/com/turkey/gravitygrid/GravityGrid.java	(date 1477779854000)
++++ core/src/com/turkey/gravitygrid/GravityGrid.java	(revision )
+@@ -6,6 +6,13 @@
+ 
+ import com.badlogic.gdx.Gdx;
+ import com.badlogic.gdx.Game;
++import com.badlogic.gdx.assets.AssetManager;
++import com.badlogic.gdx.assets.loaders.FileHandleResolver;
++import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
++import com.badlogic.gdx.graphics.Texture;
++import com.badlogic.gdx.graphics.g2d.TextureRegion;
++import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
++import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+ import com.badlogic.gdx.utils.TimeUtils;
+ import com.badlogic.gdx.Preferences;
+ import com.badlogic.gdx.graphics.Color;
+@@ -18,7 +25,9 @@
+ public class GravityGrid extends Game {
+ 	
+ 	Preferences ini;
+-	
++
++	AssetManager assets = new AssetManager(); // Asset manager
++	
+ 	// Timer variables. We implement the timer in this main Game class because we want it to be 
+ 	// independent of the level. Also, we're using TimeUtils instead of the other timer because
+ 	// the timer should be independent of the actual game (e.g., we need to have 20 real world minutes 
+@@ -42,10 +51,13 @@
+ 	Color colorRed = new Color(.79f,.01f,.25f,1f);
+ 	Color colorGreen = new Color(.60f,.77f,.23f,1f);
+ 	Color colorBlue = new Color(.37f,.78f,.93f,1f);
+-	
++
++	// Global resources
+ 	SpriteBatch batch;
+ 	BitmapFont regularFont; // The Roboto Slab font called "turkey.ttf"
+ 	BitmapFont pixelFont; // The big GravityGridder font used for planet gravity values and special things.
++	Texture littleAstronautImage; // Used for our loading screen
++	TextureRegion littleAstronautRegion;
+ 
+ 	public static int fontSize = 60;
+ 	
+@@ -451,34 +463,43 @@
+ 	}
+ 	
+ 	public void create() {
+-		
++
+-		// Initialize the timers and the dark matter counter
+-		
++		// Load our internal saved files from previous game plays
+ 		ini = Gdx.app.getPreferences("license"); // Haha we named our preferences file "license" 
+ 		
+-		// Load the saveState OR populate default values
++		// Load the saveState OR populate default values if this is a new install
+-		this.loadSaveState(); 
+-		
++		this.loadSaveState();
++
+-		batch = new SpriteBatch();
++		batch = new SpriteBatch(); // Initialize our spritebatch used to draw everything in the world
+ 
+-		// Generate our regularFont
+-		regularFont = new BitmapFont();
+-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("turkey.ttf"));
+-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+-		parameter.size = this.fontSize; //used to be 22, but that's too tiny
+-		regularFont = generator.generateFont(parameter);
+-		generator.dispose();
++		// The only things loaded before the InitialLoadingScreen is displayed are the things we need
++		// to actually show the main loader screen. That's our littleAstronaut and our fonts
+ 
+-		// Generate our pixelFont
+-		pixelFont = new BitmapFont();
+-		generator = new FreeTypeFontGenerator(Gdx.files.internal("OrialBold.ttf"));
+-		parameter.size = this.fontSize+8; //used to be 22, but that's too tiny
+-		pixelFont = generator.generateFont(parameter);
+-		generator.dispose();
++		// Load the loading screen astronaut and the font first
++		assets.load("littleAstronaut.png", Texture.class);
++		littleAstronautImage = assets.get("littleAstronauts.png", Texture.class);
++		littleAstronautRegion = TextureRegion(littleAstronautImage);
+ 
++		// Setup asset manager for freetype fonts
++		assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(new InternalFileHandleResolver()));
++		assets.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(new InternalFileHandleResolver()));
+ 
++		// Generate our regularFont
++		FreetypeFontLoader.FreeTypeFontLoaderParameter regularFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
++		regularFontParams.fontFileName = "turkey.ttf";
++		regularFontParams.fontParameters.size = this.fontSize;
++		assets.load("size"+this.fontSize+".ttf", BitmapFont.class, regularFontParams);
++		regularFont = assets.get("turkey.ttf", BitmapFont.class);
+ 
+-		this.setScreen(new MainMenuScreen(this));
++		// Generate our pixelFont (Our big fancy one)
++		FreetypeFontLoader.FreeTypeFontLoaderParameter pixelFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
++		pixelFontParams.fontFileName = "OrialBold.ttf";
++		pixelFontParams.fontParameters.size = this.fontSize;
++		assets.load("size"+(this.fontSize+8)+".ttf", BitmapFont.class, regularFontParams);
++		pixelFont = assets.get("OrialBold.ttf", BitmapFont.class);
++
++		// Now that the astronaut and the fonts are loaded, we can display our loading screen
++		this.setScreen(new InitialLoadingScreen(this));
+ 	}
+ 
+ 	public void render() {
+@@ -507,7 +528,10 @@
+ 			// the time we lost a life. 
+ 			this.timerStartTime = TimeUtils.nanoTime(); 
+ 		}
+-		
++
++		// Check to see if our asset manager is finished loading. If it's not, then let's display the loading screen
++
++
+ 		super.render(); // important!
+ 	}
+ 	
+@@ -518,8 +542,12 @@
+ 	}
+ 
+ 	public void dispose() {
++
+ 		batch.dispose();
+-		regularFont.dispose();
++		//regularFont.dispose();
++
++		assets.clear(); // Clear out all assets that have been loaded.
++		assets.dispose(); // Dispose of all our assets
+ 		
+ 	}
+ }
+Index: core/src/com/turkey/gravitygrid/InitialLoadingScreen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/src/com/turkey/gravitygrid/InitialLoadingScreen.java	(revision )
++++ core/src/com/turkey/gravitygrid/InitialLoadingScreen.java	(revision )
+@@ -0,0 +1,12 @@
++/*
++ * Copyright (c) 2016 Jesse Lawson. All Rights Reserved. No part of this code may be redistributed, reused, or otherwise used in any way, shape, or form without written permission from the author.
++ */
++
++package com.turkey.gravitygrid;
++
++/**
++ * Created by jesse on 10/30/16.
++ */
++
++public class InitialLoadingScreen {
++}
+Index: core/src/com/turkey/gravitygrid/PlayingScreen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/src/com/turkey/gravitygrid/PlayingScreen.java	(date 1477779854000)
++++ core/src/com/turkey/gravitygrid/PlayingScreen.java	(revision )
+@@ -590,7 +590,6 @@
+         backgroundStarfieldRegion = new TextureRegion(backgroundStarfieldImage);
+ 
+ 
+-
+         tileValueImage = new Texture[11];
+         tileValueImage[0] = new Texture(Gdx.files.internal("tile0.png"));
+         tileValueImage[1] = new Texture(Gdx.files.internal("tile1.png"));
+\ No newline at end of file
