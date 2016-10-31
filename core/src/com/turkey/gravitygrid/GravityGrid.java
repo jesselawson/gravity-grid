@@ -6,6 +6,13 @@ package com.turkey.gravitygrid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
@@ -18,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 public class GravityGrid extends Game {
 	
 	Preferences ini;
+
+	AssetManager assets = new AssetManager(); // Asset manager
 	
 	// Timer variables. We implement the timer in this main Game class because we want it to be 
 	// independent of the level. Also, we're using TimeUtils instead of the other timer because
@@ -42,10 +51,13 @@ public class GravityGrid extends Game {
 	Color colorRed = new Color(.79f,.01f,.25f,1f);
 	Color colorGreen = new Color(.60f,.77f,.23f,1f);
 	Color colorBlue = new Color(.37f,.78f,.93f,1f);
-	
+
+	// Global resources
 	SpriteBatch batch;
 	BitmapFont regularFont; // The Roboto Slab font called "turkey.ttf"
 	BitmapFont pixelFont; // The big GravityGridder font used for planet gravity values and special things.
+	Texture littleAstronautImage; // Used for our loading screen
+	TextureRegion littleAstronautRegion;
 
 	public static int fontSize = 60;
 	
@@ -451,34 +463,43 @@ public class GravityGrid extends Game {
 	}
 	
 	public void create() {
-		
-		// Initialize the timers and the dark matter counter
-		
+
+		// Load our internal saved files from previous game plays
 		ini = Gdx.app.getPreferences("license"); // Haha we named our preferences file "license" 
 		
-		// Load the saveState OR populate default values
-		this.loadSaveState(); 
-		
-		batch = new SpriteBatch();
+		// Load the saveState OR populate default values if this is a new install
+		this.loadSaveState();
+
+		batch = new SpriteBatch(); // Initialize our spritebatch used to draw everything in the world
+
+		// The only things loaded before the InitialLoadingScreen is displayed are the things we need
+		// to actually show the main loader screen. That's our littleAstronaut and our fonts
+
+		// Load the loading screen astronaut and the font first
+		assets.load("littleAstronaut.png", Texture.class);
+		littleAstronautImage = assets.get("littleAstronauts.png", Texture.class);
+		littleAstronautRegion = new TextureRegion(littleAstronautImage);
+
+		// Setup asset manager for freetype fonts
+		assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(new InternalFileHandleResolver()));
+		assets.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(new InternalFileHandleResolver()));
 
 		// Generate our regularFont
-		regularFont = new BitmapFont();
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("turkey.ttf"));
-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = this.fontSize; //used to be 22, but that's too tiny
-		regularFont = generator.generateFont(parameter);
-		generator.dispose();
+		FreetypeFontLoader.FreeTypeFontLoaderParameter regularFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+		regularFontParams.fontFileName = "turkey.ttf";
+		regularFontParams.fontParameters.size = this.fontSize;
+		assets.load("size"+this.fontSize+".ttf", BitmapFont.class, regularFontParams);
+		regularFont = assets.get("turkey.ttf", BitmapFont.class);
 
-		// Generate our pixelFont
-		pixelFont = new BitmapFont();
-		generator = new FreeTypeFontGenerator(Gdx.files.internal("OrialBold.ttf"));
-		parameter.size = this.fontSize+8; //used to be 22, but that's too tiny
-		pixelFont = generator.generateFont(parameter);
-		generator.dispose();
+		// Generate our pixelFont (Our big fancy one)
+		FreetypeFontLoader.FreeTypeFontLoaderParameter pixelFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+		pixelFontParams.fontFileName = "OrialBold.ttf";
+		pixelFontParams.fontParameters.size = this.fontSize;
+		assets.load("size"+(this.fontSize+8)+".ttf", BitmapFont.class, regularFontParams);
+		pixelFont = assets.get("OrialBold.ttf", BitmapFont.class);
 
-
-
-		this.setScreen(new MainMenuScreen(this));
+		// Now that the astronaut and the fonts are loaded, we can display our loading screen
+		this.setScreen(new InitialLoadingScreen(this));
 	}
 
 	public void render() {
@@ -507,7 +528,10 @@ public class GravityGrid extends Game {
 			// the time we lost a life. 
 			this.timerStartTime = TimeUtils.nanoTime(); 
 		}
-		
+
+		// Check to see if our asset manager is finished loading. If it's not, then let's display the loading screen
+
+
 		super.render(); // important!
 	}
 	
@@ -518,8 +542,12 @@ public class GravityGrid extends Game {
 	}
 
 	public void dispose() {
+
 		batch.dispose();
-		regularFont.dispose();
+		//regularFont.dispose();
+
+		assets.clear(); // Clear out all assets that have been loaded.
+		assets.dispose(); // Dispose of all our assets
 		
 	}
 }

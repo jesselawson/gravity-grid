@@ -590,7 +590,6 @@ public class PlayingScreen implements Screen {
         backgroundStarfieldRegion = new TextureRegion(backgroundStarfieldImage);
 
 
-
         tileValueImage = new Texture[11];
         tileValueImage[0] = new Texture(Gdx.files.internal("tile0.png"));
         tileValueImage[1] = new Texture(Gdx.files.internal("tile1.png"));
