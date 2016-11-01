@@ -13,8 +13,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 
 public class MainMenuScreen implements Screen {
+
+	// A custom point-in-rectangle collision checker
+	public static boolean pointInRectangle (Rectangle r, float x, float y) {
+		return r.x <= x && r.x + r.width >= x && r.y <= y && r.y + r.height >= y;
+	}
 
 	int screenWidth; // set on create so we dont have to keep calling gdx getheight
 	int screenHeight;
@@ -26,10 +32,14 @@ public class MainMenuScreen implements Screen {
 	OrthographicCamera camera;
 	
 	Texture mainMenuBackground;
-	TextureRegion elements;
-	Texture mainMenuPresents;
-	Texture mainMenuGravityGrid;
-	
+	TextureRegion mainMenuBackgroundRegion;
+	Texture buttonNewGame;
+	TextureRegion buttonNewGameRegion;
+	Rectangle buttonNewGameRect;
+	Texture buttonContinue;
+	TextureRegion buttonContinueRegion;
+	Rectangle buttonContinueRect;
+
 	int mainMenuState; 
 	
 	public MainMenuScreen(GravityGrid game) {
@@ -38,20 +48,23 @@ public class MainMenuScreen implements Screen {
 		
 		mainMenuState = 0; 	// 0 - splash screen
 							// 1 - level select
-		
+
 		// create the camera
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 480, 800);
+		camera.setToOrtho(false, game.screenWidth, game.screenHeight);
 		
-		mainMenuBackground = new Texture(Gdx.files.internal("mainmenubg.png"));
-		//mainMenuPresents = new Texture(Gdx.files.internal("mainmenupart0.png"));
-		//mainMenuGravityGrid = new Texture(Gdx.files.internal("mainmenupart1.png"));
-		//elements = new TextureRegion;
-		elements = new TextureRegion(mainMenuBackground);
-		//elements[1] = new TextureRegion(mainMenuPresents);
-		//elements[2] = new TextureRegion(mainMenuGravityGrid);
-		
-		
+		mainMenuBackground = game.assets.get("mainmenubg.png", Texture.class);
+		mainMenuBackgroundRegion = new TextureRegion(mainMenuBackground);
+		buttonNewGame = game.assets.get("button/newgame.png", Texture.class);
+		buttonNewGameRegion = new TextureRegion(buttonNewGame);
+		buttonContinue = game.assets.get("button/continue.png", Texture.class);
+		buttonContinueRegion = new TextureRegion(buttonContinue);
+
+		buttonNewGameRect = new Rectangle((Gdx.graphics.getWidth()/4)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
+
+		buttonContinueRect = new Rectangle((Gdx.graphics.getWidth()/2)+(Gdx.graphics.getWidth()/4)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
+
+
 		
 	}
 
@@ -59,11 +72,10 @@ public class MainMenuScreen implements Screen {
 	public void render(float delta) {
 		
 		int sw = Gdx.graphics.getWidth();
-		int sh = Gdx.graphics.getHeight(); 
-		
-		// Clear to black
+		int sh = Gdx.graphics.getHeight();
+
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		// tell the camera to update its matrices.
 		camera.update();
@@ -71,23 +83,33 @@ public class MainMenuScreen implements Screen {
 		// tell the SpriteBatch to render in the
 		// coordinate system specified by the camera.
 		game.batch.setProjectionMatrix(camera.combined);
-		 
+
 		game.batch.begin();
 		
 			game.batch.setColor(1f,1f,1f,1f);
-			game.batch.draw(elements, 0,0,sw/2,sh/2,480,800,1.0f,1.0f,0.0f);
-			//game.batch.draw(elements[1], 0,0,sw/2,sh/2,480,800,1.0f,1.0f,0.0f);
-			//game.batch.draw(elements[2], 0,0,sw/2,sh/2,480,800,1.0f,1.0f,0.0f);
-			game.regularFont.setColor(game.colorBlue);
-				
-			game.regularFont.draw(game.batch, "Touch Anywhere to Start", 50, 50);
+
+			game.batch.setColor(1f,1f,1f,1f);
+
+			game.batch.draw(mainMenuBackgroundRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+			game.batch.draw(buttonContinueRegion, buttonContinueRect.x, buttonContinueRect.y, buttonContinueRect.width/2, buttonContinueRect.height/2, buttonContinueRect.width, buttonContinueRect.height, 1.0f, 1.0f, 0.0f);
+
+			game.batch.draw(buttonNewGameRegion, buttonNewGameRect.x, buttonNewGameRect.y, buttonNewGameRect.width/2, buttonNewGameRect.height/2, buttonNewGameRect.width, buttonNewGameRect.height, 1.0f, 1.0f, 0.0f);
 				
 			game.batch.end();
 				
-			// Basically touch anywhere to begin
-				
+
+			// Are we touching the screen? (gross. go wash your hands. you don't know where that screen has been.)
 			if(Gdx.input.isTouched()){
-				game.setScreen(new PlayingScreen(game));
+				// Check which button is pressed
+				Vector3 finger = new Vector3();
+				camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+				if(pointInRectangle(buttonNewGameRect, finger.x, finger.y)) {
+					//game.setScreen(new NewGameScreen(game)); // maybe NewGameScreen goes through the intro story?
+				} else if(pointInRectangle(buttonContinueRect, finger.x, finger.y)) {
+					game.setScreen(new PlayingScreen(game)); // Will pickup based on what we read from the player files (the ini)
+				}
+
 			}
 			
 	}
@@ -118,8 +140,6 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void dispose() {
 		mainMenuBackground.dispose();
-		mainMenuPresents.dispose();
-		mainMenuGravityGrid.dispose(); 
 		
 	}
 

@@ -539,14 +539,14 @@ public class PlayingScreen implements Screen {
 
         // TODO: lOAD ALL OF THESE FROM THE ASSET MANAGER
         // Load the sounds before the textures so the assetmanager isn't busy by the time we're clicking things
-        //restartLevelSound = Gdx.audio.newSound(Gdx.files.internal("startup.wav"));
-        tileSelectSound = Gdx.audio.newSound(Gdx.files.internal("consoleBeep.wav"));
-        tileDeselectSound = Gdx.audio.newSound(Gdx.files.internal("tileDeselectSound.wav"));
-        goodMoveAttemptSound = Gdx.audio.newSound(Gdx.files.internal("goodMoveAttempt.ogg"));
+        //restartLevelSound = game.assets.get("startup.wav"));
+        tileSelectSound = game.assets.get("consoleBeep.wav", Sound.class);
+        tileDeselectSound = game.assets.get("tileDeselectSound.wav",Sound.class);
+        goodMoveAttemptSound = game.assets.get("goodMoveAttempt.ogg",Sound.class);
         restartLevelSound = goodMoveAttemptSound;
-        cannotMoveSound = Gdx.audio.newSound(Gdx.files.internal("cannotMoveSound.wav"));
-        outOfMovesSound = Gdx.audio.newSound(Gdx.files.internal("outOfMovesSound.wav"));
-        levelCompleteSound = Gdx.audio.newSound(Gdx.files.internal("levelCompleteSound.wav"));
+        cannotMoveSound = game.assets.get("cannotMoveSound.wav",Sound.class);
+        outOfMovesSound = game.assets.get("outOfMovesSound.wav",Sound.class);
+        levelCompleteSound = game.assets.get("levelCompleteSound.wav",Sound.class);
 
        /* 0 = blank
         1 = red
@@ -557,7 +557,7 @@ public class PlayingScreen implements Screen {
         9 = blocked*/
 
         // Load the textures
-        tileBlankImage = new Texture(Gdx.files.internal("tileBlankImage.png"));
+        tileBlankImage = game.assets.get("tileBlankImage.png", Texture.class);
         //tilePlanetImage = new Texture[4]; // remember: [4] = [0,1,2,3].
         //tilePlanetRegion = new TextureRegion[4];
         tileRedPlanetImage = new Texture(Gdx.files.internal("planet-red.png"), true);
@@ -569,22 +569,22 @@ public class PlayingScreen implements Screen {
         tileGreenPlanetImage = new Texture(Gdx.files.internal("planet-green.png"), true);
         tileGreenPlanetImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
         tileGreenPlanetRegion = new TextureRegion(tileGreenPlanetImage);
-        tileSunImage = new Texture(Gdx.files.internal("sun.png"));
+        tileSunImage = game.assets.get("sun.png", Texture.class);
         tileSunRegion = new TextureRegion(tileSunImage);
-        tileSunFlareImage = new Texture(Gdx.files.internal("sunflare0.png"));
+        tileSunFlareImage = game.assets.get("sunflare0.png", Texture.class);
         tileSunFlareRegion = new TextureRegion(tileSunFlareImage);
         tileAsteroidImage = new Texture[4];
-        tileAsteroidImage[0] = new Texture(Gdx.files.internal("asteroid0.png"));
-        tileAsteroidImage[1] = new Texture(Gdx.files.internal("asteroid1.png"));
-        tileAsteroidImage[2] = new Texture(Gdx.files.internal("asteroid2.png"));
-        tileAsteroidImage[3] = new Texture(Gdx.files.internal("asteroid3.png"));
+        tileAsteroidImage[0] = game.assets.get("asteroid0.png", Texture.class);
+        tileAsteroidImage[1] = game.assets.get("asteroid1.png", Texture.class);
+        tileAsteroidImage[2] = game.assets.get("asteroid2.png", Texture.class);
+        tileAsteroidImage[3] = game.assets.get("asteroid3.png", Texture.class);
         backgroundImage = new Texture[4];
-        backgroundImage[0] = new Texture(Gdx.files.internal("bg0.png"));
-        backgroundImage[1] = new Texture(Gdx.files.internal("bg1.png"));
-        backgroundImage[2] = new Texture(Gdx.files.internal("bg2.png"));
-        backgroundImage[3] = new Texture(Gdx.files.internal("bg3.png"));
+        backgroundImage[0] = game.assets.get("bg0.png", Texture.class);
+        backgroundImage[1] = game.assets.get("bg1.png", Texture.class);
+        backgroundImage[2] = game.assets.get("bg2.png", Texture.class);
+        backgroundImage[3] = game.assets.get("bg3.png", Texture.class);
 
-        singularityImage = new Texture(Gdx.files.internal("singularity0.png"));
+        singularityImage = game.assets.get("singularity0.png", Texture.class);
 
         backgroundStarfieldImage = new Texture(Gdx.files.internal("starfield.png"), true);
         backgroundStarfieldImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
@@ -592,37 +592,37 @@ public class PlayingScreen implements Screen {
 
 
         tileValueImage = new Texture[11];
-        tileValueImage[0] = new Texture(Gdx.files.internal("tile0.png"));
-        tileValueImage[1] = new Texture(Gdx.files.internal("tile1.png"));
-        tileValueImage[2] = new Texture(Gdx.files.internal("tile2.png"));
-        tileValueImage[3] = new Texture(Gdx.files.internal("tile3.png"));
-        tileValueImage[4] = new Texture(Gdx.files.internal("tile4.png"));
-        tileValueImage[5] = new Texture(Gdx.files.internal("tile5.png"));
-        tileValueImage[6] = new Texture(Gdx.files.internal("tile6.png"));
+        tileValueImage[0] = game.assets.get("tile0.png", Texture.class);
+        tileValueImage[1] = game.assets.get("tile1.png", Texture.class);
+        tileValueImage[2] = game.assets.get("tile2.png", Texture.class);
+        tileValueImage[3] = game.assets.get("tile3.png", Texture.class);
+        tileValueImage[4] = game.assets.get("tile4.png", Texture.class);
+        tileValueImage[5] = game.assets.get("tile5.png", Texture.class);
+        tileValueImage[6] = game.assets.get("tile6.png", Texture.class);
         tileValueImage[7] = null; // We don't actually use this value
-        tileValueImage[8] = new Texture(Gdx.files.internal("tile8.png"));
+        tileValueImage[8] = game.assets.get("tile8.png", Texture.class);
         tileValueImage[9] = null; // We don't actually use this value
-        tileValueImage[10] = new Texture(Gdx.files.internal("tile10.png"));
+        tileValueImage[10] = game.assets.get("tile10.png", Texture.class);
         tileOverlayImage = new Texture[7];
         tileOverlayRegion = new TextureRegion[7];
-        tileOverlayImage[0] = new Texture(Gdx.files.internal("tileOverlayAnim0.png"));
+        tileOverlayImage[0] = game.assets.get("tileOverlayAnim0.png", Texture.class);
         tileOverlayRegion[0] = new TextureRegion(tileOverlayImage[0]);
-        tileOverlayImage[1] = new Texture(Gdx.files.internal("tileOverlayAnim1.png"));
+        tileOverlayImage[1] = game.assets.get("tileOverlayAnim1.png", Texture.class);
         tileOverlayRegion[1] = new TextureRegion(tileOverlayImage[1]);
-        tileOverlayImage[2] = new Texture(Gdx.files.internal("tileOverlayAnim2.png"));
+        tileOverlayImage[2] = game.assets.get("tileOverlayAnim2.png", Texture.class);
         tileOverlayRegion[2] = new TextureRegion(tileOverlayImage[2]);
-        tileOverlayImage[3] = new Texture(Gdx.files.internal("tileOverlayAnim3.png"));
+        tileOverlayImage[3] = game.assets.get("tileOverlayAnim3.png", Texture.class);
         tileOverlayRegion[3] = new TextureRegion(tileOverlayImage[3]);
-        tileOverlayImage[4] = new Texture(Gdx.files.internal("tileOverlayAnim4.png"));
+        tileOverlayImage[4] = game.assets.get("tileOverlayAnim4.png", Texture.class);
         tileOverlayRegion[4] = new TextureRegion(tileOverlayImage[4]);
-        tileOverlayImage[5] = new Texture(Gdx.files.internal("tileOverlayAnim5.png"));
+        tileOverlayImage[5] = game.assets.get("tileOverlayAnim5.png", Texture.class);
         tileOverlayRegion[5] = new TextureRegion(tileOverlayImage[5]);
-        tileOverlayImage[6] = new Texture(Gdx.files.internal("tileOverlayAnim6.png"));
+        tileOverlayImage[6] = game.assets.get("tileOverlayAnim6.png", Texture.class);
         tileOverlayRegion[6] = new TextureRegion(tileOverlayImage[6]);
-        buttonFailImage = new Texture(Gdx.files.internal("buttonFail.png"));
-        buttonLevelCompleteImage = new Texture(Gdx.files.internal("buttonLevelComplete.png"));
+        buttonFailImage = game.assets.get("buttonFail.png", Texture.class);
+        buttonLevelCompleteImage = game.assets.get("buttonLevelComplete.png", Texture.class);
 
-        blackHoleImage = new Texture(Gdx.files.internal("galaxyOverlay.png"));
+        blackHoleImage = game.assets.get("galaxyOverlay.png", Texture.class);
         blackHoleRegion = new TextureRegion(blackHoleImage);
 
         // Call this once before the level starts so that we have some initial values

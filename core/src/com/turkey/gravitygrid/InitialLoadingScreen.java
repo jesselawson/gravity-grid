@@ -16,12 +16,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Created by jesse on 10/30/16.
  */
 
 public class InitialLoadingScreen implements Screen {
+
+
 
     private GravityGrid game;
 
@@ -77,6 +80,9 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("outOfMovesSound.wav", Sound.class);
         this.game.assets.load("levelCompleteSound.wav", Sound.class);
 
+        // Main menu assets
+        this.game.assets.load("mainmenubg.png", Texture.class);
+
         // Load the textures
         this.game.assets.load("tileBlankImage.png", Texture.class);
         this.game.assets.load("planet-red.png", Texture.class);
@@ -114,6 +120,43 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("buttonLevelComplete.png", Texture.class);
         this.game.assets.load("galaxyOverlay.png", Texture.class);
 
+        // Load our confetti!
+        this.game.assets.load("confetti/confettiFrame01.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame02.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame03.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame04.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame05.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame06.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame07.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame08.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame09.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame10.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame11.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame12.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame13.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame14.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame15.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame16.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame17.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame18.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame19.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame20.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame21.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame22.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame23.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame24.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame25.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame26.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame27.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame28.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame29.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame30.png", Texture.class);
+        this.game.assets.load("confetti/confettiFrame31.png", Texture.class);
+
+        // Buttons
+        this.game.assets.load("button/continue.png", Texture.class);
+        this.game.assets.load("button/newgame.png", Texture.class);
+
     }
 
 
@@ -140,6 +183,7 @@ public class InitialLoadingScreen implements Screen {
             game.setScreen(new MainMenuScreen(game));
         } else {
             game.pixelFont.draw(game.batch, "Loading...", 0, Gdx.graphics.getHeight()/3, Gdx.graphics.getWidth(), 1, true);
+            game.pixelFont.draw(game.batch, ""+Math.round(game.assets.getProgress()*100)+"%", 0, Gdx.graphics.getHeight()/4, Gdx.graphics.getWidth(), 1, true);
         }
 
         game.batch.setColor(1f,1f,1f,1f);
@@ -147,8 +191,6 @@ public class InitialLoadingScreen implements Screen {
         game.batch.draw(game.littleAstronautRegion, (Gdx.graphics.getWidth()/2)-40, (Gdx.graphics.getHeight()/2)-40, 40, 40, 80, 80, 1.0f, 1.0f, astronautDir);
 
         game.pixelFont.setColor(1.0f,1.0f,1.0f,1.0f);
-
-
 
         game.batch.end();
 

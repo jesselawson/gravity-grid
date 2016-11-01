@@ -20,11 +20,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class GravityGrid extends Game {
 	
 	Preferences ini;
+
+	private ArrayList<Level> level; // The list of all our levels
 
 	AssetManager assets = new AssetManager(); // Asset manager
 	
@@ -36,9 +40,9 @@ public class GravityGrid extends Game {
 	public long timerElapsedTime; // Difference between current timestamp and timerStartTime
 								 // We save this value
 	
-	public int darkMatterCount; // This is the "lives" that we have. The max is 5. 
+	public int darkMatterCount; // This is the "lives" that we have. The max is 5. THIS IS GOING AWAY
 	
-	public int currentLevel;
+	public int currentLevel;	// This is going away
 
 	public int screenWidth;
 	public int screenHeight;
@@ -63,13 +67,13 @@ public class GravityGrid extends Game {
 	TextureRegion littleAstronautRegion;
 
 	public static int fontSize = 60;
-	
-	
+
 	// This array holds the values of each tile
 	public static final int[] tileValueTable = new int[] { 0,1,3,5,3,1,0,1,2,4,6,4,2,1,3,4,6,8,6,4,3,5,6,8,10,8,6,5,3,4,6,8,6,4,3,1,2,4,6,4,2,1,0,1,3,5,3,1,0 };
 	
 	// levelNames to make our levels prettier
 	// For more: https://en.wikipedia.org/wiki/List_of_most_massive_black_holes
+
 	
 	public static final String[] levelName = new String[] {
 		"Saggitarius A",
@@ -148,8 +152,8 @@ public class GravityGrid extends Game {
 	public static final String[] levelMessage = new String[] {
 		
 		"Red planets can only be moved diagonally to other red planets.", // 1
-		"Planets can start out not touching other planets...", //2
-		"... but if you do move a planet, you must follow the placement rules for that planet color.", //3
+		"Planets in some systems start out misaligned. That's okay! But if you MOVE a planet, you must follow that planet's rules.", //2
+		"Red planets are always diagonal.", //3
 		"Blue planets can only be moved next to other blue planets, on any side except diagonally.", //4
 		"Planets that start out in violation of their rules can finish that way, too, as long as you don't move them.",//5
 		"",//6
@@ -414,11 +418,11 @@ public class GravityGrid extends Game {
 	} 
 	
 	public void storeSaveState() {
-		
-		ini.putInteger("a", this.currentLevel); 
+
+		ini.putInteger("a", this.currentLevel);
 		ini.putInteger("b", this.darkMatterCount);
 		ini.putLong("c", this.timerStartTime);
-		
+
 		ini.flush(); 
 		
 	}
@@ -466,6 +470,7 @@ public class GravityGrid extends Game {
 	}
 	
 	public void create() {
+
 
 		// Prepopulate our screen geometry
 		this.screenWidth = Gdx.graphics.getWidth();
