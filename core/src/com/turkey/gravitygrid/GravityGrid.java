@@ -32,8 +32,6 @@ public class GravityGrid extends Game {
 
 	Preferences ini;
 
-	private ArrayList<Level> level; // The list of all our levels
-
 	AssetManager assets = new AssetManager(); // Asset manager
 
 	// Timer variables. We implement the timer in this main Game class because we want it to be
@@ -152,34 +150,33 @@ public class GravityGrid extends Game {
 		return false;
 	}
 
-	/* Default values for level progress. Stores the <status,total_attempts,num_moves_took,points_earned> of each level */
+	/* Default values for level progress. Stores the <status,total_attempts,total_moves_attempted,moves_to_win,points_earned> of each level */
 	public int[][] levelCompletionInfo = new int[][] { // This will ALWAYS instantiate to zero values
-			{0,0,0,0}, // 1
-			{0,0,0,0}, // 2
-			{0,0,0,0}, // 3
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0}, // 10
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0}, // 15
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0}, // 20
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0},
+			{0,0,0,0,0}, // 1
+			{0,0,0,0,0}, // 2
+			{0,0,0,0,0}, // 3
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0}, // 10
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0}, // 15
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0}, // 20
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
 	};
-
 
 	/* Level messages. Displayed at the bottom of each grid for its associated level */
 	public static final String[] levelMessage = new String[] {
@@ -443,10 +440,29 @@ public class GravityGrid extends Game {
 		return(sb.toString());
 	}
 
-	// This is only called from our LEVEL_COMPLETE modal when we beat a level, so currentLevel will always be watched
-	public void markLevelAsComplete() {
+	// This is only called from our LEVEL_COMPLETE modal when we beat a level, or when we need to update values for a level
+	// (like when we fail a level or close the program)
+	// <status,total_attempts,total_moves_attempted,moves_to_win,points_earned>
+	public void UpdateLevelCompletionInfo(int level, int status, int attempts, int moves, int points) {
+
+		this.levelCompletionInfo[level][0] = status;
+		this.levelCompletionInfo[level][1] += 1; // Add one attempt to this level
+		this.levelCompletionInfo[level][2] += moves; // Total accrued moves this level for all attempts
+
+		// Check if we are marking this level as 1 ("complete"). If we are, then we'll record the moves given as the number of moves
+		// it took to beat this level. If not, we'll keep that at zero, since the level has not been marked complete yet.
+		if(status == 1) {
+			this.levelCompletionInfo[level][3] = moves; // Number moves to beat the game
+			this.levelCompletionInfo[level][4] = points; // Add the number of points we earned by beating this level
+		} else {
+			this.levelCompletionInfo[level][3] = 0;
+			this.levelCompletionInfo[level][4] = 0;
+		}
+
 		// Increment our currentLevel counter so we know the next one to load
 		this.currentLevel++;
+
+		// Finally, save the new values to our preferences file
 		this.storeSaveState();
 	}
 
@@ -473,11 +489,18 @@ public class GravityGrid extends Game {
 
 		if(!serializedValues.isEmpty()) {
 			this.levelCompletionInfo = json.fromJson(int[][].class, serializedValues);
+			this.currentLevel = 0;
 
 			// Compute currentlevel
-			for(int[] list : this.levelCompletionInfo) {
+			computeCurrentLevel:
+			for(int i=0; i<this.levelCompletionInfo.length; i++) {
 				// iterate through and find the earliest level where list[0] (status) is 0, then set that to our currentLevel.
+				if(this.levelCompletionInfo[i][0] == 0){
+					this.currentLevel = i;
+					break computeCurrentLevel;
+				}
 			}
+
 		}
 	}
 
@@ -503,34 +526,6 @@ public class GravityGrid extends Game {
 	}
 
 	public void render() {
-		// Update the global timer. Since we have loaded the previous starttime and elapsedtime,
-		// we need to remember to reset both of them when we have reached 5 lives (dark matter). 
-
-		// Check how many lives we have
-		if(this.darkMatterCount < 5) {
-
-			//Has it been 20 minutes? 
-			if(this.timerElapsedTime > this.darkMatterCooldown) {
-				// If so, reset both timer variables
-				this.timerElapsedTime = 0L;
-				this.timerStartTime = TimeUtils.nanoTime(); // Get a new timestamp
-				this.darkMatterCount++; // Increment our dark matter
-			} else {
-				// It hasn't been 20 minutes, so update our elapsed timer
-
-				// Get a timestamp
-				long rightNow = TimeUtils.nanoTime();
-				this.timerElapsedTime = rightNow - this.timerStartTime;
-			}
-		} else {
-			// Our dark matter is full, so we don't need to do anything except for update our 
-			// start time, which will always ensure we are starting our 20 minute counter from 
-			// the time we lost a life. 
-			this.timerStartTime = TimeUtils.nanoTime();
-		}
-
-		// Check to see if our asset manager is finished loading. If it's not, then let's display the loading screen
-
 
 		super.render(); // important!
 	}

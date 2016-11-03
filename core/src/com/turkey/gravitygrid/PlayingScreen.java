@@ -38,8 +38,8 @@ public class PlayingScreen implements Screen {
     public int thisLevelCurrentBlueTotal;
     public int thisLevelCurrentGreenTotal;
     public int thisLevelCurrentMoves;
-
-    public int bgRand; // Random number for each level's background
+    public int thisLevelCurrentAttempts; // Increased on FAILURE and RESET
+    public int thisLevelBackgroundImageNumber; // Computed in the constructor: (int)currentLevel / 10. So lvl 35 would be bg03.png, and lvl 90 would be (you guessed it) bg09.png
 
     public enum gameState {
         READY, 						// Process tile selections
@@ -430,8 +430,6 @@ public class PlayingScreen implements Screen {
         fingerOnScreen = false;
         readyForInput = true;
 
-        bgRand = MathUtils.random(0,3);
-
         blackHoleRotation = 0.0f;
 
         // Initialize the required color values and the max moves, which are specific elements in the gravityGridLevel array
@@ -442,8 +440,9 @@ public class PlayingScreen implements Screen {
         thisLevelCurrentRedTotal = 0;
         thisLevelCurrentBlueTotal = 0;
         thisLevelCurrentGreenTotal = 0;
-
+        thisLevelCurrentAttempts = 0;
         thisLevelCurrentMoves = 0; // Keep track of how many moves we've taken
+        thisLevelBackgroundImageNumber = this.game.currentLevel / 10;
 
         theGameState = gameState.READY;
 
@@ -579,7 +578,8 @@ public class PlayingScreen implements Screen {
         tileAsteroidImage[2] = game.assets.get("asteroid2.png", Texture.class);
         tileAsteroidImage[3] = game.assets.get("asteroid3.png", Texture.class);
         backgroundImage = new Texture[4];
-        backgroundImage[0] = game.assets.get("bg0.png", Texture.class);
+
+        backgroundImage[0] = game.assets.get("bg0.png", Texture.class); // Levels 0-
         backgroundImage[1] = game.assets.get("bg1.png", Texture.class);
         backgroundImage[2] = game.assets.get("bg2.png", Texture.class);
         backgroundImage[3] = game.assets.get("bg3.png", Texture.class);
@@ -944,10 +944,9 @@ public class PlayingScreen implements Screen {
             }
         }
 
-        // Draw a dynamic background. It will have a base layer that rotates one way and a top layer that
-        // rotates the other way
+        // Draw the background based on the "galaxy," which is just the level#/10. Every ten levels is a new background (i.e., a new galaxy)
         game.batch.setColor(1f,1f,1f,0.75f);
-        game.batch.draw(backgroundImage[1], 0,0,screenWidth, screenHeight);
+        game.batch.draw(backgroundImage[thisLevelBackgroundImageNumber], 0,0,screenWidth, screenHeight);
 
         // Top layer is this alpha-masked image that goes on top
 
@@ -1236,10 +1235,13 @@ public class PlayingScreen implements Screen {
             game.batch.draw(buttonLevelCompleteImage, 0, 0, this.screenWidth, this.whiteSpace);
 
             if(Gdx.input.isTouched()) {
-                // This doesn't work because the restartlevel uses the same Tile()s as the last level. We need to completely rebuild this screen. 
-                game.markLevelAsComplete();
+                game.UpdateLevelCompletionInfo();
+                // RestartLevel uses game.currentLevel to determine which level to load, so it's imperative that
+                // game.UpdateLevelCompletionInfo is called first!
                 RestartLevel();
-                bgRand = MathUtils.random(0,3); // Force new background image
+
+                // TODO: The background should be part of the level/galaxy...
+                backgroundImage = MathUtils.random(0,3); // Force new background image
             }
         }
 
