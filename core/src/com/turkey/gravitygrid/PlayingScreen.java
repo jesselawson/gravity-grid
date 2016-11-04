@@ -400,8 +400,12 @@ public class PlayingScreen implements Screen {
     private TextureRegion tileBluePlanetRegion;
     private TextureRegion tileGreenPlanetRegion;
 
+    private Texture buttonResetImage;
+    Rectangle buttonResetRect;
+    private boolean tryingToReset; // If this is true, user has already pushed the reset button once.
+    private int holdToResetCounter;
+
     private Texture[] backgroundImage;
-    private Texture[] confettiImage;
     Texture tileSunImage;
     Texture tileSunFlareImage;
     TextureRegion tileSunFlareRegion;
@@ -438,6 +442,8 @@ public class PlayingScreen implements Screen {
 
         fingerOnScreen = false;
         readyForInput = true;
+
+        holdToResetCounter = 0;
 
         // Initialize the required color values and the max moves, which are specific elements in the gravityGridLevel array
         thisLevelRedNeeded = game.gravityGridLevel[game.currentLevel][49];
@@ -551,6 +557,11 @@ public class PlayingScreen implements Screen {
 
                 worldCol++;
                 tileNum++;
+
+                // (4-Nov-2016 Jesse) Add a new particle system on each and every tile so that when the level starts, there's a huge burst of stars
+                ParticleEffectPool.PooledEffect levelStartEffect = goodMoveStarburstPool.obtain();
+                levelStartEffect.setPosition(rect.x+(rect.width/2), rect.y+(rect.height/2));
+                particleEffects.add(levelStartEffect);
             }
             worldCol = 0; // Reset column counter
             worldRow++; // Iterate our row counter
@@ -642,16 +653,26 @@ public class PlayingScreen implements Screen {
         buttonFailImage = game.assets.get("buttonFail.png", Texture.class);
         buttonLevelCompleteImage = game.assets.get("buttonLevelComplete.png", Texture.class);
 
+        buttonResetImage = game.assets.get("button/reset.png", Texture.class);
+        tryingToReset = false;
+        buttonResetRect = new Rectangle((screenWidth/7)*6.0f, screenHeight-(screenWidth/7.0f), screenWidth/7.0f, screenWidth/7.0f); // Draw one tile big in upper-right corner
+
         blackHoleImage = game.assets.get("galaxyOverlay.png", Texture.class);
         blackHoleRegion = new TextureRegion(blackHoleImage);
 
 
         // Call this once before the level starts so that we have some initial values
+
         updateCurrentLevelValueTotals();
 
     }
 
     public void RestartLevel() {
+
+        // Reset all the particleEffects in our array that manages them all
+        for (int i = particleEffects.size - 1; i >= 0; i--)
+            particleEffects.get(i).free(); //free all the effects back to the pool
+        particleEffects.clear(); //clear the current effects array
 
         // Set our defaults for our levelCompletionInfo
         thisLevelCurrentAttempts += 1; // It's set to zero when we beat the level and RestartLevel is called afterward
@@ -724,6 +745,12 @@ public class PlayingScreen implements Screen {
 
                 worldCol++;
                 tileNum++;
+
+                // (4-Nov-2016 Jesse) Add a new particle system on each and every tile so that when the level starts, there's a huge burst of stars
+                ParticleEffectPool.PooledEffect levelStartEffect = goodMoveStarburstPool.obtain();
+                levelStartEffect.setPosition(rect.x+(rect.width/2), rect.y+(rect.height/2));
+                particleEffects.add(levelStartEffect);
+
             }
             worldCol = 0; // Reset column counter
             worldRow++; // Iterate our row counter
@@ -734,11 +761,7 @@ public class PlayingScreen implements Screen {
         updateCurrentLevelValueTotals();
         readyForInput = true;
         theGameState = gameState.READY;
-
-        // Reset all the particleEffects in our array that manages them all
-        for (int i = particleEffects.size - 1; i >= 0; i--)
-            particleEffects.get(i).free(); //free all the effects back to the pool
-        particleEffects.clear(); //clear the current effects array
+        tryingToReset = false;
 
         restartLevelSound.play();
     }
@@ -760,12 +783,41 @@ public class PlayingScreen implements Screen {
             theGameState = gameState.OUT_OF_LIVES;
         }*/
 
+        if(tryingToReset) {
+            if(holdToResetCounter > 100) {
+                holdToResetCounter = 0;
+                RestartLevel();
+                tryingToReset = false;
+            } else {
+                holdToResetCounter++;
+            }
+        } else {
+            // reset if we're not holding it down
+            holdToResetCounter = 0;
+        }
+
+        // Had to create a special block here to set tryingToReset=false on the else part of the if(is touched) (because it didn't seem right to stuff it at the bottom of this huge file
+        if(Gdx.input.isTouched()) {
+
+            Vector3 finger = new Vector3();
+            camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+
+            // See if we touched the reset button
+            if (pointInRectangle(buttonResetRect, finger.x, finger.y)) {
+                tryingToReset = true;
+            }
+        } else {
+            tryingToReset = false;
+        }
+
+
         if(Gdx.input.isTouched() ) {
 
             Vector3 finger = new Vector3();
             camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
             if(readyForInput) {
+
                 // Only process input if the game state is READY
                 if(theGameState == gameState.READY) {
 
@@ -808,7 +860,7 @@ public class PlayingScreen implements Screen {
 
                     // Check to see if our gamestate is still ready. if it is, that means we didn't touch a tile.
                     // We can now go ahead and check to see if the player pressed any UI elements.
-                    // TODO: See above. Add logic here to check for UI element presses
+
                 }
             }
 
@@ -1172,10 +1224,12 @@ public class PlayingScreen implements Screen {
         game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
 
         game.regularFont.setColor(1f,1f,1f,1f);
-        game.regularFont.draw(game.batch, "Level "+(game.currentLevel+1)+": "+game.levelName[game.currentLevel], 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.regularFont.draw(game.batch, "Level "+(game.currentLevel+1)+". Par: "+thisLevelMaxMoves+", You: "+thisLevelCurrentMoves, 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
 
-        game.regularFont.setColor(1f,1f,1f,1f);
-        game.regularFont.draw(game.batch, "Moves Left: "+(thisLevelMaxMoves - thisLevelCurrentMoves), 5, screenHeight-(2.5f*this.game.fontSize), this.screenWidth-10, 1, false);
+        if(tryingToReset) {
+            game.regularFont.setColor(1f,1f,1f,1f);
+            game.regularFont.draw(game.batch, "(hold to reset level)", 5, screenHeight-(2.5f*this.game.fontSize), this.screenWidth-10, 1, false);
+        }
 
         game.pixelFont.setColor(game.colorRed);
         game.pixelFont.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
@@ -1184,7 +1238,9 @@ public class PlayingScreen implements Screen {
         game.pixelFont.setColor(game.colorGreen);
         game.pixelFont.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
 
-
+        // Draw the reset button
+        game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        game.batch.draw(buttonResetImage, buttonResetRect.x, buttonResetRect.y, buttonResetRect.width, buttonResetRect.height);
 
         // (27-Oct-2016 Jesse) Removing the dark matter from being displayed at the top
         // Display the dark matter (lives) at the top of the screen

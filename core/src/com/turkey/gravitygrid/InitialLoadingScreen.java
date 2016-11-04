@@ -124,6 +124,7 @@ public class InitialLoadingScreen implements Screen {
         // Buttons
         this.game.assets.load("button/continue.png", Texture.class);
         this.game.assets.load("button/newgame.png", Texture.class);
+        this.game.assets.load("button/reset.png", Texture.class);
 
         // Particle effects
         this.game.assets.load("particles/starfield.p", ParticleEffect.class);
