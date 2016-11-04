@@ -127,6 +127,8 @@ public class InitialLoadingScreen implements Screen {
 
         // Particle effects
         this.game.assets.load("particles/starfield.p", ParticleEffect.class);
+        this.game.assets.load("particles/goodmovestarburst.p", ParticleEffect.class);
+        this.game.assets.load("particles/badmovestarburst.p", ParticleEffect.class);
 
     }
 

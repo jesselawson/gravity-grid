@@ -13,11 +13,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 
@@ -45,6 +47,13 @@ public class PlayingScreen implements Screen {
 
     public ParticleEffect levelCompleteFireworks;
     public ParticleEffect backgroundStarfieldParticles;
+    public ParticleEffect goodMoveStarburst;
+    public ParticleEffectPool goodMoveStarburstPool;
+    public ParticleEffect badMoveStarburst;
+    public ParticleEffectPool badMoveStarburstPool;
+
+    // An array of pooled effects to manage all our particle effect systems
+    Array<ParticleEffectPool.PooledEffect> particleEffects = new Array();
 
     public enum gameState {
         READY, 						// Process tile selections
@@ -107,6 +116,7 @@ public class PlayingScreen implements Screen {
             this.tileNum = tileNum;
 
             this.rand = MathUtils.random(0,3);
+
         }
     }
 
@@ -443,7 +453,13 @@ public class PlayingScreen implements Screen {
 
         // Init our levelComplete particle effects
         levelCompleteFireworks = new ParticleEffect();
-        levelCompleteFireworks.load(Gdx.files.internal("particles/fireworks.p"), Gdx.files.internal("particles"));
+        levelCompleteFireworks.load(Gdx.files.internal("particles/bigstarburst.p"), Gdx.files.internal("particles"));
+
+        goodMoveStarburst = game.assets.get("particles/goodmovestarburst.p", ParticleEffect.class); // Template effect
+        goodMoveStarburstPool = new ParticleEffectPool(goodMoveStarburst, 0, 50);                   // Pool for the template
+
+        badMoveStarburst = game.assets.get("particles/badmovestarburst.p", ParticleEffect.class);   // Template effect
+        badMoveStarburstPool = new ParticleEffectPool(badMoveStarburst, 0, 50);                     // Pool for the template
 
         backgroundStarfieldParticles = game.assets.get("particles/starfield.p", ParticleEffect.class);
 
@@ -719,6 +735,11 @@ public class PlayingScreen implements Screen {
         readyForInput = true;
         theGameState = gameState.READY;
 
+        // Reset all the particleEffects in our array that manages them all
+        for (int i = particleEffects.size - 1; i >= 0; i--)
+            particleEffects.get(i).free(); //free all the effects back to the pool
+        particleEffects.clear(); //clear the current effects array
+
         restartLevelSound.play();
     }
 
@@ -907,6 +928,13 @@ public class PlayingScreen implements Screen {
 
                                     goodMoveAttemptSound.play();
 
+                                    // Create a new particle system at this tile. The system is generated independently of the tile itself; we only need to create it here to
+                                    // know the to.rect values (i.e., where the system will originate)
+                                    ParticleEffectPool.PooledEffect effect = goodMoveStarburstPool.obtain();
+                                    effect.setPosition(to.rect.x+(0.5f*to.rect.width), to.rect.y+(0.5f*to.rect.height));
+                                    // Add our new particle system to the particleeffects array
+                                    particleEffects.add(effect);
+
 
                                     if(	thisLevelRedNeeded == thisLevelCurrentRedTotal &&
                                             thisLevelBlueNeeded == thisLevelCurrentBlueTotal &&
@@ -940,6 +968,11 @@ public class PlayingScreen implements Screen {
                                     theGameState = gameState.READY;
 
                                     cannotMoveSound.play();
+                                    // Create a new particle system at this tile
+                                    ParticleEffectPool.PooledEffect effect = badMoveStarburstPool.obtain();
+                                    effect.setPosition(to.rect.x+(0.5f*to.rect.width), to.rect.y+(0.5f*to.rect.height));
+                                    // Add our new particle system to the particleeffects array
+                                    particleEffects.add(effect);
 
                                     break moveSelectedTile;
                                 }
@@ -974,8 +1007,6 @@ public class PlayingScreen implements Screen {
             game.batch.setColor(1f,1f,1f,1f);
 
             // Draw the value (which are just numbers) image, then the border image (tileBlankImage)
-            game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
-            game.batch.draw(tileBlankImage, tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
 
             // (22-Aug-2015 Jesse) Sami had an idea to have the planets sized according to their
             // tile value. I tried this out a few times but the planets changing sizes continuously 
@@ -987,8 +1018,10 @@ public class PlayingScreen implements Screen {
             // First draw the type of tile it is and the value of the tile if it's a planet
             switch(tile.type) {
                 case NONE:
-                    //game.regularFont.setColor(1f,1f,1f,0.5f);
-                    //game.regularFont.draw(game.batch, ""+tile.value, tile.rect.x+18, tile.rect.y+38);
+                    // Flip these if you want the text brighter. right now it's behind the transparent tileir
+                    game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
+                    game.batch.draw(tileBlankImage, tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
+
                     break;
                 case REDPLANET:
                     //game.batch.setColor(game.colorRed);
@@ -1047,24 +1080,16 @@ public class PlayingScreen implements Screen {
                     break;
 
                 case MOVECOMPLETE:
-
-                    // Move complete means that we should increment our frame counter and set the texture
-                    // of the appropriate frame
-                    // If our frame counter gets high enough (i.e., we're done with the animation, we'll set
-                    // the tile status to be NONE
-
+                    // Even though we use a particle system to display some bursting stars, I also want to display the sunflare
                     // If we still have a frame in our animation
                     if(tile.overlayFrameNumber < 12) {
-
                         game.batch.setColor(1.0f,1.0f,1.0f,1f-(tile.overlayFrameNumber/12.0f));
-
                         game.batch.draw(tileSunFlareRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, 1.5f*(.5f*tile.overlayFrameNumber), 1.5f*(.5f*tile.overlayFrameNumber), tile.overlayFrameNumber*13.0f);
                         // Add deltatime to our time since last frame
                         if (TimeUtils.nanoTime() - tile.timeSinceLastFrame > 25000000) {
                             tile.overlayFrameNumber++;
                             tile.timeSinceLastFrame = TimeUtils.nanoTime();
                         }
-
                     } else {
                         // Reset everything if we're done with our animation
                         tile.overlayFrameNumber = 0;
@@ -1075,30 +1100,7 @@ public class PlayingScreen implements Screen {
                     break;
 
                 case CANNOTMOVE:
-
-                    // CANNOTMOVE means that we tried to move to a tile that was outside the bounds of our movement rules.
-                    // See function canMoveAccordingToRules() for more details on what causes this to trigger.
-
-                    // If we still have a frame in our animation
-                    if(tile.overlayFrameNumber < 6) {
-
-                        //game.batch.setColor(game.colorRed);
-                        //game.regularFont.draw(game.batch, "TileNum="+tile.tileNum, 50,600);
-                        game.batch.draw(tileOverlayRegion[tile.overlayFrameNumber], tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, 1.0f, 1.0f, 0.0f);
-
-                        // Add deltatime to our time since last frame
-                        if (TimeUtils.nanoTime() - tile.timeSinceLastFrame > 25000000) {
-                            tile.overlayFrameNumber++;
-                            tile.timeSinceLastFrame = TimeUtils.nanoTime();
-                        }
-
-                    } else {
-                        // Reset everything if we're done with our animation
-                        tile.overlayFrameNumber = 0;
-                        tile.timeSinceLastFrame = 0f;
                         tile.status = TileStatus.NONE;
-                    }
-
                     break;
 
                 default: break;
@@ -1108,6 +1110,17 @@ public class PlayingScreen implements Screen {
 
             cellNumber++;
         }
+
+        // Draw all particle effects from our array that holds all currently running particle effect systems
+        for (int i = particleEffects.size - 1; i >= 0; i--) {
+            ParticleEffectPool.PooledEffect effect = particleEffects.get(i);
+            effect.draw(game.batch, delta*1.5f);
+            if (effect.isComplete()) {
+                effect.free();
+                particleEffects.removeIndex(i);
+            }
+        }
+
 
 
         // Last but not least, draw any UI elements (or ads if you're an asshat [hint: don't be an asshat, Jesse])
