@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
@@ -120,42 +121,12 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("buttonLevelComplete.png", Texture.class);
         this.game.assets.load("galaxyOverlay.png", Texture.class);
 
-        // Load our confetti!
-        this.game.assets.load("confetti/confettiFrame01.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame02.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame03.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame04.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame05.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame06.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame07.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame08.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame09.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame10.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame11.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame12.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame13.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame14.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame15.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame16.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame17.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame18.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame19.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame20.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame21.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame22.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame23.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame24.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame25.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame26.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame27.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame28.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame29.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame30.png", Texture.class);
-        this.game.assets.load("confetti/confettiFrame31.png", Texture.class);
-
         // Buttons
         this.game.assets.load("button/continue.png", Texture.class);
         this.game.assets.load("button/newgame.png", Texture.class);
+
+        // Particle effects
+        this.game.assets.load("particles/starfield.p", ParticleEffect.class);
 
     }
 

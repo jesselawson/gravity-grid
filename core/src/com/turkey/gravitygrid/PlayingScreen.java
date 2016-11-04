@@ -12,10 +12,12 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.TimeUtils;
 
 
@@ -40,6 +42,9 @@ public class PlayingScreen implements Screen {
     public int thisLevelCurrentMoves;
     public int thisLevelCurrentAttempts; // Increased on FAILURE and RESET
     public int thisLevelBackgroundImageNumber; // Computed in the constructor: (int)currentLevel / 10. So lvl 35 would be bg03.png, and lvl 90 would be (you guessed it) bg09.png
+
+    public ParticleEffect levelCompleteFireworks;
+    public ParticleEffect backgroundStarfieldParticles;
 
     public enum gameState {
         READY, 						// Process tile selections
@@ -360,18 +365,13 @@ public class PlayingScreen implements Screen {
         return outcome;
     }
 
-
-
-
-
     private ArrayList<Tile> tile; // Single array of tiles, instead of multidimensional
 
     private float backgroundStarfieldPosition; // used to keep track of the background spiral that goes over the background images
 
+
     private int tileWidth;
-
     private int tileHeight;
-
     private int whiteSpace;
 
     private int headSpace; // This accounts for the header column numbers
@@ -391,6 +391,7 @@ public class PlayingScreen implements Screen {
     private TextureRegion tileGreenPlanetRegion;
 
     private Texture[] backgroundImage;
+    private Texture[] confettiImage;
     Texture tileSunImage;
     Texture tileSunFlareImage;
     TextureRegion tileSunFlareRegion;
@@ -421,16 +422,12 @@ public class PlayingScreen implements Screen {
 
     gameState theGameState;
 
-    public float blackHoleRotation;
-
     public PlayingScreen(GravityGrid game) {
 
         this.game = game;
 
         fingerOnScreen = false;
         readyForInput = true;
-
-        blackHoleRotation = 0.0f;
 
         // Initialize the required color values and the max moves, which are specific elements in the gravityGridLevel array
         thisLevelRedNeeded = game.gravityGridLevel[game.currentLevel][49];
@@ -444,6 +441,12 @@ public class PlayingScreen implements Screen {
         thisLevelCurrentMoves = 0; // Keep track of how many moves we've taken
         thisLevelBackgroundImageNumber = this.game.currentLevel / 10;
 
+        // Init our levelComplete particle effects
+        levelCompleteFireworks = new ParticleEffect();
+        levelCompleteFireworks.load(Gdx.files.internal("particles/fireworks.p"), Gdx.files.internal("particles"));
+
+        backgroundStarfieldParticles = game.assets.get("particles/starfield.p", ParticleEffect.class);
+
         theGameState = gameState.READY;
 
         finger = new Rectangle();
@@ -454,7 +457,8 @@ public class PlayingScreen implements Screen {
 
         // create the camera
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, screenWidth, screenHeight);
+        camera.setToOrtho(false, 1080, 1920); // Hard-set these to control for multiple display sizes
+
 
         // The amount of space we want for the top of the grid where the numbers will be displayed.
         // This comes out to one half of the width (or height) of one tile.
@@ -625,6 +629,7 @@ public class PlayingScreen implements Screen {
         blackHoleImage = game.assets.get("galaxyOverlay.png", Texture.class);
         blackHoleRegion = new TextureRegion(blackHoleImage);
 
+
         // Call this once before the level starts so that we have some initial values
         updateCurrentLevelValueTotals();
 
@@ -632,7 +637,11 @@ public class PlayingScreen implements Screen {
 
     public void RestartLevel() {
 
-        // This also works as a level changer because we can increment the game.currentLevel and then call RestartLevel() which reloads everything,
+        // Set our defaults for our levelCompletionInfo
+        thisLevelCurrentAttempts += 1; // It's set to zero when we beat the level and RestartLevel is called afterward
+        thisLevelCurrentMoves = 0;
+
+        // This also works as a level changer because we can increment the game.currentLevel (via UpdateLevelCompletionInfo) and then call RestartLevel() which reloads everything,
         // essentially loading up a new level. 
 
         // Let's reset the value totals needed just in case this is a new level. If we don't do this, the old values from the previous level seep through.
@@ -640,7 +649,6 @@ public class PlayingScreen implements Screen {
         thisLevelBlueNeeded = game.gravityGridLevel[game.currentLevel][50];
         thisLevelGreenNeeded = game.gravityGridLevel[game.currentLevel][51];
         thisLevelMaxMoves = game.gravityGridLevel[game.currentLevel][52];
-
 
         // Reset the tiles
         int worldRow = 0;
@@ -708,6 +716,7 @@ public class PlayingScreen implements Screen {
         // Reset the variables 
         thisLevelCurrentMoves = 0;
         updateCurrentLevelValueTotals();
+        readyForInput = true;
         theGameState = gameState.READY;
 
         restartLevelSound.play();
@@ -721,14 +730,14 @@ public class PlayingScreen implements Screen {
 
     }
 
-    public void PlayLevel() {
+    public void PlayLevel(float delta) {
 
         // If we are out of dark matter, then ensure that we update our game state appropriately
         // Forcing the gamestate here should ensure that the rest of the screen renders but does not
         // process input. 
-        if(game.darkMatterCount <= 0) {
+        /*if(game.darkMatterCount <= 0) {
             theGameState = gameState.OUT_OF_LIVES;
-        }
+        }*/
 
         if(Gdx.input.isTouched() ) {
 
@@ -906,17 +915,17 @@ public class PlayingScreen implements Screen {
                                         levelCompleteSound.play();
 
                                     } else {
-                                        // We have not beaten this level, so let's make sure we're not out of moves
-                                        if(thisLevelCurrentMoves == thisLevelMaxMoves) {
-                                            theGameState = gameState.OUT_OF_MOVES;
+                                        // We have not beaten the level, so let's
+                                        //if(thisLevelCurrentMoves > thisLevelMaxMoves) {
+                                            //theGameState = gameState.OUT_OF_MOVES;
 
-                                            outOfMovesSound.play();
+                                            //outOfMovesSound.play();
 
-                                        } else {
+                                        //} else {
                                             // We haven't beaten the level && we haven't maxed out our moves, so
                                             // go back to ready
                                             theGameState = gameState.READY;
-                                        }
+                                        //}
                                     }
 
                                     break moveSelectedTile;
@@ -948,17 +957,13 @@ public class PlayingScreen implements Screen {
         game.batch.setColor(1f,1f,1f,0.75f);
         game.batch.draw(backgroundImage[thisLevelBackgroundImageNumber], 0,0,screenWidth, screenHeight);
 
-        // Top layer is this alpha-masked image that goes on top
 
-        if(backgroundStarfieldPosition >= 0.0f) {
-            backgroundStarfieldPosition = -1680.0f;
-        }
-
-        game.batch.setColor(1f,1f,1f,0.85f);
-        game.batch.draw(backgroundStarfieldRegion, 0,backgroundStarfieldPosition,screenWidth/2,screenHeight/2, screenWidth, 2*screenHeight, 1.0f, 1.0f, 0.0f);
-
-
-        backgroundStarfieldPosition += 1.0f;
+        // The starfield kept rendering at approximately half width and half height. I edited the particle p file to have
+        // spawn width: 2160
+        // spawn height: 3840
+        // Not sure why this was necessary... and what effect does this have on different rendering displays? Nothing, because I am hard-setting the orthographic projection?
+        backgroundStarfieldParticles.setPosition(0,0);
+        backgroundStarfieldParticles.draw(game.batch, delta);
 
         int cellNumber = 0;
 
@@ -1019,8 +1024,6 @@ public class PlayingScreen implements Screen {
                 default:
                     break;
             }
-
-
 
             // Next draw the status (if selected or moving or failed to move or whatnot)
             switch(tile.status) {
@@ -1138,6 +1141,10 @@ public class PlayingScreen implements Screen {
 		#/# | #/# | #/#
 		*/
 
+
+
+
+
         // Trick to get accurate lines:
         // Set the Y value of the rendered fonts to (lineNumberFromTop*(screenHeight-this.game.fontSize))
 
@@ -1194,7 +1201,7 @@ public class PlayingScreen implements Screen {
         game.batch.draw(singularityImage, (screenWidth/2) +16 +2 +32 +2,767,32,32);
         */
 
-        // Display the level message, if we have one, and only if the gameState is ready or tile selected or good move attempt
+        // Display the level message if we have one, and only if the gameState is ready or tile selected or good move attempt
         if(theGameState == gameState.READY || theGameState == gameState.TILE_SELECTED || theGameState == gameState.GOOD_MOVE_ATTEMPT) {
 
             // The location of the top line should be below the last tile. We can find this easily:
@@ -1216,7 +1223,10 @@ public class PlayingScreen implements Screen {
         //    game.regularFont.draw(game.batch, ""+game.toPrettyDate(diff)+" > ", 5, 800);
         //}
 
-        // Another UI element is the button that goes to another level. This is only displayed if 
+        // (3-Nov-2016 Jesse) Removing the OUT_OF_MOVES gamestate because I switched to a PAR value for levels.
+        /*
+        // Another UI element is the button that goes to another level. This is only displayed if
+
         // the gamestate is LEVEL_COMPLETE. Alternatively, if we're OUT_OF_MOVES, we'll display a "Restart Level" button.
         if(theGameState == gameState.OUT_OF_MOVES) {
             game.batch.setColor(1f,1f,1f,1f);
@@ -1229,53 +1239,43 @@ public class PlayingScreen implements Screen {
 
             }
         }
+        */
 
+        // The level has been marked complete, so let's display our awesome level complete confetti loop!
         if(theGameState == gameState.LEVEL_COMPLETE) {
+
             game.batch.setColor(1f,1f,1f,1f);
+
+            // Render our fireworks
+            levelCompleteFireworks.setPosition(0,0);
+            levelCompleteFireworks.draw(game.batch, delta);
+
+            // Draw the level complete modal
             game.batch.draw(buttonLevelCompleteImage, 0, 0, this.screenWidth, this.whiteSpace);
 
             if(Gdx.input.isTouched()) {
-                game.UpdateLevelCompletionInfo();
+
+                // This will update our currentLevel
+                this.game.UpdateLevelCompletionInfo(this.game.currentLevel, 1, this.thisLevelCurrentAttempts, this.thisLevelCurrentMoves, 100);
+
                 // RestartLevel uses game.currentLevel to determine which level to load, so it's imperative that
                 // game.UpdateLevelCompletionInfo is called first!
                 RestartLevel();
-
-                // TODO: The background should be part of the level/galaxy...
-                backgroundImage = MathUtils.random(0,3); // Force new background image
             }
+
+
         }
 
-        // Also check to see if we're out of lives 
-        if(theGameState == gameState.OUT_OF_LIVES) {
+        //TODO: Create an in-game menu
+        /*
+        if(theGameState == gameState.IN_GAME_MENU) {
 
             game.batch.setColor(1f,0f,0f,0.8f);
             game.batch.draw(backgroundImage[0], 0, 0, screenWidth, screenHeight);
             game.batch.setColor(1f,1f,1f,1f);
 
-
-            // Display a rotating blackhole over our screen 
-            game.batch.setColor(1f,1f,1f,1f);
-            //game.batch.draw(blackHoleRegion, 0, (screenHeight/2)-200, 200, 200, screenWidth,(screenHeight/2)+200, 3.0f, 3.0f, blackHoleRotation);
-            game.batch.draw(blackHoleRegion, 0, 0, 200, 200, 400,400, 3.0f, 3.0f, blackHoleRotation);
-
-
-
-            // Update the blackHoleRotation
-            if(blackHoleRotation <= 354.0f){
-                blackHoleRotation += 6.0f;
-            }
-
-            if(blackHoleRotation >=360.0f) {
-                blackHoleRotation = 0.0f;
-            }
-
-            // For libgdx, the [1, true] part at the end means "Center the text" (1) and "wrap to screenWidth" (true)
-			/*game.regularFont.draw(game.batch, "You're Out of Dark Matter!\nSince this is the FREE version of Gravity Grid, each time you fail a level you spend one Dark Matter point. When you've used up all of your five total Dark Matter points, you have to wait for new Dark Matter to recharge.\nNew dark matter in:\n"+(game.toPrettyDate(game.darkMatterCooldown - game.timerElapsedTime))+"\n\nIf you just want to play the puzzles without all this Dark Matter stuff, the $1.99 version of this game has zero ads, zero in-app purchases, and zero Dark Matter.", 0, (screenHeight/2)+140, screenWidth, 1, true);
-			*/
-            game.regularFont.draw(game.batch, "You're Out of Dark Matter!\nIn the free version of Gravity Grid, each time you fail a level you spend one Dark Matter point. When you've used up all of your five total Dark Matter points, you have to wait for a new Dark Matter to recharge (every twenty minutes).\nNew dark matter in:\n"+(game.toPrettyDate(game.darkMatterCooldown - game.timerElapsedTime))+"\n\nSince I don't like in-app purchases and intrusive ads, this was how I gently encourage people who like the game to purchase the full version. If this is a bad idea, please let me know!\n\nAnd thank you for participating in the alpha release!", 0, (screenHeight/2)+180, screenWidth, 1, true);
-
-
         }
+        */
 
 
         game.batch.end();
@@ -1323,7 +1323,7 @@ public class PlayingScreen implements Screen {
 
         // Switch the gamestate to ensure that we are not OUT_OF_MOVES or LEVEL_COMPLETE
 
-        PlayLevel();
+        PlayLevel(delta);
 
     }
 
@@ -1355,56 +1355,7 @@ public class PlayingScreen implements Screen {
 
     @Override
     public void dispose() {
-        tileBlankImage.dispose();
-        tileRedPlanetImage.dispose();
-        tileBluePlanetImage.dispose();
-        tileGreenPlanetImage.dispose();
 
-        tileSunImage.dispose();
-        tileSunFlareImage.dispose();
-
-        tileAsteroidImage[0].dispose();
-        tileAsteroidImage[1].dispose();
-        tileAsteroidImage[2].dispose();
-        tileAsteroidImage[3].dispose();
-
-        backgroundImage[0].dispose();
-        backgroundImage[1].dispose();
-        backgroundImage[2].dispose();
-        backgroundImage[3].dispose();
-
-        tileValueImage[0].dispose();
-        tileValueImage[1].dispose();
-        tileValueImage[2].dispose();
-        tileValueImage[3].dispose();
-        tileValueImage[4].dispose();
-        tileValueImage[5].dispose();
-        tileValueImage[6].dispose();
-        tileValueImage[8].dispose();
-        tileValueImage[10].dispose();
-
-        tileOverlayImage[0].dispose();
-        tileOverlayImage[1].dispose();
-        tileOverlayImage[2].dispose();
-        tileOverlayImage[3].dispose();
-        tileOverlayImage[4].dispose();
-        tileOverlayImage[5].dispose();
-        tileOverlayImage[6].dispose();
-
-        buttonLevelCompleteImage.dispose();
-        buttonFailImage.dispose();
-        backgroundStarfieldImage.dispose();
-
-        singularityImage.dispose();
-        blackHoleImage.dispose();
-
-        tileSelectSound.dispose();
-        tileDeselectSound.dispose();
-        goodMoveAttemptSound.dispose();
-        cannotMoveSound.dispose();
-        outOfMovesSound.dispose();
-        levelCompleteSound.dispose();
-        restartLevelSound.dispose();
 
     }
 
