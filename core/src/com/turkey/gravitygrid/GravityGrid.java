@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.Preferences;
@@ -48,6 +49,10 @@ public class GravityGrid extends Game {
 
 	public int screenWidth;
 	public int screenHeight;
+
+	public boolean fingerOnScreen;
+
+	public boolean gravityMenuActive; // Main Gg menu. If active, super.render does not render, and instead, the main menu displays
 
 	// This is 20 minutes
 	// TRANSITION PLAN BEFORE WE get rid of dark matter entirely: set timer to 1 second
@@ -151,8 +156,8 @@ public class GravityGrid extends Game {
 	}
 
 	/* Default values for level progress. Stores the <status,total_attempts,total_moves_attempted,moves_to_win,points_earned> of each level */
-	public int[][] levelCompletionInfo = new int[][] { // This will ALWAYS instantiate to zero values
-			{0,0,0,0,0}, // 1
+	public static int[][] levelCompletionInfo = new int[][] { // This will ALWAYS instantiate to zero values
+			{1,0,0,0,0}, // 1
 			{0,0,0,0,0}, // 2
 			{0,0,0,0,0}, // 3
 			{0,0,0,0,0},
@@ -176,6 +181,9 @@ public class GravityGrid extends Game {
 			{0,0,0,0,0},
 			{0,0,0,0,0},
 			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0},
+			{0,0,0,0,0}
 	};
 
 	/* Level messages. Displayed at the bottom of each grid for its associated level */
@@ -409,6 +417,11 @@ public class GravityGrid extends Game {
 		return gravityGridLevel[levelNum];
 	}
 
+	// A custom point-in-rectangle collision checker
+	public static boolean pointInRectangle (Rectangle r, float x, float y) {
+		return r.x <= x && r.x + r.width >= x && r.y <= y && r.y + r.height >= y;
+	}
+
 	// toPrettyDate helps us create a MM:SS string for displaying the next time our dark matter
 	// will regenerate
 	public static String toPrettyDate(long nanotime) {
@@ -454,6 +467,10 @@ public class GravityGrid extends Game {
 		if(status == 1) {
 			this.levelCompletionInfo[level][3] = moves; // Number moves to beat the game
 			this.levelCompletionInfo[level][4] = points; // Add the number of points we earned by beating this level
+			// Also mark the next level as ready to play ("1")
+			if(level+1 < this.levelCompletionInfo.length-1) {
+				this.levelCompletionInfo[level+1][0] = 1;
+			}
 		} else {
 			this.levelCompletionInfo[level][3] = 0;
 			this.levelCompletionInfo[level][4] = 0;
@@ -474,7 +491,7 @@ public class GravityGrid extends Game {
 		Json json = new Json();
 
 		// Here we are serializing our array
-		hashTable.put("levels", json.toJson(this.levelCompletionInfo));
+		hashTable.put("levels", json.toJson(levelCompletionInfo));
 
 		// Store it in the preferences file
 		ini.put(hashTable);
@@ -488,26 +505,40 @@ public class GravityGrid extends Game {
 		String serializedValues = ini.getString("levels");
 
 		if(!serializedValues.isEmpty()) {
-			this.levelCompletionInfo = json.fromJson(int[][].class, serializedValues);
+			levelCompletionInfo = json.fromJson(int[][].class, serializedValues);
+			System.out.println("Loaded the following:");
+			for(int a=0; a<levelCompletionInfo.length-1; a++) {
+				System.out.println("Level "+a+": "+levelCompletionInfo[a][0]+","+levelCompletionInfo[a][1]+","+levelCompletionInfo[a][2]+","+levelCompletionInfo[a][3]+".");
+			}
 			this.currentLevel = 0;
+
+			boolean setLevel = false;
 
 			// Compute currentlevel
 			computeCurrentLevel:
-			for(int i=0; i<this.levelCompletionInfo.length; i++) {
-				// iterate through and find the earliest level where list[0] (status) is 0, then set that to our currentLevel.
-				if(this.levelCompletionInfo[i][0] == 0){
+			for(int i=0; i<levelCompletionInfo.length; i++) {
+				// iterate through and find the earliest level where list[0] (status) is 1 (playable), then set that to our currentLevel.
+				if(this.levelCompletionInfo[i][0] == 1){
 					this.currentLevel = i;
+					setLevel = true;
 					break computeCurrentLevel;
 				}
 			}
 
+			if(setLevel == false) {
+				// we iterated through every single one and still didnt find the currentLevel, then we need to set it as the earliest possible locked level
+				// Loop through tiles?
+				// For now:
+				this.currentLevel = 0;
+				this.levelCompletionInfo[0][0] = 1; // hard set the first one. This would only be called if this is a new game
+			}
 		}
 	}
 
 	public void create() {
 
 
-		//map red blue green par darkmatterneeded))
+		fingerOnScreen = false;
 
 		// Prepopulate our screen geometry
 		this.screenWidth = Gdx.graphics.getWidth();
@@ -546,10 +577,18 @@ public class GravityGrid extends Game {
 
 	}
 }
-/* BETA RELEASE
+/*
+
+CODE CLEANUP
+* Get the particle effects pool out of the screens and into its own class or inside the game engine itself
+
+
+
+
+BETA RELEASE
 
 	* More levels!
-	* UNDO button
+	* [DONE] UNDO button as a reset button you hold on each level
 
 ALPHA RELEASE
 

@@ -131,6 +131,20 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("particles/goodmovestarburst.p", ParticleEffect.class);
         this.game.assets.load("particles/badmovestarburst.p", ParticleEffect.class);
 
+        // Assets for LevelSelectScreen
+        this.game.assets.load("levelicons/background.png", Texture.class);
+        this.game.assets.load("levelicons/done.png", Texture.class);
+        this.game.assets.load("levelicons/locked.png", Texture.class);
+        this.game.assets.load("levelicons/play.png", Texture.class);
+
+        // Assets for the in-game menu
+        game.assets.load("menu/blackBackground.png", Texture.class);
+        game.assets.load("menu/cancelButton.png", Texture.class);
+        game.assets.load("menu/levelSelectButton.png", Texture.class);
+        game.assets.load("menu/helpButton.png", Texture.class);
+        game.assets.load("menu/resetButton.png", Texture.class);
+        game.assets.load("menu/menuButton.png", Texture.class);
+
     }
 
 

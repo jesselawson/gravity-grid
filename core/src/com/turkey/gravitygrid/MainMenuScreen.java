@@ -64,8 +64,6 @@ public class MainMenuScreen implements Screen {
 
 		buttonContinueRect = new Rectangle((Gdx.graphics.getWidth()/2)+(Gdx.graphics.getWidth()/4)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
 
-
-		
 	}
 
 	@Override
@@ -100,14 +98,15 @@ public class MainMenuScreen implements Screen {
 				
 
 			// Are we touching the screen? (gross. go wash your hands. you don't know where that screen has been.)
-			if(Gdx.input.isTouched()){
+			if(Gdx.input.justTouched()){
 				// Check which button is pressed
 				Vector3 finger = new Vector3();
 				camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 				if(pointInRectangle(buttonNewGameRect, finger.x, finger.y)) {
 					//game.setScreen(new NewGameScreen(game)); // maybe NewGameScreen goes through the intro story?
 				} else if(pointInRectangle(buttonContinueRect, finger.x, finger.y)) {
-					game.setScreen(new PlayingScreen(game)); // Will pickup based on what we read from the player files (the ini)
+					game.setScreen(new LevelSelectScreen(game)); // Will pickup based on what we read from the player files (the ini)
+					// Really, this should be sending us to the LevelSelectScreen
 				}
 
 			}

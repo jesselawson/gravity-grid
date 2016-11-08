@@ -18,7 +18,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -32,6 +31,14 @@ public class PlayingScreen implements Screen {
 
     public boolean fingerOnScreen; // Are we getting input?
     public boolean readyForInput; // Can we handle input?
+
+    private int screenWidth = Gdx.graphics.getWidth();
+    private int screenHeight = Gdx.graphics.getHeight();
+
+    Rectangle inGameMenuResetButtonRect;
+    Rectangle inGameMenuLevelSelectButtonRect;
+    Rectangle inGameMenuHelpButtonRect;
+
 
     // On create, these are loaded according to the currentLevel that is managed in the GravityGrid class
     public int thisLevelRedNeeded;
@@ -51,6 +58,14 @@ public class PlayingScreen implements Screen {
     public ParticleEffectPool goodMoveStarburstPool;
     public ParticleEffect badMoveStarburst;
     public ParticleEffectPool badMoveStarburstPool;
+
+    public boolean inGameMenuActive;
+    public Texture inGameMenuButtonImage;
+    public Texture inGameMenuBackgroundImage;
+    public Texture inGameMenuCancelButtonImage;
+    public Texture inGameMenuResetButtonImage;
+    public Texture inGameMenuLevelSelectButtonImage;
+    public Texture inGameMenuHelpButtonImage;
 
     // An array of pooled effects to manage all our particle effect systems
     Array<ParticleEffectPool.PooledEffect> particleEffects = new Array();
@@ -387,8 +402,7 @@ public class PlayingScreen implements Screen {
     private int headSpace; // This accounts for the header column numbers
     private int leftSpace; // This accounts for the left column numbers
 
-    private int screenWidth = Gdx.graphics.getWidth();
-    private int screenHeight = Gdx.graphics.getHeight();
+
 
     // All the textures we use
     private Texture tileBlankImage;
@@ -400,8 +414,7 @@ public class PlayingScreen implements Screen {
     private TextureRegion tileBluePlanetRegion;
     private TextureRegion tileGreenPlanetRegion;
 
-    private Texture buttonResetImage;
-    Rectangle buttonResetRect;
+    Rectangle inGameMenuButtonRect;
     private boolean tryingToReset; // If this is true, user has already pushed the reset button once.
     private int holdToResetCounter;
 
@@ -653,12 +666,24 @@ public class PlayingScreen implements Screen {
         buttonFailImage = game.assets.get("buttonFail.png", Texture.class);
         buttonLevelCompleteImage = game.assets.get("buttonLevelComplete.png", Texture.class);
 
-        buttonResetImage = game.assets.get("button/reset.png", Texture.class);
         tryingToReset = false;
-        buttonResetRect = new Rectangle((screenWidth/7)*6.0f, screenHeight-(screenWidth/7.0f), screenWidth/7.0f, screenWidth/7.0f); // Draw one tile big in upper-right corner
+        inGameMenuButtonRect = new Rectangle((screenWidth/7)*6.0f, screenHeight-(screenWidth/7.0f), screenWidth/7.0f, screenWidth/7.0f); // Draw one tile big in upper-right corner
 
         blackHoleImage = game.assets.get("galaxyOverlay.png", Texture.class);
         blackHoleRegion = new TextureRegion(blackHoleImage);
+
+        inGameMenuActive = false;
+        inGameMenuBackgroundImage = game.assets.get("menu/blackBackground.png", Texture.class);
+        inGameMenuCancelButtonImage = game.assets.get("menu/cancelButton.png", Texture.class);
+        inGameMenuResetButtonImage = game.assets.get("menu/resetButton.png", Texture.class);
+        inGameMenuLevelSelectButtonImage = game.assets.get("menu/levelSelectButton.png", Texture.class);
+        inGameMenuHelpButtonImage = game.assets.get("menu/helpButton.png", Texture.class);
+        inGameMenuButtonImage = game.assets.get("menu/menuButton.png", Texture.class);
+
+        inGameMenuResetButtonRect = new Rectangle(0, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
+        inGameMenuLevelSelectButtonRect = new Rectangle(this.screenWidth/3.0f, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
+        inGameMenuHelpButtonRect = new Rectangle((this.screenWidth/3)*2, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
+
 
 
         // Call this once before the level starts so that we have some initial values
@@ -772,166 +797,171 @@ public class PlayingScreen implements Screen {
 
     public void LevelComplete() {
 
+
+
     }
 
     public void PlayLevel(float delta) {
 
-        // If we are out of dark matter, then ensure that we update our game state appropriately
-        // Forcing the gamestate here should ensure that the rest of the screen renders but does not
-        // process input. 
-        /*if(game.darkMatterCount <= 0) {
-            theGameState = gameState.OUT_OF_LIVES;
-        }*/
+        // Check for input
+            if (Gdx.input.justTouched()) {
 
-        if(tryingToReset) {
-            if(holdToResetCounter > 100) {
-                holdToResetCounter = 0;
-                RestartLevel();
-                tryingToReset = false;
-            } else {
-                holdToResetCounter++;
+                Vector3 finger = new Vector3();
+                camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+
+                if (theGameState == gameState.IN_GAME_MENU) {
+
+                    // Did we tap cancel button?
+                    if (pointInRectangle(inGameMenuButtonRect, finger.x, finger.y)) {
+                        System.out.println("Exiting in-game menu");
+                        theGameState = gameState.READY;
+                        readyForInput = false;
+                    }
+
+                    // Did we reset?
+                    if (pointInRectangle(inGameMenuResetButtonRect, finger.x, finger.y)) {
+                        RestartLevel();
+                    }
+                    // Did we tap level select?
+                    if (pointInRectangle(inGameMenuLevelSelectButtonRect, finger.x, finger.y)) {
+                        game.setScreen(new LevelSelectScreen(game));
+                    }
+
+                    // Did we tap help button?
+                    if (pointInRectangle(inGameMenuHelpButtonRect, finger.x, finger.y)) {
+                        // TODO: Add a help screen
+                    }
+                }
             }
-        } else {
-            // reset if we're not holding it down
-            holdToResetCounter = 0;
-        }
 
-        // Had to create a special block here to set tryingToReset=false on the else part of the if(is touched) (because it didn't seem right to stuff it at the bottom of this huge file
-        if(Gdx.input.isTouched()) {
+        if (Gdx.input.isTouched()) {
 
             Vector3 finger = new Vector3();
             camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
-            // See if we touched the reset button
-            if (pointInRectangle(buttonResetRect, finger.x, finger.y)) {
-                tryingToReset = true;
-            }
-        } else {
-            tryingToReset = false;
-        }
+                if (readyForInput) {
+
+                    if(theGameState != gameState.IN_GAME_MENU) {
+                        if(pointInRectangle(inGameMenuButtonRect, finger.x, finger.y)) {
+                            // Make sure there was a separate touch than the one that caused the menu to appear
+                                theGameState = gameState.IN_GAME_MENU;
+                        }
+                    }
+
+                    // Only process input if the game state is READY
+                    if (theGameState == gameState.READY) {
+
+                        //game.regularFont.setColor(1f,1f,1f,1f);
+                        //game.regularFont.draw(game.batch, ""+finger.x + ","+finger.y, 240,30);
+
+                        // If we touched the screen during READY state, check to see if we touched a planet.
+                        // If we did, mark it as selected.
+                        // The `checkTiles` below is how you add a break in Java.
+                        checkTiles:
+                        for (Tile tile : this.tile) {
+                            // We only care about tiles that are planets. Anything else can't be touched (for now).
+                            // TODO: Add logic for handling input of MENU and HELP buttons outside of the checkTiles section below.
+                            if (tile.type == TileType.REDPLANET || tile.type == TileType.BLUEPLANET || tile.type == TileType.GREENPLANET) {
+                                if (pointInRectangle(tile.rect, finger.x, finger.y)) {
+
+                                    // DEBUG:
+                                    //game.regularFont.setColor(1f,1f,1f,1f);
+                                    //game.regularFont.draw(game.batch, "Tile "+tile.value, 240,60);
+
+                                    // if game state is ready and tile status is none, that means we haven't tried to move yet.
+                                    if (tile.status == TileStatus.NONE) {
+                                        // Select this tile
+                                        tile.status = TileStatus.SELECTED;
+                                        // Set the gamestate to handle input after a tile is selected
+                                        theGameState = gameState.TILE_SELECTED;
+
+                                        tileSelectSound.play();
+
+                                        readyForInput = false;
+
+                                        // If we've found our tile, there's no sense in looping through the rest of them so we break the loop here.
+                                        break checkTiles;
+                                    }
+
+                                } // end check for if pointInRectangle
+                            } // end check for tile.type
+                        } // end for loop
 
 
-        if(Gdx.input.isTouched() ) {
+                        // Check to see if our gamestate is still ready. if it is, that means we didn't touch a tile.
+                        // We can now go ahead and check to see if the player pressed any UI elements.
 
-            Vector3 finger = new Vector3();
-            camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+                    }
+                }
 
-            if(readyForInput) {
 
-                // Only process input if the game state is READY
-                if(theGameState == gameState.READY) {
+                // To make sure we are not "repeat key"ing, check for ready for input
 
-                    //game.regularFont.setColor(1f,1f,1f,1f);
-                    //game.regularFont.draw(game.batch, ""+finger.x + ","+finger.y, 240,30);
+                if (readyForInput) {
+                    if (theGameState == gameState.TILE_SELECTED) {
 
-                    // If we touched the screen during READY state, check to see if we touched a planet.
-                    // If we did, mark it as selected.
-                    // The `checkTiles` below is how you add a break in Java.
-                    checkTiles:
-                    for (Tile tile : this.tile) {
-                        // We only care about tiles that are planets. Anything else can't be touched (for now).
-                        // TODO: Add logic for handling input of MENU and HELP buttons outside of the checkTiles section below.
-                        if(tile.type == TileType.REDPLANET || tile.type == TileType.BLUEPLANET || tile.type == TileType.GREENPLANET) {
-                            if(pointInRectangle(tile.rect, finger.x, finger.y)) {
+                        // If we touched the screen during a TILE_SELECTED state, check to see if we touched a type.NONE&&status.NONE
+                        // If we did, then find the SELECTED tile's type and move it.
 
-                                // DEBUG:
-                                //game.regularFont.setColor(1f,1f,1f,1f);
-                                //game.regularFont.draw(game.batch, "Tile "+tile.value, 240,60);
+                        // First check to see if where we are going is indeed go-able
+                        markDestinationTile:
+                        for (Tile tile : this.tile) {
+                            // Did we collide with this tile?
+                            if (pointInRectangle(tile.rect, finger.x, finger.y)) {
 
-                                // if game state is ready and tile status is none, that means we haven't tried to move yet. 
-                                if(tile.status == TileStatus.NONE) {
-                                    // Select this tile
-                                    tile.status = TileStatus.SELECTED;
-                                    // Set the gamestate to handle input after a tile is selected
-                                    theGameState = gameState.TILE_SELECTED;
+                                // Is this tile blank?
+                                if (tile.type == TileType.NONE && tile.status == TileStatus.NONE) {
 
+                                    // This is a potential tile to move to. Check if we're touching it
+
+                                    // Mark this tile as the move destination
+                                    tile.status = TileStatus.MOVETOHERE;
+
+                                    // Update game state so we know that both SELECTED and MOVETOHERE have been set.
+                                    theGameState = gameState.GOOD_MOVE_ATTEMPT;
                                     tileSelectSound.play();
+                                    readyForInput = false;
+                                    break markDestinationTile;
+
+
+                                } else if (tile.status == TileStatus.SELECTED) {
+
+                                    // We clicked a tile that was marked as selected, so deselect it
+                                    tile.status = TileStatus.NONE;
+
+                                    // And reset the game state
+                                    theGameState = gameState.READY;
+
+                                    tileDeselectSound.play();
+
 
                                     readyForInput = false;
+                                    break markDestinationTile;
 
-                                    // If we've found our tile, there's no sense in looping through the rest of them so we break the loop here.
-                                    break checkTiles;
+                                    // Don't need the below, since the else {} will cover everyone else
+                                    // } else if(tile.type == TileType.REDPLANET || tile.type == //TileType.BLUEPLANET || tile.type == TileType.GREENPLANET) {
+
+                                } else {    // This should cover PLANET, ASTEROID, SUN, and BLOCKED types. (anyone not BLANK)
+                                    // (21-Aug-2015 Jesse) Display cannot move animation on any tile
+                                    // we try to move to that we can't move to.
+                                    tile.status = TileStatus.CANNOTMOVE;
+
+                                    cannotMoveSound.play();
+
+                                    readyForInput = false;
+                                    break markDestinationTile;
+
                                 }
 
-                            } // end check for if pointInRectangle
-                        } // end check for tile.type
-                    } // end for loop		
-
-
-                    // Check to see if our gamestate is still ready. if it is, that means we didn't touch a tile.
-                    // We can now go ahead and check to see if the player pressed any UI elements.
-
-                }
-            }
-
-
-            // To make sure we are not "repeat key"ing, check for ready for input
-
-            if(readyForInput == true) {
-                if(theGameState == gameState.TILE_SELECTED) {
-
-                    // If we touched the screen during a TILE_SELECTED state, check to see if we touched a type.NONE&&status.NONE
-                    // If we did, then find the SELECTED tile's type and move it.
-
-                    // First check to see if where we are going is indeed go-able
-                    markDestinationTile:
-                    for (Tile tile : this.tile) {
-                        // Did we collide with this tile? 
-                        if(pointInRectangle(tile.rect, finger.x, finger.y)) {
-
-                            // Is this tile blank?
-                            if(tile.type == TileType.NONE && tile.status == TileStatus.NONE) {
-
-                                // This is a potential tile to move to. Check if we're touching it
-
-                                // Mark this tile as the move destination
-                                tile.status = TileStatus.MOVETOHERE;
-
-                                // Update game state so we know that both SELECTED and MOVETOHERE have been set.
-                                theGameState = gameState.GOOD_MOVE_ATTEMPT;
-                                tileSelectSound.play();
-                                readyForInput = false;
-                                break markDestinationTile;
-
-
-
-                            } else if(tile.status == TileStatus.SELECTED) {
-
-                                // We clicked a tile that was marked as selected, so deselect it
-                                tile.status = TileStatus.NONE;
-
-                                // And reset the game state
-                                theGameState = gameState.READY;
-
-                                tileDeselectSound.play();
-
-
-                                readyForInput = false;
-                                break markDestinationTile;
-
-                            // Don't need the below, since the else {} will cover everyone else
-                            // } else if(tile.type == TileType.REDPLANET || tile.type == //TileType.BLUEPLANET || tile.type == TileType.GREENPLANET) {
-
-                            } else {	// This should cover PLANET, ASTEROID, SUN, and BLOCKED types. (anyone not BLANK)
-                                // (21-Aug-2015 Jesse) Display cannot move animation on any tile
-                                // we try to move to that we can't move to.
-                                tile.status = TileStatus.CANNOTMOVE;
-
-                                cannotMoveSound.play();
-
-                                readyForInput = false;
-                                break markDestinationTile;
-
                             }
+                        } // end for loop					// end check for gamestate.READY during touch
 
-                        }
-                    } // end for loop					// end check for gamestate.READY during touch
-
+                    }
                 }
+            } else {
+                readyForInput = true;
             }
-        } else {
-            readyForInput = true;
-        }
+
 
 
 
@@ -1173,43 +1203,6 @@ public class PlayingScreen implements Screen {
             }
         }
 
-
-
-        // Last but not least, draw any UI elements (or ads if you're an asshat [hint: don't be an asshat, Jesse])
-
-        // Draw the row and col headers
-        /* (26-Oct-2016 Lawson) Get rid of the left and top value borders
-            since we're drawing the tile values directly onto the board.
-            game.regularFont.setColor(1f,1f,1f,1.0f);
-
-        int s = (int)(0.5*leftSpace);
-        int s2 = (int)(0.5*tileWidth) + s;
-        game.regularFont.draw(game.batch, "0", s, whiteSpace+(tileHeight*6));
-        game.regularFont.draw(game.batch, "1", s, whiteSpace+(tileHeight*5));
-        game.regularFont.draw(game.batch, "3", s, whiteSpace+(tileHeight*4));
-        game.regularFont.draw(game.batch, "5", s, whiteSpace+(tileHeight*3));
-        game.regularFont.draw(game.batch, "3", s, whiteSpace+(tileHeight*2));
-        game.regularFont.draw(game.batch, "1", s, whiteSpace+(tileHeight*1));
-        game.regularFont.draw(game.batch, "0", s, whiteSpace+(tileHeight*0));
-        game.regularFont.draw(game.batch, "0", leftSpace + s + (tileWidth*6), screenHeight - whiteSpace - s2);
-        game.regularFont.draw(game.batch, "1", leftSpace + s + (tileWidth*5), screenHeight - whiteSpace - s2);
-        game.regularFont.draw(game.batch, "3", leftSpace + s + (tileWidth*4), screenHeight - whiteSpace - s2);
-        game.regularFont.draw(game.batch, "5", leftSpace + s + (tileWidth*3), screenHeight - whiteSpace - s2);
-        game.regularFont.draw(game.batch, "3", leftSpace + s + (tileWidth*2), screenHeight - whiteSpace - s2);
-        game.regularFont.draw(game.batch, "1", leftSpace + s + (tileWidth*1), screenHeight - whiteSpace - s2);
-        game.regularFont.draw(game.batch, "0", leftSpace + s + (tileWidth*0), screenHeight - whiteSpace - s2);
-
-		*/
-
-		/*
-		Level %num%: %name%
-		#/# | #/# | #/#
-		*/
-
-
-
-
-
         // Trick to get accurate lines:
         // Set the Y value of the rendered fonts to (lineNumberFromTop*(screenHeight-this.game.fontSize))
 
@@ -1226,11 +1219,6 @@ public class PlayingScreen implements Screen {
         game.regularFont.setColor(1f,1f,1f,1f);
         game.regularFont.draw(game.batch, "Level "+(game.currentLevel+1)+". Par: "+thisLevelMaxMoves+", You: "+thisLevelCurrentMoves, 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
 
-        if(tryingToReset) {
-            game.regularFont.setColor(1f,1f,1f,1f);
-            game.regularFont.draw(game.batch, "(hold to reset level)", 5, screenHeight-(2.5f*this.game.fontSize), this.screenWidth-10, 1, false);
-        }
-
         game.pixelFont.setColor(game.colorRed);
         game.pixelFont.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
         game.pixelFont.setColor(game.colorBlue);
@@ -1238,9 +1226,9 @@ public class PlayingScreen implements Screen {
         game.pixelFont.setColor(game.colorGreen);
         game.pixelFont.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
 
-        // Draw the reset button
-        game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        game.batch.draw(buttonResetImage, buttonResetRect.x, buttonResetRect.y, buttonResetRect.width, buttonResetRect.height);
+        // Draw the menu button
+        game.batch.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+        game.batch.draw(inGameMenuButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
 
         // (27-Oct-2016 Jesse) Removing the dark matter from being displayed at the top
         // Display the dark matter (lives) at the top of the screen
@@ -1285,30 +1273,7 @@ public class PlayingScreen implements Screen {
         }
 
 
-        // (27-Oct-2016 Jesse) Removing the dark matter from being displayed at the top
-        // If we have less than 5 lives, display our timer
-        //if(game.darkMatterCount < 5) {
-        //    long diff = game.darkMatterCooldown - game.timerElapsedTime;
-        //    game.regularFont.draw(game.batch, ""+game.toPrettyDate(diff)+" > ", 5, 800);
-        //}
 
-        // (3-Nov-2016 Jesse) Removing the OUT_OF_MOVES gamestate because I switched to a PAR value for levels.
-        /*
-        // Another UI element is the button that goes to another level. This is only displayed if
-
-        // the gamestate is LEVEL_COMPLETE. Alternatively, if we're OUT_OF_MOVES, we'll display a "Restart Level" button.
-        if(theGameState == gameState.OUT_OF_MOVES) {
-            game.batch.setColor(1f,1f,1f,1f);
-            game.batch.draw(buttonFailImage, 0, 0, this.screenWidth, this.whiteSpace);
-
-            if(Gdx.input.isTouched()) {
-                RestartLevel();
-                // Also decrement a life
-                game.darkMatterCount--;
-
-            }
-        }
-        */
 
         // The level has been marked complete, so let's display our awesome level complete confetti loop!
         if(theGameState == gameState.LEVEL_COMPLETE) {
@@ -1325,7 +1290,8 @@ public class PlayingScreen implements Screen {
             if(Gdx.input.isTouched()) {
 
                 // This will update our currentLevel
-                this.game.UpdateLevelCompletionInfo(this.game.currentLevel, 1, this.thisLevelCurrentAttempts, this.thisLevelCurrentMoves, 100);
+                // Status type = 2 means we beat the level
+                this.game.UpdateLevelCompletionInfo(this.game.currentLevel, 2, this.thisLevelCurrentAttempts, this.thisLevelCurrentMoves, 100);
 
                 // RestartLevel uses game.currentLevel to determine which level to load, so it's imperative that
                 // game.UpdateLevelCompletionInfo is called first!
@@ -1335,16 +1301,23 @@ public class PlayingScreen implements Screen {
 
         }
 
-        //TODO: Create an in-game menu
-        /*
         if(theGameState == gameState.IN_GAME_MENU) {
+            game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
 
-            game.batch.setColor(1f,0f,0f,0.8f);
-            game.batch.draw(backgroundImage[0], 0, 0, screenWidth, screenHeight);
-            game.batch.setColor(1f,1f,1f,1f);
+            // Draw the background
+            game.batch.setColor(1.0f,1.0f,1.0f,0.5f);
+            game.batch.draw(inGameMenuBackgroundImage, 0, 0, screenWidth, screenHeight);
+            game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+            // Draw the icons center-line
 
+            game.batch.draw(inGameMenuResetButtonImage, inGameMenuResetButtonRect.x, inGameMenuResetButtonRect.y, inGameMenuResetButtonRect.width, inGameMenuResetButtonRect.height);
+            game.batch.draw(inGameMenuLevelSelectButtonImage, inGameMenuLevelSelectButtonRect.x, inGameMenuLevelSelectButtonRect.y, inGameMenuLevelSelectButtonRect.width, inGameMenuLevelSelectButtonRect.height);
+            game.batch.draw(inGameMenuHelpButtonImage, inGameMenuHelpButtonRect.x, inGameMenuHelpButtonRect.y, inGameMenuHelpButtonRect.width, inGameMenuHelpButtonRect.height);
+
+            game.batch.draw(inGameMenuCancelButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
         }
-        */
+
+
 
 
         game.batch.end();
