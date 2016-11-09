@@ -31,32 +31,18 @@ import static com.badlogic.gdx.utils.JsonWriter.OutputType.json;
 
 public class GravityGrid extends Game {
 
-	Preferences ini;
+	private Preferences ini;
 
 	AssetManager assets = new AssetManager(); // Asset manager
 
-	// Timer variables. We implement the timer in this main Game class because we want it to be
-	// independent of the level. Also, we're using TimeUtils instead of the other timer because
-	// the timer should be independent of the actual game (e.g., we need to have 20 real world minutes
-	// pass before another Dark Matter regenerates
-	public long timerStartTime; // Timestamp of when we started this game session
-	public long timerElapsedTime; // Difference between current timestamp and timerStartTime
-	// We save this value
-
-	public int darkMatterCount; // This is the "lives" that we have. The max is 5. THIS IS GOING AWAY
-
-	public int currentLevel;	// This is going away
+	public static int currentLevel;	// The current level
+	public static int currentGalaxy; // The current galaxy (currentLevel / 25)
 
 	public int screenWidth;
 	public int screenHeight;
 
 	public boolean fingerOnScreen;
 
-	public boolean gravityMenuActive; // Main Gg menu. If active, super.render does not render, and instead, the main menu displays
-
-	// This is 20 minutes
-	// TRANSITION PLAN BEFORE WE get rid of dark matter entirely: set timer to 1 second
-	public static final long darkMatterCooldown = 1000000L * 1000; //* 60 * 20;
 
 	// Explicitly set our colors for consistency
 	Color colorDarkBlue = new Color(.38f,.57f,.80f,0.75f);
@@ -78,41 +64,18 @@ public class GravityGrid extends Game {
 	// This array holds the values of each tile
 	public static final int[] tileValueTable = new int[] { 0,1,3,5,3,1,0,1,2,4,6,4,2,1,3,4,6,8,6,4,3,5,6,8,10,8,6,5,3,4,6,8,6,4,3,1,2,4,6,4,2,1,0,1,3,5,3,1,0 };
 
-	// levelNames to make our levels prettier
-	// For more: https://en.wikipedia.org/wiki/List_of_most_massive_black_holes
 
 
-	public static final String[] levelName = new String[] {
-			"Saggitarius A",
-			"Messier 32",
-			"Messier 61",
-			"Markarian 335",
-			"M60-UCD1",
-			"Messier 82",
-			"NGC 4151",
-			"Centaurus A",
-			"Messier 81",
-			"RX J12x-11x",
-			"Andromeda Galaxy",
-			"Messier 59",
-			"NGC 1275",
-			"NGC 4261",
-			"3C 273",
-			"Markarian 501",
-			"Sombrero Galaxy",
-			"Cygnus A",
-			"NGC 6166",
-			"Q0906+6930",
-			"ULAS J1120",
-			"Hercules A",
-			"NGC 1277",
-			"Messier 87",
-			"NGC 3842",
-			"Holmberg 15A",
-			"Phoenix cluster",
-			"S5 0014",//27
-			"Messier A3"
-
+	// Each set of 25 levels is part of a new galaxy
+	public static final String[] galaxyName = new String[] {
+			"Andromeda",
+			"Black Eye",
+			"Bode's",
+			"Cartwheel",
+			"Cigar",
+			"Pinwheel",
+			"Sunflower",
+			"Tadpole"
 	};
 
 	/*
@@ -458,23 +421,26 @@ public class GravityGrid extends Game {
 	// <status,total_attempts,total_moves_attempted,moves_to_win,points_earned>
 	public void UpdateLevelCompletionInfo(int level, int status, int attempts, int moves, int points) {
 
-		this.levelCompletionInfo[level][0] = status;
-		this.levelCompletionInfo[level][1] += 1; // Add one attempt to this level
-		this.levelCompletionInfo[level][2] += moves; // Total accrued moves this level for all attempts
+		levelCompletionInfo[level][0] = status;
+		levelCompletionInfo[level][1] += 1; // Add one attempt to this level
+		levelCompletionInfo[level][2] += moves; // Total accrued moves this level for all attempts
 
 		// Check if we are marking this level as 1 ("complete"). If we are, then we'll record the moves given as the number of moves
 		// it took to beat this level. If not, we'll keep that at zero, since the level has not been marked complete yet.
 		if(status == 1) {
-			this.levelCompletionInfo[level][3] = moves; // Number moves to beat the game
-			this.levelCompletionInfo[level][4] = points; // Add the number of points we earned by beating this level
+			levelCompletionInfo[level][3] = moves; // Number moves to beat the game
+			levelCompletionInfo[level][4] = points; // Add the number of points we earned by beating this level
 			// Also mark the next level as ready to play ("1")
-			if(level+1 < this.levelCompletionInfo.length-1) {
-				this.levelCompletionInfo[level+1][0] = 1;
+			if(level+1 < levelCompletionInfo.length-1) {
+				levelCompletionInfo[level+1][0] = 1;
 			}
 		} else {
-			this.levelCompletionInfo[level][3] = 0;
-			this.levelCompletionInfo[level][4] = 0;
+			levelCompletionInfo[level][3] = 0;
+			levelCompletionInfo[level][4] = 0;
 		}
+
+		// Finally, set the NEXT level as the playable level
+		levelCompletionInfo[level+1][0] = 1;
 
 		// Increment our currentLevel counter so we know the next one to load
 		this.currentLevel++;
@@ -510,7 +476,7 @@ public class GravityGrid extends Game {
 			for(int a=0; a<levelCompletionInfo.length-1; a++) {
 				System.out.println("Level "+a+": "+levelCompletionInfo[a][0]+","+levelCompletionInfo[a][1]+","+levelCompletionInfo[a][2]+","+levelCompletionInfo[a][3]+".");
 			}
-			this.currentLevel = 0;
+			currentLevel = 0;
 
 			boolean setLevel = false;
 
@@ -518,8 +484,8 @@ public class GravityGrid extends Game {
 			computeCurrentLevel:
 			for(int i=0; i<levelCompletionInfo.length; i++) {
 				// iterate through and find the earliest level where list[0] (status) is 1 (playable), then set that to our currentLevel.
-				if(this.levelCompletionInfo[i][0] == 1){
-					this.currentLevel = i;
+				if(levelCompletionInfo[i][0] == 1){
+					currentLevel = i;
 					setLevel = true;
 					break computeCurrentLevel;
 				}
@@ -529,9 +495,16 @@ public class GravityGrid extends Game {
 				// we iterated through every single one and still didnt find the currentLevel, then we need to set it as the earliest possible locked level
 				// Loop through tiles?
 				// For now:
-				this.currentLevel = 0;
-				this.levelCompletionInfo[0][0] = 1; // hard set the first one. This would only be called if this is a new game
+				currentLevel = 0;
+				levelCompletionInfo[0][0] = 1; // hard set the first one. This would only be called if this is a new game
 			}
+		}
+
+		// Finally, compute current galaxy
+		if(currentLevel <= 25) {
+			currentGalaxy = 0;
+		} else {
+			currentGalaxy = currentLevel / 25;
 		}
 	}
 

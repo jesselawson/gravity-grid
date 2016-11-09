@@ -16,6 +16,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
 
+import static com.turkey.gravitygrid.GravityGrid.levelCompletionInfo;
+
 /**
  * Created by jesse on 10/30/16.
  */
@@ -97,7 +99,7 @@ public class LevelSelectScreen implements Screen {
             for(int c = 0; c < 5; c++) {
 
                 // Figure out the type of this level icon
-                int thisLevelIconType = game.levelCompletionInfo[levelNum][0];
+                int thisLevelIconType = levelCompletionInfo[levelNum][0];
                 //System.out.println("Max: "+game.levelCompletionInfo.length+":: At levelNum "+levelNum+" I found "+thisLevelIconType);
 
                 // Create a placeholder for the rect values
@@ -114,7 +116,7 @@ public class LevelSelectScreen implements Screen {
                 levelIcons.add(new LevelSelectScreen.LevelIcon(rect, levelNum, thisLevelIconType));
 
                 worldCol++;
-                if(levelNum <= game.levelCompletionInfo.length-1) {
+                if(levelNum <= levelCompletionInfo.length-1) {
                     levelNum++; // make sure we aren't going to throw an index out of bounds exception
                 }
             }
@@ -128,6 +130,11 @@ public class LevelSelectScreen implements Screen {
         // We might be able to just use currentLevel
         //this.levelIcons.get(this.game.currentLevel).type = 1;
         // No this needs to be computed on the fly right here because we're not writing currentLevel to the filesystem
+    }
+
+    // This will be used when a player has beaten level 25, 50, 75, or 100
+    public void CreateNewGalaxy() {
+
     }
 
     @Override
@@ -171,7 +178,12 @@ public class LevelSelectScreen implements Screen {
 
         }
 
-            game.batch.begin();
+        // Make sure we are displaying the currentLevel as able to play
+        //if(levelCompletionInfo[game.currentLevel][0] == ) {
+
+        //}
+
+        game.batch.begin();
 
         game.batch.draw(screenBackground, 0, 0, screenWidth, screenHeight);
 
@@ -183,7 +195,7 @@ public class LevelSelectScreen implements Screen {
             //game.batch.setColor(1f, 1f, 1f, 1f);
 
             switch(level.type) {
-                case 0: game.batch.setColor(0.5f, 0.5f, 0.5f, 0.75f); break;
+                case 0: game.batch.setColor(1.0f, 1.0f, 1.0f, 0.75f); break;
                 case 1: game.batch.setColor(0.0f, 0.5f, 0.0f, 1.0f); break;
                 case 2: game.batch.setColor(0.0f, 0.5f, 0.0f, 0.5f); break;
                 default: game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f); break;
@@ -197,8 +209,8 @@ public class LevelSelectScreen implements Screen {
 
 
             // Draw the level number in the middle
-            game.pixelFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-            float y = level.rect.y+(0.5f*level.rect.height)+game.fontSize+8;
+            game.pixelFont.setColor(0.0f, 0.0f, 1.0f, 1.0f);
+            float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*game.fontSize);
             game.pixelFont.draw(game.batch, ""+(level.levelNum+1), level.rect.x, y, level.rect.width, 1, true);
 
 
@@ -215,8 +227,14 @@ public class LevelSelectScreen implements Screen {
             game.regularFont.setColor(1f, 0.5f, 1f, messageAlpha);
             game.regularFont.draw(game.batch, "" + message, 0, startLineY, this.screenWidth, 1, true);
             game.regularFont.setColor(1f, 1f, 1f, 1f);  //reset the regularFont color to white
-            messageAlpha -= 0.05f;
+            messageAlpha -= 0.015f;
         }
+
+
+        game.pixelFont.setColor(0.87f,0.84f,0.22f,1f);
+        game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
+        game.regularFont.draw(game.batch, "GALAXY "+game.galaxyName[game.currentGalaxy], 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.regularFont.draw(game.batch, "Select a Planetary System:", 5, screenHeight-(2.5f*this.game.fontSize), this.screenWidth-10, 1, false);
 
         game.batch.end();
     }
