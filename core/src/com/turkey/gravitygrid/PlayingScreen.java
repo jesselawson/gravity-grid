@@ -1227,7 +1227,7 @@ public class PlayingScreen implements Screen {
         game.pixelFont.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
 
         // Draw the menu button
-        game.batch.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+        game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         game.batch.draw(inGameMenuButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
 
         // (27-Oct-2016 Jesse) Removing the dark matter from being displayed at the top

@@ -209,7 +209,7 @@ public class LevelSelectScreen implements Screen {
 
 
             // Draw the level number in the middle
-            game.pixelFont.setColor(0.0f, 0.0f, 1.0f, 1.0f);
+            game.pixelFont.setColor(0.0f, 0.0f, 0.0f, 1.0f);
             float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*game.fontSize);
             game.pixelFont.draw(game.batch, ""+(level.levelNum+1), level.rect.x, y, level.rect.width, 1, true);
 

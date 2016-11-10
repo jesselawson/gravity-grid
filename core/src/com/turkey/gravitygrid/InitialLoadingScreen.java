@@ -7,6 +7,7 @@ package com.turkey.gravitygrid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
@@ -53,11 +54,10 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("littleAstronaut.png", Texture.class);
 
         // Setup asset manager for freetype fonts
-        //this.game.assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(new InternalFileHandleResolver()));
-        //this.game.assets.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(new InternalFileHandleResolver()));
+        this.game.assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(new InternalFileHandleResolver()));
+        this.game.assets.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(new InternalFileHandleResolver()));
 
         // Generate our regularFont
-        /*
         FreetypeFontLoader.FreeTypeFontLoaderParameter regularFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         regularFontParams.fontFileName = "turkey.ttf";
         regularFontParams.fontParameters.size = this.game.fontSize;
@@ -68,24 +68,14 @@ public class InitialLoadingScreen implements Screen {
         pixelFontParams.fontFileName = "OrialBold.ttf";
         pixelFontParams.fontParameters.size = this.game.fontSize+8;
         this.game.assets.load("OrialBold.ttf", BitmapFont.class, pixelFontParams);
-        */
-        BitmapFontLoader.BitmapFontParameter pixelFontParams = new BitmapFontLoader.BitmapFontParameter();
-        pixelFontParams.minFilter = Texture.TextureFilter.Linear;
-        pixelFontParams.magFilter = Texture.TextureFilter.Linear;
-
-        AssetDescriptor<BitmapFont> regularFontAsset = new AssetDescriptor<BitmapFont>(Gdx.files.internal("droidSans.fnt"), BitmapFont.class, pixelFontParams);
-        this.game.assets.load(regularFontAsset);
-        AssetDescriptor<BitmapFont> pixelFontAsset = new AssetDescriptor<BitmapFont>("orialBold.fnt", BitmapFont.class, pixelFontParams);
-        this.game.assets.load(pixelFontAsset);
-
 
 
         this.game.assets.finishLoading(); // Wait for all the assets to load, then go ahead and get our initial assets for the loading screen
 
         this.game.littleAstronautImage = this.game.assets.get("littleAstronaut.png", Texture.class);
         this.game.littleAstronautRegion = new TextureRegion(this.game.littleAstronautImage);
-        this.game.regularFont = this.game.assets.get("droidSans.fnt", BitmapFont.class);
-        this.game.pixelFont = this.game.assets.get("orialBold.fnt", BitmapFont.class);
+        this.game.regularFont = this.game.assets.get("OrialBold.ttf", BitmapFont.class);
+        this.game.pixelFont = this.game.assets.get("turkey.ttf", BitmapFont.class);
 
         // Load all assetmanager assets
         this.game.assets.load("consoleBeep.wav", Sound.class);
