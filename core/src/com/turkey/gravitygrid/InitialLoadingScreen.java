@@ -74,8 +74,8 @@ public class InitialLoadingScreen implements Screen {
 
         this.game.littleAstronautImage = this.game.assets.get("littleAstronaut.png", Texture.class);
         this.game.littleAstronautRegion = new TextureRegion(this.game.littleAstronautImage);
-        this.game.regularFont = this.game.assets.get("OrialBold.ttf", BitmapFont.class);
-        this.game.pixelFont = this.game.assets.get("turkey.ttf", BitmapFont.class);
+        this.game.pixelFont = this.game.assets.get("OrialBold.ttf", BitmapFont.class);
+        this.game.regularFont = this.game.assets.get("turkey.ttf", BitmapFont.class);
 
         // Load all assetmanager assets
         this.game.assets.load("consoleBeep.wav", Sound.class);

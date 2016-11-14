@@ -151,7 +151,6 @@ public class GravityGrid extends Game {
 
 	/* Level messages. Displayed at the bottom of each grid for its associated level */
 	public static final String[] levelMessage = new String[] {
-
 			"Red planets can only be moved diagonally to other red planets.", // 1
 			"Planets in some systems start out misaligned. That's okay! But if you MOVE a planet, you must follow that planet's rules.", //2
 			"Red planets are always diagonal.", //3
@@ -178,7 +177,12 @@ public class GravityGrid extends Game {
 			"",//24
 	};
 
-	public static final int[][] gravityGridLevel = new int[][] {
+	// Most levels will be randomly generated.
+	LevelGenerator levelGenerator;
+	public int[][] gravityGridLevel = new int[5][52];
+
+	// Some levels are specifically constructed by me, like tutorial levels.
+	public static final int[][] myCustomLevel = new int[][] {
 			{	// Level 1
 					0,0,0,0,0,0,0,
 					0,0,0,0,0,0,0,
@@ -372,13 +376,23 @@ public class GravityGrid extends Game {
 					0,0,0,0,4,0,0,
 					8,38,0,4
 			},
+			{	// 20
+					1,0,0,3,0,0,1,
+					0,0,0,0,0,0,0,
+					0,0,0,0,0,0,0,
+					0,0,0,3,0,0,0,
+					0,0,0,0,0,0,0,
+					0,0,0,0,0,0,0,
+					1,0,0,0,0,0,1,
+					18,5,0,4
+			},
 
 	};
 
 	// GetLevel(#) is used to preload the PlayingScreen main playing array.
-	public static int[] GetLevel(int levelNum) {
+	/*public static int[] GetLevel(int levelNum) {
 		return gravityGridLevel[levelNum];
-	}
+	}*/
 
 	// A custom point-in-rectangle collision checker
 	public static boolean pointInRectangle (Rectangle r, float x, float y) {
@@ -510,6 +524,25 @@ public class GravityGrid extends Game {
 
 	public void create() {
 
+		levelGenerator = new LevelGenerator();
+
+		//gravityGridLevel[0] = myCustomLevel[0];
+		//gravityGridLevel[1] = myCustomLevel[1];
+		//gravityGridLevel[2] = myCustomLevel[2];
+		gravityGridLevel[0] = levelGenerator.GenerateLevel(4,5,5,0);
+
+		/*
+		gravityGridLevel[4] = levelGenerator.GenerateLevel(2,5,0,0);
+
+		gravityGridLevel[5] = levelGenerator.GenerateLevel(2,5,0,0);
+		gravityGridLevel[6] = myCustomLevel[3];
+		//gravityGridLevel[4] = myCustomLevel[3]; an example of how I can inject my custom levels here and there
+		gravityGridLevel[7] = myCustomLevel[4];
+		gravityGridLevel[8] = levelGenerator.GenerateLevel(2,3,4,0);
+		gravityGridLevel[9] = levelGenerator.GenerateLevel(2,3,4,0);
+		gravityGridLevel[10] = levelGenerator.GenerateLevel(3,5,5,0);
+		//gravityGridLevel[11] = levelGenerator.GenerateLevel(2,4,0,0);
+		*/
 
 		fingerOnScreen = false;
 
