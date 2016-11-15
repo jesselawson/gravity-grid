@@ -426,10 +426,13 @@ public class LevelGenerator {
         // Now, for every complexity point, let's move a random tile to a non-levelFlagged square according to that tile's rules.
         // Sometimes we might move the same tile a few times, other times we might just move other tiles. Who knows.
 
+
+
         for(int i=0; i<complexity; i++) {
 
             int selectedValue = 0;  // the value of the selected tile
             int selectedNum = 0;    // the tileNum of the selected tile
+
             TileType selectedType = TileType.NONE;
 
             // Select a random tile that is a planet
@@ -439,6 +442,7 @@ public class LevelGenerator {
 
                 int rand = MathUtils.random(0,48);
 
+                // Check if this is a planet tile
                 if( tile.get(rand).type != TileType.NONE ) {
 
                     tile.get(rand).isSelected = true;
@@ -447,7 +451,7 @@ public class LevelGenerator {
                     selectedType = tile.get(rand).type;
                     // We don't have to worry about flagging it in levelFlagged because it already has been flagged
                     selected = true;
-                    System.out.println("> Selecting tile #"+tile.get(rand).tileNum);
+                    System.out.println("> Selecting tile #"+tile.get(rand).tileNum+" ("+tile.get(rand).type+")");
                 } else {
                     System.out.println("> Skipping tile #"+tile.get(rand).tileNum);
                 }
@@ -465,7 +469,7 @@ public class LevelGenerator {
 
                 int rand = MathUtils.random(0, 48);
 
-                System.out.println("Checking tile "+tile.get(rand).tileNum+" for being a good destination...");
+                System.out.println("Checking tile "+tile.get(rand).tileNum+" for being a good destination for selection "+selectedNum+"...");
 
                 // Great! We found a blank tile. Not so fast, though. Let's check to see if this
                 // new tile has a value different from the old one.
@@ -485,7 +489,8 @@ public class LevelGenerator {
                         levelFlagged[tile.get(rand).tileNum] = 1;   // Flag the location as dirty
 
                         // Previous Location
-                        tile.get(selectedNum).type = TileType.NONE; // Set the destination to none
+                        tile.get(selectedNum).type = TileType.NONE; // Set the old one to none
+                        tile.get(selectedNum).isSelected = false; // Set the destination to none
 
                         updateCurrentLevelValueTotals();
 
@@ -495,9 +500,9 @@ public class LevelGenerator {
                             //goodDestinationFound = false; // Reset this if now that we've moved we have the same damn value as we began with.
                         //}
 
-                    }
+                    } else {continue;}
 
-                }
+                } else {continue;}
             }
             numMovesNeeded++; // Increment our par moves counter... I guess this is just equal to the complexity, isn't it, Jesse?
         }
