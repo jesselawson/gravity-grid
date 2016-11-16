@@ -150,36 +150,10 @@ public class GravityGrid extends Game {
 	};
 
 	/* Level messages. Displayed at the bottom of each grid for its associated level */
-	public static final String[] levelMessage = new String[] {
-			"Red planets can only be moved diagonally to other red planets.", // 1
-			"Planets in some systems start out misaligned. That's okay! But if you MOVE a planet, you must follow that planet's rules.", //2
-			"Red planets are always diagonal.", //3
-			"Blue planets can only be moved next to other blue planets, on any side except diagonally.", //4
-			"Planets that start out in violation of their rules can finish that way, too, as long as you don't move them.",//5
-			"",//6
-			"Anytime you move a planet you must follow the movement rules for that planet color.",//7
-			"",//8
-			"Sometimes you need to move planets of one color out of the way to make room for planets of a different color.",//9
-			"Asteroids mean you can't use that tile. You'll have to work around it.",//10
-			"",//11
-			"If the planets are aligned, we can save the universe!",//12
-			"Do you see the astronaut on this level? No? That's because there isn't one.",//13
-			"",//14
-			"Suns are just like asteroids, but take up a lot more space. You cannot move a planet into any tile that is under any part of a sun.",//15
-			"Saturn's moon Titan has plenty of evidence of organic (life) chemicals in its atmosphere.",//16
-			"A day in Mercury lasts approximately as long as 59 days on earth.",//17
-			"The left pillar of the Pillars of Creation is 40 trillion kilometers long!",//18
-			"If you think our sun is big, compare it to VY Canis Majoris.",//19
-			"Well that's all, folks!",//20
-			"",//21
-			"",//22
-			"",//23
-			"",//24
-	};
+	public static String[] levelMessage = new String[100];
 
 	// Most levels will be randomly generated.
-	LevelGenerator levelGenerator;
-	public int[][] gravityGridLevel = new int[5][52];
+	public int[][] gravityGridLevel = new int[100][52];
 
 	// Some levels are specifically constructed by me, like tutorial levels.
 	public static final int[][] myCustomLevel = new int[][] {
@@ -471,7 +445,7 @@ public class GravityGrid extends Game {
 		Json json = new Json();
 
 		// Here we are serializing our array
-		hashTable.put("levels", json.toJson(levelCompletionInfo));
+		hashTable.put("levelcompletion", json.toJson(levelCompletionInfo));
 
 		// Store it in the preferences file
 		ini.put(hashTable);
@@ -482,7 +456,7 @@ public class GravityGrid extends Game {
 
 		Json json = new Json();
 
-		String serializedValues = ini.getString("levels");
+		String serializedValues = ini.getString("levelcompletion");
 
 		if(!serializedValues.isEmpty()) {
 			levelCompletionInfo = json.fromJson(int[][].class, serializedValues);
@@ -522,14 +496,46 @@ public class GravityGrid extends Game {
 		}
 	}
 
+	/*{
+		"Move the red planets so that their total score equals 16. Tap a planet to select it, then tap a blank tile to move it there.", // 1
+				"Planets in some systems start out misaligned. That's okay! But if you MOVE a planet, you must follow that planet's rules.", //2
+				"Red planets are always diagonal.", //3
+				"Blue planets can only be moved next to other blue planets, on any side except diagonally.", //4
+				"Planets that start out in violation of their rules can finish that way, too, as long as you don't move them.",//5
+				"",//6
+				"Anytime you move a planet you must follow the movement rules for that planet color.",//7
+				"",//8
+				"Sometimes you need to move planets of one color out of the way to make room for planets of a different color.",//9
+				"Asteroids mean you can't use that tile. You'll have to work around it.",//10
+				"",//11
+				"If the planets are aligned, we can save the universe!",//12
+				"Do you see the astronaut on this level? No? That's because there isn't one.",//13
+				"",//14
+				"Suns are just like asteroids, but take up a lot more space. You cannot move a planet into any tile that is under any part of a sun.",//15
+				"Saturn's moon Titan has plenty of evidence of organic (life) chemicals in its atmosphere.",//16
+				"A day in Mercury lasts approximately as long as 59 days on earth.",//17
+				"The left pillar of the Pillars of Creation is 40 trillion kilometers long!",//18
+				"If you think our sun is big, compare it to VY Canis Majoris.",//19
+				"Well that's all, folks!",//20
+				"",//21
+				"",//22
+				"",//23
+				""//24
+	};*/
+
 	public void create() {
 
-		levelGenerator = new LevelGenerator();
+		gravityGridLevel[0] = myCustomLevel[0];
+		levelMessage[0] = "Tap a planet to select it, then tap a tile diagonal to another planet. Keep moving planets like this until the total numbers in red equal 16.";
+		gravityGridLevel[1] = myCustomLevel[1];
+		levelMessage[1] = "Great! Notice the red numbers above the grid (35/32). Your current red score is 35; you must move the planets until your red score equals 32.";
+		gravityGridLevel[2] = myCustomLevel[2];
+		gravityGridLevel[3] = new int[] {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,1};
+		gravityGridLevel[4] = new int[] {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,9,0,0,1};
+		gravityGridLevel[5] = new int[] {0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,1};
+		gravityGridLevel[6] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,28,0,0,1};
 
-		//gravityGridLevel[0] = myCustomLevel[0];
-		//gravityGridLevel[1] = myCustomLevel[1];
-		//gravityGridLevel[2] = myCustomLevel[2];
-		gravityGridLevel[0] = levelGenerator.GenerateLevel(4,5,5,0);
+
 
 		/*
 		gravityGridLevel[4] = levelGenerator.GenerateLevel(2,5,0,0);

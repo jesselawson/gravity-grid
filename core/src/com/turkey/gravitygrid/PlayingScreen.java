@@ -431,6 +431,7 @@ public class PlayingScreen implements Screen {
     TextureRegion blackHoleRegion;
     Texture buttonFailImage;
     Texture buttonLevelCompleteImage;
+    Texture levelMessageBackgroundImage;
     Texture singularityImage;
     Texture backgroundStarfieldImage;
     TextureRegion backgroundStarfieldRegion;
@@ -628,12 +629,8 @@ public class PlayingScreen implements Screen {
         backgroundImage[2] = game.assets.get("bg2.png", Texture.class);
         backgroundImage[3] = game.assets.get("bg3.png", Texture.class);
 
-        singularityImage = game.assets.get("singularity0.png", Texture.class);
 
-        backgroundStarfieldImage = new Texture(Gdx.files.internal("starfield.png"), true);
-        backgroundStarfieldImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
-        backgroundStarfieldRegion = new TextureRegion(backgroundStarfieldImage);
-
+        levelMessageBackgroundImage = game.assets.get("levelMessageBackground.png", Texture.class);
 
         tileValueImage = new Texture[11];
         tileValueImage[0] = game.assets.get("tile0.png", Texture.class);
@@ -1259,7 +1256,7 @@ public class PlayingScreen implements Screen {
         */
 
         // Display the level message if we have one, and only if the gameState is ready or tile selected or good move attempt
-        if(theGameState == gameState.READY || theGameState == gameState.TILE_SELECTED || theGameState == gameState.GOOD_MOVE_ATTEMPT) {
+        if(theGameState == gameState.READY || theGameState == gameState.TILE_SELECTED || theGameState == gameState.GOOD_MOVE_ATTEMPT || theGameState == gameState.IN_GAME_MENU) {
 
             // The location of the top line should be below the last tile. We can find this easily:
             float tileHeight = Gdx.graphics.getWidth() / 7;
@@ -1267,8 +1264,11 @@ public class PlayingScreen implements Screen {
             float startLineY = middle - 3.85f*tileHeight; // So we want to start 3.5*tileHeight from center of screen. That should get us to the bottom.
                                                             // At 3.85f*tileHeight, we give ourselves a little padding between the text and grid
 
+            // Draw a black square behind the text
+            game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+            game.batch.draw(levelMessageBackgroundImage, 0, 0, this.screenWidth, this.whiteSpace);
             game.regularFont.setColor(1f,0.5f, 1f, 1f);
-            game.regularFont.draw(game.batch, ""+game.levelMessage[game.currentLevel], 0, startLineY, this.screenWidth, 1, true);
+            game.regularFont.draw(game.batch, ""+game.levelMessage[game.currentLevel], 40, startLineY, this.screenWidth-40, 1, true);
             game.regularFont.setColor(1f,1f,1f,1f);  //reset the regularFont color to white
         }
 

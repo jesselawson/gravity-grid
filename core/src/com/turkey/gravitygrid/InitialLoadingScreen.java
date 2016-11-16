@@ -125,6 +125,8 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("buttonLevelComplete.png", Texture.class);
         this.game.assets.load("galaxyOverlay.png", Texture.class);
 
+        this.game.assets.load("levelMessageBackground.png", Texture.class);
+
         // Buttons
         this.game.assets.load("button/continue.png", Texture.class);
         this.game.assets.load("button/newgame.png", Texture.class);
