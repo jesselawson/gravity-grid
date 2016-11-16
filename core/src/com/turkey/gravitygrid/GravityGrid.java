@@ -529,7 +529,7 @@ public class GravityGrid extends Game {
 		levelMessage[0] = "Tap a planet to select it, then tap a tile diagonal to another planet. Keep moving planets like this until the total numbers in red equal 16.";
 		gravityGridLevel[1] = myCustomLevel[1];
 		levelMessage[1] = "Great! Notice the red numbers above the grid (35/32). Your current red score is 35; you must move the planets until your red score equals 32.";
-		gravityGridLevel[2] = myCustomLevel[2];
+		gravityGridLevel[2] = myCustomLevel[3];
 		gravityGridLevel[3] = new int[] {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,1};
 		gravityGridLevel[4] = new int[] {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,9,0,0,1};
 		gravityGridLevel[5] = new int[] {0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,1};
