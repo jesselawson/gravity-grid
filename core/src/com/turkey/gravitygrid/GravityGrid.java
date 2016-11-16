@@ -190,7 +190,7 @@ public class GravityGrid extends Game {
 					42,0,0,4
 			},
 
-			{	// 4
+			{	// 4 Blue introduction
 					0,0,0,0,0,0,0,
 					0,0,0,0,0,0,0,
 					0,0,0,0,0,0,0,
@@ -200,7 +200,7 @@ public class GravityGrid extends Game {
 					0,0,0,0,0,2,2,
 					0,4,0,1
 			},
-			{	// 5
+			{	// 5 Blue Intro 2
 					0,2,0,0,0,2,0,
 					0,0,0,0,0,0,0,
 					2,0,0,0,0,0,2,
@@ -210,7 +210,7 @@ public class GravityGrid extends Game {
 					0,0,0,0,0,0,0,
 					0,13,0,3
 			},
-			{	// 6
+			{	// 6 Blue Intro 3
 					0,0,0,0,0,0,0,
 					0,0,0,0,2,0,0,
 					0,2,2,0,2,0,0,
@@ -526,15 +526,59 @@ public class GravityGrid extends Game {
 	public void create() {
 
 		gravityGridLevel[0] = myCustomLevel[0];
-		levelMessage[0] = "Tap a planet to select it, then tap a tile diagonal to another planet. Keep moving planets like this until the total numbers in red equal 16.";
+		levelMessage[0] = "The red numbers at the top (20/16) says the sum of red planets is 20; you must move planets so that the sum of all red planets is 16.";
 		gravityGridLevel[1] = myCustomLevel[1];
-		levelMessage[1] = "Great! Notice the red numbers above the grid (35/32). Your current red score is 35; you must move the planets until your red score equals 32.";
-		gravityGridLevel[2] = myCustomLevel[3];
-		gravityGridLevel[3] = new int[] {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,1};
+		levelMessage[1] = "Planets in some systems start out misaligned. That's okay! But if you MOVE a planet, you must follow that planet's rules.";
+		gravityGridLevel[2] = myCustomLevel[2];
+		levelMessage[2] = "Great! Each level has planets that must be moved. Your goal is to move the least number of planets to achieve the required score.";
+		gravityGridLevel[3] = new int[] {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,1};
+		levelMessage[3] = "Sometimes planetary systems only require one planet to be moved. You can see the par moves required at the top of the screen.";
 		gravityGridLevel[4] = new int[] {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,9,0,0,1};
+		levelMessage[4] = "Systems with a par 1 often have more than one solution.";
 		gravityGridLevel[5] = new int[] {0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,1};
-		gravityGridLevel[6] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,28,0,0,1};
-
+		levelMessage[5] = "";
+		gravityGridLevel[6] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,24,0,0,1};
+		levelMessage[6] = "";
+		gravityGridLevel[7] = myCustomLevel[4]; // First blue
+		levelMessage[7] = "Blue planets can only be moved to the top, bottom, left, or right of other blue planets.";
+		gravityGridLevel[8] = myCustomLevel[5];
+		levelMessage[8] = "Great! Just like red planets, blue planets might start in violation of their rules. Only when moving must the rules be followed.";
+		gravityGridLevel[9] = myCustomLevel[6];
+		levelMessage[9] = "Who knows how a planetary system will present itself. It's up to you to come up with the smartest solution!";
+		gravityGridLevel[10] = new int[] {0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,8,0,1};
+		levelMessage[10] = "";
+		gravityGridLevel[11] = new int[] {0,0,0,2,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,0,1};
+		levelMessage[11] = "";
+		gravityGridLevel[12] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,18,0,1};
+		levelMessage[12] = "";
+		gravityGridLevel[13] = myCustomLevel[7];
+		levelMessage[13] = "Sometimes you need to move planets of one color out of the way to make room for planets of a different color.";
+		gravityGridLevel[14] = myCustomLevel[8];
+		levelMessage[13] = "Sometimes it seems like you need to make room for different color planets, but there might also be a different solution.";
+		gravityGridLevel[14] = new int[] {0,0,0,0,1,0,2,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,11,16,0,2};
+		levelMessage[14] = "Here, try to get the red AND blue scores aligned in only two moves. Can you do it?";
+		gravityGridLevel[15] = new int[] {2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,12,18,0,2};
+		levelMessage[15] = "Remember that everything in our universe is connected. Could there be multiple ways to solve this problem?";
+		gravityGridLevel[16] = myCustomLevel[9];
+		levelMessage[16] = "Other times you might run into a rather unique conundrum--like this. The universe is a crazy place!";
+		gravityGridLevel[17] = new int[] {0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,2,0,1,0,0,0,0,0,0,0,1,0,0,0,18,19,0,2};
+		levelMessage[17] = "Each galaxy consists of 25 planetary systems (or levels). When you beat the 25th level of a galaxy, you unlock the next one!";
+		gravityGridLevel[18] = new int[] {0,0,0,0,0,2,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,2,0,0,0,1,0,0,2,2,0,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,17,14,0,2};
+		levelMessage[18] = "Just seven more levels in this galaxy, including this one!";
+		gravityGridLevel[19] = new int[] {0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,2,2,0,1,0,0,0,0,0,0,0,2,0,2,0,0,0,1,2,0,0,0,32,19,0,3};
+		levelMessage[19] = "Six more levels--you're almost there!";
+		gravityGridLevel[20] = new int[] {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1,0,0,0,2,2,0,2,1,0,2,0,0,0,1,1,0,2,0,0,0,7,24,0,3};
+		levelMessage[20] = "Five levels left!";
+		gravityGridLevel[21] = new int[] {0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,2,2,2,0,0,1,2,0,0,1,0,0,2,0,0,0,2,0,2,2,0,0,0,0,0,0,0,0,19,38,0,3};
+		levelMessage[21] = "Four more levels in this galaxy. Keep going!";
+		gravityGridLevel[22] = new int[] {0,2,0,1,0,0,0,0,0,2,0,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,2,0,1,1,0,0,0,1,0,1,0,1,0,0,27,10,0,3};
+		levelMessage[22] = "Three levels left!";
+		gravityGridLevel[23] = new int[] {0,0,0,0,0,2,2,2,1,0,0,0,0,2,0,0,2,0,1,0,0,1,0,0,0,1,0,1,0,1,0,0,2,1,0,0,0,0,0,2,2,2,1,0,0,1,0,0,0,34,29,0,3};
+		levelMessage[23] = "Two more levels until you unlock the next galaxy!";
+		gravityGridLevel[24] = new int[] {0,0,0,1,0,0,2,0,1,0,0,0,0,2,1,2,0,0,1,0,2,0,0,0,0,0,0,0,1,1,0,2,1,0,0,0,1,0,1,2,0,0,2,0,2,0,2,0,0,41,24,0,4};
+		levelMessage[24] = "This is the last level in this galaxy! After you beat this level, you can unlock the next galaxy!";
+		gravityGridLevel[25] = myCustomLevel[10];
+		levelMessage[25] = "Woohoo! You've unlocked the second galaxy, which has ASTEROIDS. Asteroids mean you can't use that tile.";
 
 
 		/*
