@@ -56,8 +56,8 @@ public class GravityGrid extends Game {
 	SpriteBatch batch;
 	BitmapFont regularFont; // The Roboto Slab font called "turkey.ttf"
 	BitmapFont pixelFont; // The big GravityGridder font used for planet gravity values and special things.
-	Texture littleAstronautImage; // Used for our loading screen
-	TextureRegion littleAstronautRegion;
+	Texture gravityGridSphereLogoImage; // Used for our loading screen
+	TextureRegion gravityGridSphereLogoRegion;
 
 	public static int fontSize = 60;
 
@@ -120,33 +120,27 @@ public class GravityGrid extends Game {
 
 	/* Default values for level progress. Stores the <status,total_attempts,total_moves_attempted,moves_to_win,points_earned> of each level */
 	public static int[][] levelCompletionInfo = new int[][] { // This will ALWAYS instantiate to zero values
-			{1,0,0,0,0}, // 1
-			{0,0,0,0,0}, // 2
-			{0,0,0,0,0}, // 3
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0}, // 10
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0}, // 15
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0}, // 20
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0},
-			{0,0,0,0,0}
+			{1,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 05
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 10
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 15
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 20
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 25
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 30
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 35
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 40
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 45
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 50
+			{1,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 55
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 60
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 65
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 70
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 75
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 80
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 85
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 90
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 95
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, //100
+
 	};
 
 	/* Level messages. Displayed at the bottom of each grid for its associated level */
@@ -361,6 +355,7 @@ public class GravityGrid extends Game {
 					18,5,0,4
 			},
 
+
 	};
 
 	// GetLevel(#) is used to preload the PlayingScreen main playing array.
@@ -415,20 +410,37 @@ public class GravityGrid extends Game {
 
 		// Check if we are marking this level as 1 ("complete"). If we are, then we'll record the moves given as the number of moves
 		// it took to beat this level. If not, we'll keep that at zero, since the level has not been marked complete yet.
-		if(status == 1) {
-			levelCompletionInfo[level][3] = moves; // Number moves to beat the game
+		if(status == 2) {
+			levelCompletionInfo[level][3] = moves; // Number moves used to beat the level during the playthrough where it was beaten
 			levelCompletionInfo[level][4] = points; // Add the number of points we earned by beating this level
-			// Also mark the next level as ready to play ("1")
-			if(level+1 < levelCompletionInfo.length-1) {
+			if(levelCompletionInfo[level+1][0] == 0) {
 				levelCompletionInfo[level+1][0] = 1;
+				// Also mark the next level as ready to play ("1")
 			}
+
 		} else {
 			levelCompletionInfo[level][3] = 0;
 			levelCompletionInfo[level][4] = 0;
 		}
 
-		// Finally, set the NEXT level as the playable level
-		levelCompletionInfo[level+1][0] = 1;
+		// We need to now loop through the levels backwards to find the most recent playable level. This will also
+		// allow us to set the galaxy to the correct galaxy as well.
+		findCurrentLevel:
+		for(int i=gravityGridLevel.length; i<0; i--) {
+			// Looping through each level, find [level]=0 and [level-1]=2 (beaten)
+			if(levelCompletionInfo[i][0] == 0 && levelCompletionInfo[i-1][0] == 2) {
+				levelCompletionInfo[i][0] = 1;
+				currentLevel = i;
+				break findCurrentLevel;
+			}
+		}
+
+		if(currentLevel <= 25) {
+			currentGalaxy = 0;
+		} else {
+			currentGalaxy = currentLevel / 25;
+		}
+
 
 		// Increment our currentLevel counter so we know the next one to load
 		this.currentLevel++;
@@ -526,15 +538,15 @@ public class GravityGrid extends Game {
 	public void create() {
 
 		gravityGridLevel[0] = myCustomLevel[0];
-		levelMessage[0] = "The red numbers at the top (20/16) says the sum of red planets is 20; you must move planets so that the sum of all red planets is 16.";
+		levelMessage[0] = "Red planets can only be moved to a tile diagonal to another red planet. Move planets so that the sum of all red planets is 16.";
 		gravityGridLevel[1] = myCustomLevel[1];
-		levelMessage[1] = "Planets in some systems start out misaligned. That's okay! But if you MOVE a planet, you must follow that planet's rules.";
+		levelMessage[1] = "Perfect! There are two red numbers above the grid. The first (35) is the current sum of red planets; 32 is the sum you need to get to.";
 		gravityGridLevel[2] = myCustomLevel[2];
 		levelMessage[2] = "Great! Each level has planets that must be moved. Your goal is to move the least number of planets to achieve the required score.";
 		gravityGridLevel[3] = new int[] {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,1};
 		levelMessage[3] = "Sometimes planetary systems only require one planet to be moved. You can see the par moves required at the top of the screen.";
 		gravityGridLevel[4] = new int[] {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,9,0,0,1};
-		levelMessage[4] = "Systems with a par 1 often have more than one solution.";
+		levelMessage[4] = "Planetary systems often have more than one solution. Try to think a few moves ahead.";
 		gravityGridLevel[5] = new int[] {0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,1};
 		levelMessage[5] = "";
 		gravityGridLevel[6] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,24,0,0,1};
@@ -577,9 +589,11 @@ public class GravityGrid extends Game {
 		levelMessage[23] = "Two more levels until you unlock the next galaxy!";
 		gravityGridLevel[24] = new int[] {0,0,0,1,0,0,2,0,1,0,0,0,0,2,1,2,0,0,1,0,2,0,0,0,0,0,0,0,1,1,0,2,1,0,0,0,1,0,1,2,0,0,2,0,2,0,2,0,0,41,24,0,4};
 		levelMessage[24] = "This is the last level in this galaxy! After you beat this level, you can unlock the next galaxy!";
+
 		gravityGridLevel[25] = myCustomLevel[10];
 		levelMessage[25] = "Woohoo! You've unlocked the second galaxy, which has ASTEROIDS. Asteroids mean you can't use that tile.";
 
+		gravityGridLevel[26] = new int[] {0,0,2,0,2,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,2,0,0,0,4,1,2,2,0,0,0,1,1,2,4,0,0,0,0,0,0,26,15,0,3};
 
 		/*
 		gravityGridLevel[4] = levelGenerator.GenerateLevel(2,5,0,0);

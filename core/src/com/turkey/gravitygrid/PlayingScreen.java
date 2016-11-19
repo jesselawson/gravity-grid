@@ -1020,6 +1020,7 @@ public class PlayingScreen implements Screen {
                                             thisLevelGreenNeeded == thisLevelCurrentGreenTotal) {
                                         theGameState = gameState.LEVEL_COMPLETE;
                                         levelCompleteSound.play();
+                                        //Gdx.input.vibrate(500);
 
                                     } else {
                                         // We have not beaten the level, so let's
@@ -1214,7 +1215,7 @@ public class PlayingScreen implements Screen {
         game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
 
         game.regularFont.setColor(1f,1f,1f,1f);
-        game.regularFont.draw(game.batch, "Level "+(game.currentLevel+1)+". Par: "+thisLevelMaxMoves+", You: "+thisLevelCurrentMoves, 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.regularFont.draw(game.batch, "Level "+(game.currentLevel+1)+", Par "+thisLevelMaxMoves+". You: "+thisLevelCurrentMoves, 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
 
         game.pixelFont.setColor(game.colorRed);
         game.pixelFont.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
@@ -1317,13 +1318,7 @@ public class PlayingScreen implements Screen {
             game.batch.draw(inGameMenuCancelButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
         }
 
-
-
-
         game.batch.end();
-
-
-
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -73,6 +74,7 @@ public class LevelSelectScreen implements Screen {
         // Get our textures
         screenBackground = game.assets.get("menu/blackBackground.png", Texture.class);
         this.levelTileBackground = game.assets.get("levelicons/background.png", Texture.class);
+
         this.levelIcon = new Texture[3];
         this.levelIcon[0] = game.assets.get("levelicons/locked.png", Texture.class);
         this.levelIcon[1] = game.assets.get("levelicons/play.png", Texture.class);
@@ -195,9 +197,9 @@ public class LevelSelectScreen implements Screen {
             //game.batch.setColor(1f, 1f, 1f, 1f);
 
             switch(level.type) {
-                case 0: game.batch.setColor(1.0f, 1.0f, 1.0f, 0.75f); break;
-                case 1: game.batch.setColor(0.0f, 0.5f, 0.0f, 1.0f); break;
-                case 2: game.batch.setColor(0.0f, 0.5f, 0.0f, 0.5f); break;
+                case 0: game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f); break;   //Locked
+                case 1: game.batch.setColor(0.0f, 0.5f, 0.0f, 0.9f); break; //Current Level
+                case 2: game.batch.setColor(0.0f, 0.5f, 0.0f, 0.9f); break; //Completed
                 default: game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f); break;
             }
 
@@ -205,12 +207,16 @@ public class LevelSelectScreen implements Screen {
             game.batch.draw(levelTileBackground, level.rect.x, level.rect.y, level.rect.width, level.rect.height);
 
             // Draw the tile type on top
-            //game.batch.draw(levelIcon[level.type], level.rect.x, level.rect.y, level.rect.width, level.rect.height);
-
+            game.batch.setColor(1.0f,1.0f,1.0f,0.75f);
+            float cornerX = level.rect.x+(level.rect.width-(0.5f*level.rect.width));
+            float cornerY = level.rect.y+(level.rect.height-(0.5f*level.rect.height));
+            float cornerWH = 0.5f*level.rect.width;
+            game.batch.draw(levelIcon[level.type], cornerX, cornerY, cornerWH, cornerWH);
+            game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
 
             // Draw the level number in the middle
-            game.pixelFont.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-            float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*game.fontSize);
+            game.pixelFont.setColor(1f,1.0f, 1f, 1f);
+            float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*(game.fontSize+8));
             game.pixelFont.draw(game.batch, ""+(level.levelNum+1), level.rect.x, y, level.rect.width, 1, true);
 
 
@@ -233,7 +239,7 @@ public class LevelSelectScreen implements Screen {
 
         game.pixelFont.setColor(0.87f,0.84f,0.22f,1f);
         game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
-        game.regularFont.draw(game.batch, "GALAXY "+game.galaxyName[game.currentGalaxy], 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.regularFont.draw(game.batch, game.galaxyName[game.currentGalaxy]+" Galaxy", 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
         game.regularFont.draw(game.batch, "Select a Planetary System:", 5, screenHeight-(2.5f*this.game.fontSize), this.screenWidth-10, 1, false);
 
         game.batch.end();

@@ -6,9 +6,6 @@ package com.turkey.gravitygrid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.assets.AssetLoaderParameters;
-import com.badlogic.gdx.assets.loaders.BitmapFontLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,7 +17,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Created by jesse on 10/30/16.
@@ -37,7 +33,7 @@ public class InitialLoadingScreen implements Screen {
     private int screenWidth = Gdx.graphics.getWidth();
     private int screenHeight = Gdx.graphics.getHeight();
 
-    private float astronautDir; // keeps track of the astronaut direction
+    private float gravityGridSphereDir; // keeps track of the astronaut direction
 
     // Screen constructor
     public InitialLoadingScreen(GravityGrid game) {
@@ -48,10 +44,10 @@ public class InitialLoadingScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, screenWidth, screenHeight);
 
-        astronautDir = 0.0f;
+        gravityGridSphereDir = 0.0f;
 
         // Load the loading screen astronaut and the font first
-        this.game.assets.load("littleAstronaut.png", Texture.class);
+        this.game.assets.load("gravityGridSphereLogo.png", Texture.class);
 
         // Setup asset manager for freetype fonts
         this.game.assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(new InternalFileHandleResolver()));
@@ -69,11 +65,10 @@ public class InitialLoadingScreen implements Screen {
         pixelFontParams.fontParameters.size = this.game.fontSize+8;
         this.game.assets.load("OrialBold.ttf", BitmapFont.class, pixelFontParams);
 
-
         this.game.assets.finishLoading(); // Wait for all the assets to load, then go ahead and get our initial assets for the loading screen
 
-        this.game.littleAstronautImage = this.game.assets.get("littleAstronaut.png", Texture.class);
-        this.game.littleAstronautRegion = new TextureRegion(this.game.littleAstronautImage);
+        this.game.gravityGridSphereLogoImage = this.game.assets.get("gravityGridSphereLogo.png", Texture.class);
+        this.game.gravityGridSphereLogoRegion = new TextureRegion(this.game.gravityGridSphereLogoImage);
         this.game.pixelFont = this.game.assets.get("OrialBold.ttf", BitmapFont.class);
         this.game.regularFont = this.game.assets.get("turkey.ttf", BitmapFont.class);
 
@@ -104,7 +99,6 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("bg2.png", Texture.class);
         this.game.assets.load("bg3.png", Texture.class);
         this.game.assets.load("singularity0.png", Texture.class);
-        this.game.assets.load("starfield.png", Texture.class);
         this.game.assets.load("tile0.png", Texture.class);
         this.game.assets.load("tile1.png", Texture.class);
         this.game.assets.load("tile2.png", Texture.class);
@@ -151,12 +145,15 @@ public class InitialLoadingScreen implements Screen {
         game.assets.load("menu/resetButton.png", Texture.class);
         game.assets.load("menu/menuButton.png", Texture.class);
 
+        // Assets for help screen
+        game.assets.load("menu/helpScreen0.png", Texture.class);
+        game.assets.load("menu/helpScreen1.png", Texture.class);
+
     }
 
 
     @Override
     public void render(float delta) {
-
 
         // Check if the asset manager is done loading all the assets. If so, go ahead and move to the Main Menu screen
         // If it's not done, continue to display the loading screen
@@ -182,16 +179,16 @@ public class InitialLoadingScreen implements Screen {
 
         game.batch.setColor(1f,1f,1f,1f);
 
-        game.batch.draw(game.littleAstronautRegion, (Gdx.graphics.getWidth()/2)-40, (Gdx.graphics.getHeight()/2)-40, 40, 40, 80, 80, 1.0f, 1.0f, astronautDir);
+        game.batch.draw(game.gravityGridSphereLogoRegion, (Gdx.graphics.getWidth()/2)-140, (Gdx.graphics.getHeight()/2)-140, 140, 140, 280, 280, 1.0f, 1.0f, gravityGridSphereDir);
 
         game.pixelFont.setColor(1.0f,1.0f,1.0f,1.0f);
 
         game.batch.end();
 
-        // Update astronautDir so that our astronaut spins
-        astronautDir += 1.0f;
-        if(astronautDir >= 359.0f) {
-            astronautDir = 0.0f;
+        // Update gravityGridSphereDir so that our astronaut spins
+        gravityGridSphereDir += 1.0f;
+        if(gravityGridSphereDir >= 359.0f) {
+            gravityGridSphereDir = 0.0f;
         }
     }
 

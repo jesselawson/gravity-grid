@@ -138,7 +138,7 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		mainMenuBackground.dispose();
+		//mainMenuBackground.dispose();
 		
 	}
 
