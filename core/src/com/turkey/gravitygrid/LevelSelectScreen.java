@@ -40,7 +40,12 @@ public class LevelSelectScreen implements Screen {
     Texture screenBackground;
     Texture levelTileBackground;
     Texture[] levelIcon; // levelIcon[0] corresponds to levelcompletioninfo[level].[0] value. see `type` below
-    ArrayList<LevelIcon> levelIcons;
+    ArrayList<LevelIcon> levelIcons; // The tiles for our level selector
+
+    Texture previousGalaxyButtonImage;
+    Texture nextGalaxyButtonImage;
+    Rectangle previousGalaxyButtonRect;
+    Rectangle nextGalaxyButtonRect;
 
     OrthographicCamera camera;
 
@@ -75,16 +80,25 @@ public class LevelSelectScreen implements Screen {
         screenBackground = game.assets.get("menu/blackBackground.png", Texture.class);
         this.levelTileBackground = game.assets.get("levelicons/background.png", Texture.class);
 
+        this.tileWidth = screenWidth / 5; // So it's 7 segments of our screenwidth minus the space we've reserved for the tile labels.
+        this.tileHeight = screenWidth / 5;
+
         this.levelIcon = new Texture[3];
         this.levelIcon[0] = game.assets.get("levelicons/locked.png", Texture.class);
         this.levelIcon[1] = game.assets.get("levelicons/play.png", Texture.class);
         this.levelIcon[2] = game.assets.get("levelicons/done.png", Texture.class);
 
-        this.tileWidth = screenWidth / 5; // So it's 7 segments of our screenwidth minus the space we've reserved for the tile labels.
-        this.tileHeight = screenWidth / 5;
+        previousGalaxyButtonImage = game.assets.get("levelicons/previousGalaxyButton.png", Texture.class);
+        nextGalaxyButtonImage = game.assets.get("levelicons/nextGalaxyButton.png", Texture.class);
 
         // The whitespace variable sets a modifier for the rect.x values of each tile so that the grid is in the center of the screen.
-        this.whiteSpace = (int)(0.5*screenHeight) + (int)(0.5*(screenWidth/5)*5);
+        this.whiteSpace = (int)(0.5*screenHeight) + (int)(0.33*(screenWidth/5)*5);
+
+        // Generate rect's for buttons
+
+        previousGalaxyButtonRect = new Rectangle(this.tileWidth, this.tileHeight, this.tileWidth, this.tileHeight);
+        nextGalaxyButtonRect = new Rectangle(3*this.tileWidth, this.tileHeight, this.tileWidth, this.tileHeight);
+
 
         this.levelIcons = new ArrayList<LevelIcon>(); // Initialize our grid
 
@@ -215,14 +229,20 @@ public class LevelSelectScreen implements Screen {
             game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
 
             // Draw the level number in the middle
-            game.pixelFont.setColor(1f,1.0f, 1f, 1f);
-            float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*(game.fontSize+8));
-            game.pixelFont.draw(game.batch, ""+(level.levelNum+1), level.rect.x, y, level.rect.width, 1, true);
+            game.regularFont.setColor(1f,1.0f, 1f, 1f);
+            float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*(game.fontSize));
+            game.regularFont.draw(game.batch, ""+(level.levelNum+1), level.rect.x, y, level.rect.width, 1, true);
 
 
         }
 
+
         // Display any messages AND the "next galaxy" button
+
+        // Prev and Next galaxy buttons
+        game.batch.draw(previousGalaxyButtonImage, previousGalaxyButtonRect.x, previousGalaxyButtonRect.y, previousGalaxyButtonRect.width, previousGalaxyButtonRect.height);
+        game.batch.draw(nextGalaxyButtonImage, nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
+
         // The location of the top line should be below the last tile. We can find this easily:
         float tileHeight = Gdx.graphics.getWidth() / 7;
         float middle = Gdx.graphics.getHeight() / 2;

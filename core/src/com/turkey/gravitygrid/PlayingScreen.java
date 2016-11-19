@@ -573,9 +573,12 @@ public class PlayingScreen implements Screen {
                 tileNum++;
 
                 // (4-Nov-2016 Jesse) Add a new particle system on each and every tile so that when the level starts, there's a huge burst of stars
-                ParticleEffectPool.PooledEffect levelStartEffect = goodMoveStarburstPool.obtain();
-                levelStartEffect.setPosition(rect.x+(rect.width/2), rect.y+(rect.height/2));
-                particleEffects.add(levelStartEffect);
+                // (19-Nov-2016 Jesse) Only do this on tiles with planets, otherwise there's lots of lag
+                if(rcType == TileType.REDPLANET || rcType == TileType.BLUEPLANET || rcType == TileType.GREENPLANET) {
+                    ParticleEffectPool.PooledEffect levelStartEffect = goodMoveStarburstPool.obtain();
+                    levelStartEffect.setPosition(rect.x + (rect.width / 2), rect.y + (rect.height / 2));
+                    particleEffects.add(levelStartEffect);
+                }
             }
             worldCol = 0; // Reset column counter
             worldRow++; // Iterate our row counter
@@ -1099,26 +1102,23 @@ public class PlayingScreen implements Screen {
             switch(tile.type) {
                 case NONE:
                     // Flip these if you want the text brighter. right now it's behind the transparent tileir
-                    game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
+                    game.batch.setColor(0.5f,0.5f,0.5f,0.5f);
                     game.batch.draw(tileBlankImage, tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
-
+                    game.batch.setColor(1f,1f,1f,.8f);
+                    game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
+                    game.batch.setColor(1f,1f,1f,1f);
                     break;
                 case REDPLANET:
-                    //game.batch.setColor(game.colorRed);
                     game.batch.draw(tileRedPlanetRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
-
-                    //game.batch.draw(tilePlanetImage[tile.rand], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     game.batch.setColor(1f,1f,1f,1f);
                     game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     break;
                 case BLUEPLANET:
-                    //game.batch.setColor(game.colorBlue);
                     game.batch.draw(tileBluePlanetRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
                     game.batch.setColor(1f,1f,1f,1f);
                     game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     break;
                 case GREENPLANET:
-                    //game.batch.setColor(game.colorGreen);
                     game.batch.draw(tileGreenPlanetRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
                     game.batch.setColor(1f,1f,1f,1f);
                     game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
