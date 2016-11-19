@@ -573,8 +573,8 @@ public class GravityGrid extends Game {
 		levelMessage[15] = "Remember that everything in our universe is connected. Could there be multiple ways to solve this problem?";
 		gravityGridLevel[16] = myCustomLevel[9];
 		levelMessage[16] = "Other times you might run into a rather unique conundrum--like this. The universe is a crazy place!";
-		gravityGridLevel[17] = new int[] {0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,2,0,1,0,0,0,0,0,0,0,1,0,0,0,18,19,0,2};
-		levelMessage[17] = "Each galaxy consists of 25 planetary systems (or levels). When you beat the 25th level of a galaxy, you unlock the next one!";
+		gravityGridLevel[17] = new int[] {0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,2,0,1,0,0,0,0,0,0,0,1,0,0,0,21,30,0,2};
+		levelMessage[17] = "Each galaxy consists of 25 planetary systems (or levels). When you beat the 25th level of a galaxy, you unlock the next galaxy!";
 		gravityGridLevel[18] = new int[] {0,0,0,0,0,2,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,2,0,0,0,1,0,0,2,2,0,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,17,14,0,2};
 		levelMessage[18] = "Just seven more levels in this galaxy, including this one!";
 		gravityGridLevel[19] = new int[] {0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,2,2,0,1,0,0,0,0,0,0,0,2,0,2,0,0,0,1,2,0,0,0,32,19,0,3};

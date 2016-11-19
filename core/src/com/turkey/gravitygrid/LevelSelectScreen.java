@@ -96,8 +96,8 @@ public class LevelSelectScreen implements Screen {
 
         // Generate rect's for buttons
 
-        previousGalaxyButtonRect = new Rectangle(this.tileWidth, this.tileHeight, this.tileWidth, this.tileHeight);
-        nextGalaxyButtonRect = new Rectangle(3*this.tileWidth, this.tileHeight, this.tileWidth, this.tileHeight);
+        previousGalaxyButtonRect = new Rectangle(this.tileWidth, 5, this.tileWidth, this.tileHeight);
+        nextGalaxyButtonRect = new Rectangle(3*this.tileWidth, 5, this.tileWidth, this.tileHeight);
 
 
         this.levelIcons = new ArrayList<LevelIcon>(); // Initialize our grid
@@ -148,9 +148,27 @@ public class LevelSelectScreen implements Screen {
         // No this needs to be computed on the fly right here because we're not writing currentLevel to the filesystem
     }
 
-    // This will be used when a player has beaten level 25, 50, 75, or 100
-    public void CreateNewGalaxy() {
+    // Call this to change the currentGalaxy so that we map the levelCompletionInfo to the tiles appropriately
+    public void ChangeToGalaxy(int direction) {
 
+        game.currentGalaxy += direction;
+
+        int levelNum = 0;
+
+        for(int r = 4; r >= 0; r--) {
+            for(int c = 0; c < 5; c++) {
+
+                // Get the icon we need
+                int thisLevelIconType = levelCompletionInfo[(game.currentGalaxy*25)+levelNum][0];
+
+                // set the level icon appropriately
+                levelIcons.get(levelNum).type = thisLevelIconType;
+
+                if(levelNum <= levelCompletionInfo.length-1) {
+                    levelNum++; // make sure we aren't going to throw an index out of bounds exception
+                }
+            }
+        }
     }
 
     @Override
@@ -171,24 +189,53 @@ public class LevelSelectScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         // Check for input
+        processInput:
         if(Gdx.input.justTouched() ) {
 
             Vector3 finger = new Vector3();
             camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
+            // First check if the player is touching one of the prev/next galaxy buttons
+            if(game.currentGalaxy < 5) { // so: 0,1,2,3,4
+                // Don't bother with previous button if this is our current galaxy
+                if(GravityGrid.pointInRectangle(nextGalaxyButtonRect, finger.x, finger.y)) {
+                    // Has the player beaten level 25 yet?
+                    if(levelCompletionInfo[(GravityGrid.currentGalaxy *25)+24][0] == 2) {
+                        // Yep, so let's increment our galaxy
+                        ChangeToGalaxy(1);
+                        message = "Now entering the "+game.galaxyName[game.currentGalaxy]+" Galaxy";
+                        messageAlpha = 1.0f;
+                    }
+                    break processInput;
+                }
+            }
+
+            // What about the prev galaxy button?
+            if(game.currentGalaxy > 0) { // so: 0,1,2,3,4
+                // Don't bother with previous button if this is our current galaxy
+                if(GravityGrid.pointInRectangle(previousGalaxyButtonRect, finger.x, finger.y)) {
+                    // We can assume that if the player can go back that they beat the previous galaxies
+                        ChangeToGalaxy(-1);
+                        message = "Now entering the "+game.galaxyName[game.currentGalaxy]+" Galaxy";
+                        messageAlpha = 1.0f;
+                    break processInput;
+                }
+            }
+
             // loop through the levels and find the touched one
             for(LevelSelectScreen.LevelIcon level : this.levelIcons) {
-                if (game.pointInRectangle(level.rect, finger.x, finger.y)) {
+                if (GravityGrid.pointInRectangle(level.rect, finger.x, finger.y)) {
 
                     // If it's a playable level, then set that as the current level and load that bad boy
                     if(level.type == 1 || level.type == 2) {
-                        this.game.currentLevel = level.levelNum;
+                        GravityGrid.currentLevel = level.levelNum+(game.currentGalaxy*25);
                         game.setScreen(new PlayingScreen(game)); // Will pickup based on what we read from the player files (the ini)
                     } else {
                         message = "You can't play that one yet!";
                         messageAlpha = 1.0f;
 
                     }
+                    break processInput;
                 }
             }
 
@@ -230,7 +277,7 @@ public class LevelSelectScreen implements Screen {
 
             // Draw the level number in the middle
             game.regularFont.setColor(1f,1.0f, 1f, 1f);
-            float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*(game.fontSize));
+            float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*(GravityGrid.fontSize));
             game.regularFont.draw(game.batch, ""+(level.levelNum+1), level.rect.x, y, level.rect.width, 1, true);
 
 
@@ -253,14 +300,14 @@ public class LevelSelectScreen implements Screen {
             game.regularFont.setColor(1f, 0.5f, 1f, messageAlpha);
             game.regularFont.draw(game.batch, "" + message, 0, startLineY, this.screenWidth, 1, true);
             game.regularFont.setColor(1f, 1f, 1f, 1f);  //reset the regularFont color to white
-            messageAlpha -= 0.015f;
+            messageAlpha -= 0.005f;
         }
 
 
         game.pixelFont.setColor(0.87f,0.84f,0.22f,1f);
         game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
-        game.regularFont.draw(game.batch, game.galaxyName[game.currentGalaxy]+" Galaxy", 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
-        game.regularFont.draw(game.batch, "Select a Planetary System:", 5, screenHeight-(2.5f*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.regularFont.draw(game.batch, GravityGrid.galaxyName[GravityGrid.currentGalaxy]+" Galaxy", 5, screenHeight-(1.5f* GravityGrid.fontSize), this.screenWidth-10, 1, false);
+        game.regularFont.draw(game.batch, "Select a Planetary System:", 5, screenHeight-(2.5f* GravityGrid.fontSize), this.screenWidth-10, 1, false);
 
         game.batch.end();
     }

@@ -1070,7 +1070,7 @@ public class PlayingScreen implements Screen {
         }
 
         // Draw the background based on the "galaxy," which is just the level#/10. Every ten levels is a new background (i.e., a new galaxy)
-        game.batch.setColor(1f,1f,1f,0.75f);
+        game.batch.setColor(1f,1f,1f,0.25f);
         game.batch.draw(backgroundImage[thisLevelBackgroundImageNumber], 0,0,screenWidth, screenHeight);
 
 
@@ -1079,7 +1079,8 @@ public class PlayingScreen implements Screen {
         // spawn height: 3840
         // Not sure why this was necessary... and what effect does this have on different rendering displays? Nothing, because I am hard-setting the orthographic projection?
         backgroundStarfieldParticles.setPosition(0,0);
-        backgroundStarfieldParticles.draw(game.batch, delta);
+        game.batch.setColor(0.5f,0.5f,0.5f,0.1f);
+        backgroundStarfieldParticles.draw(game.batch, delta*.75f);
 
         int cellNumber = 0;
 
@@ -1205,11 +1206,12 @@ public class PlayingScreen implements Screen {
         // Set the Y value of the rendered fonts to (lineNumberFromTop*(screenHeight-this.game.fontSize))
 
         // Generate some values for our color indicators, with 5-px padding
-        // NOTE: when using halign=1 in regularFont.draw, you are setting the y value RELATIVE to the center of the screen. Don't forget, dummy!
-        // ALSO: 0-(Gdx.graphics.getWidth()/2); will put the center RIGHT on the edge of the screen, so you'll need to shift (pad) the Y value a bit
-        float blueScoreY = 0; // center
-        float redScoreY = 0-(Gdx.graphics.getWidth()/4); // use 1/4 distance
-        float greenScoreY = (Gdx.graphics.getWidth()/4);
+        // NOTE: when using halign=1 in regularFont.draw, you are setting the X value RELATIVE to the center of the screen. Don't forget, dummy!
+        // ALSO: 0-(Gdx.graphics.getWidth()/2); will put the center RIGHT on the edge of the screen, so you'll need to shift (pad) the X value a bit
+        // (19-Nov-2016 Jesse) Only display the color score if we have that planet type on this level
+        float blueScoreX = 0; // center
+        float redScoreX = 0-(Gdx.graphics.getWidth()/4); // use 1/4 distance
+        float greenScoreX = (Gdx.graphics.getWidth()/4);
 
         game.pixelFont.setColor(0.87f,0.84f,0.22f,1f);
         game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
@@ -1218,43 +1220,15 @@ public class PlayingScreen implements Screen {
         game.regularFont.draw(game.batch, "Level "+(game.currentLevel+1)+", Par "+thisLevelMaxMoves+". You: "+thisLevelCurrentMoves, 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
 
         game.pixelFont.setColor(game.colorRed);
-        game.pixelFont.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.pixelFont.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreX, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
         game.pixelFont.setColor(game.colorBlue);
-        game.pixelFont.draw(game.batch, ""+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+"", blueScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.pixelFont.draw(game.batch, ""+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+"", blueScoreX, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
         game.pixelFont.setColor(game.colorGreen);
-        game.pixelFont.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreY, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
+        game.pixelFont.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreX, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
 
         // Draw the menu button
         game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         game.batch.draw(inGameMenuButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
-
-        // (27-Oct-2016 Jesse) Removing the dark matter from being displayed at the top
-        // Display the dark matter (lives) at the top of the screen
-        /*if(game.darkMatterCount > 0) {
-            game.batch.setColor(1f,1f,1f,1f);
-        } else { game.batch.setColor(1f,1f,1f,0.5f); }
-        game.batch.draw(singularityImage, (screenWidth/2) -16 -2 -32 -2 -32,767,32,32);
-
-        if(game.darkMatterCount > 1) {
-            game.batch.setColor(1f,1f,1f,1f);
-        } else { game.batch.setColor(1f,1f,1f,0.5f); }
-        game.batch.draw(singularityImage, (screenWidth/2) - 16 -2 -32,767,32,32);
-
-        if(game.darkMatterCount > 2) {
-            game.batch.setColor(1f,1f,1f,1f);
-        } else { game.batch.setColor(1f,1f,1f,0.5f); }
-        game.batch.draw(singularityImage, (screenWidth/2) -16,767,32,32);
-
-        if(game.darkMatterCount > 3) {
-            game.batch.setColor(1f,1f,1f,1f);
-        } else { game.batch.setColor(1f,1f,1f,0.5f); }
-        game.batch.draw(singularityImage, (screenWidth/2) +16 +2,767,32,32);
-
-        if(game.darkMatterCount > 4) {
-            game.batch.setColor(1f,1f,1f,1f);
-        } else { game.batch.setColor(1f,1f,1f,0.5f); }
-        game.batch.draw(singularityImage, (screenWidth/2) +16 +2 +32 +2,767,32,32);
-        */
 
         // Display the level message if we have one, and only if the gameState is ready or tile selected or good move attempt
         if(theGameState == gameState.READY || theGameState == gameState.TILE_SELECTED || theGameState == gameState.GOOD_MOVE_ATTEMPT || theGameState == gameState.IN_GAME_MENU) {
@@ -1266,8 +1240,8 @@ public class PlayingScreen implements Screen {
                                                             // At 3.85f*tileHeight, we give ourselves a little padding between the text and grid
 
             // Draw a black square behind the text
-            game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-            game.batch.draw(levelMessageBackgroundImage, 0, 0, this.screenWidth, this.whiteSpace);
+            //game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+            //game.batch.draw(levelMessageBackgroundImage, 0, 0, this.screenWidth, this.whiteSpace);
             game.regularFont.setColor(1f,0.5f, 1f, 1f);
             game.regularFont.draw(game.batch, ""+game.levelMessage[game.currentLevel], 40, startLineY, this.screenWidth-40, 1, true);
             game.regularFont.setColor(1f,1f,1f,1f);  //reset the regularFont color to white
