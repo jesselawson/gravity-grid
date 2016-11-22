@@ -44,10 +44,10 @@ public class InitialLoadingScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, screenWidth, screenHeight);
 
-        gravityGridSphereDir = 0.0f;
+        gravityGridSphereDir = 359.0f;
 
         // Load the loading screen astronaut and the font first
-        this.game.assets.load("gravityGridSphereLogo.png", Texture.class);
+        this.game.assets.load("spaceturkeylogosquare.png", Texture.class);
 
         // Setup asset manager for freetype fonts
         this.game.assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(new InternalFileHandleResolver()));
@@ -61,15 +61,15 @@ public class InitialLoadingScreen implements Screen {
 
         // Generate our pixelFont (Our big fancy one)
         FreetypeFontLoader.FreeTypeFontLoaderParameter pixelFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        pixelFontParams.fontFileName = "OrialBold.ttf";
+        pixelFontParams.fontFileName = "agencyfb.ttf";
         pixelFontParams.fontParameters.size = this.game.fontSize+8;
-        this.game.assets.load("OrialBold.ttf", BitmapFont.class, pixelFontParams);
+        this.game.assets.load("agencyfb.ttf", BitmapFont.class, pixelFontParams);
 
         this.game.assets.finishLoading(); // Wait for all the assets to load, then go ahead and get our initial assets for the loading screen
 
-        this.game.gravityGridSphereLogoImage = this.game.assets.get("gravityGridSphereLogo.png", Texture.class);
+        this.game.gravityGridSphereLogoImage = this.game.assets.get("spaceturkeylogosquare.png", Texture.class);
         this.game.gravityGridSphereLogoRegion = new TextureRegion(this.game.gravityGridSphereLogoImage);
-        this.game.pixelFont = this.game.assets.get("OrialBold.ttf", BitmapFont.class);
+        this.game.pixelFont = this.game.assets.get("agencyfb.ttf", BitmapFont.class);
         this.game.regularFont = this.game.assets.get("turkey.ttf", BitmapFont.class);
 
         // Load all assetmanager assets
@@ -79,6 +79,9 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("cannotMoveSound.wav", Sound.class);
         this.game.assets.load("outOfMovesSound.wav", Sound.class);
         this.game.assets.load("levelCompleteSound.wav", Sound.class);
+
+        // Tutorial assets
+        this.game.assets.load("tap-here.png", Texture.class);
 
         // Main menu assets
         this.game.assets.load("mainmenubg.png", Texture.class);
@@ -94,8 +97,8 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("asteroid1.png", Texture.class);
         this.game.assets.load("asteroid2.png", Texture.class);
         this.game.assets.load("asteroid3.png", Texture.class);
-        this.game.assets.load("bg0.png", Texture.class);
-        this.game.assets.load("bg1.png", Texture.class);
+        this.game.assets.load("bg0.jpg", Texture.class);
+        this.game.assets.load("bg1.jpg", Texture.class);
         this.game.assets.load("bg2.png", Texture.class);
         this.game.assets.load("bg3.png", Texture.class);
         this.game.assets.load("singularity0.png", Texture.class);
@@ -121,10 +124,11 @@ public class InitialLoadingScreen implements Screen {
 
         this.game.assets.load("levelMessageBackground.png", Texture.class);
 
+
+
         // Buttons
         this.game.assets.load("button/continue.png", Texture.class);
         this.game.assets.load("button/newgame.png", Texture.class);
-        this.game.assets.load("button/reset.png", Texture.class);
 
         // Particle effects
         this.game.assets.load("particles/starfield.p", ParticleEffect.class);
@@ -148,8 +152,8 @@ public class InitialLoadingScreen implements Screen {
         game.assets.load("menu/menuButton.png", Texture.class);
 
         // Assets for help screen
-        game.assets.load("menu/helpScreen0.png", Texture.class);
-        game.assets.load("menu/helpScreen1.png", Texture.class);
+        //game.assets.load("menu/helpScreen0.png", Texture.class);
+        //game.assets.load("menu/helpScreen1.png", Texture.class);
 
     }
 
@@ -181,16 +185,16 @@ public class InitialLoadingScreen implements Screen {
 
         game.batch.setColor(1f,1f,1f,1f);
 
-        game.batch.draw(game.gravityGridSphereLogoRegion, (Gdx.graphics.getWidth()/2)-140, (Gdx.graphics.getHeight()/2)-140, 140, 140, 280, 280, 1.0f, 1.0f, gravityGridSphereDir);
+        game.batch.draw(game.gravityGridSphereLogoRegion, (Gdx.graphics.getWidth()/2)-250, (Gdx.graphics.getHeight()/2)-250, 250, 250, 500, 500, 1.0f, 1.0f, gravityGridSphereDir);
 
         game.pixelFont.setColor(1.0f,1.0f,1.0f,1.0f);
 
         game.batch.end();
 
         // Update gravityGridSphereDir so that our astronaut spins
-        gravityGridSphereDir += 1.0f;
-        if(gravityGridSphereDir >= 359.0f) {
-            gravityGridSphereDir = 0.0f;
+        gravityGridSphereDir -= 0.5f;
+        if(gravityGridSphereDir <= 0.0f) {
+            gravityGridSphereDir = 359.0f;
         }
     }
 

@@ -51,6 +51,7 @@ public class GravityGrid extends Game {
 	Color colorRed = new Color(.79f,.01f,.25f,1f);
 	Color colorGreen = new Color(.60f,.77f,.23f,1f);
 	Color colorBlue = new Color(.37f,.78f,.93f,1f);
+	Color colorOrange = new Color(0.91f, 0.56f, 0.02f, 1.0f);
 
 	// Global resources (yes, includes our fonts and our littleastronaut)
 	SpriteBatch batch;
@@ -87,6 +88,7 @@ public class GravityGrid extends Game {
 		4 = asteroid
 		5 = sun
 		9 = blocked
+
 
 		Last line syntax is as follows:
 		RED SCORE NEEDED, BLUE SCORE NEEDED, GREEN SCORE NEEDED, PAR MOVES

@@ -431,7 +431,6 @@ public class PlayingScreen implements Screen {
     TextureRegion blackHoleRegion;
     Texture buttonFailImage;
     Texture buttonLevelCompleteImage;
-    Texture levelMessageBackgroundImage;
     Texture singularityImage;
     Texture backgroundStarfieldImage;
     TextureRegion backgroundStarfieldRegion;
@@ -627,13 +626,13 @@ public class PlayingScreen implements Screen {
         tileAsteroidImage[3] = game.assets.get("asteroid3.png", Texture.class);
         backgroundImage = new Texture[4];
 
-        backgroundImage[0] = game.assets.get("bg0.png", Texture.class); // Levels 0-
-        backgroundImage[1] = game.assets.get("bg1.png", Texture.class);
+        backgroundImage[0] = game.assets.get("bg0.jpg", Texture.class); // Levels 0-
+        backgroundImage[1] = game.assets.get("bg1.jpg", Texture.class);
         backgroundImage[2] = game.assets.get("bg2.png", Texture.class);
         backgroundImage[3] = game.assets.get("bg3.png", Texture.class);
 
 
-        levelMessageBackgroundImage = game.assets.get("levelMessageBackground.png", Texture.class);
+        //levelMessageBackgroundImage = game.assets.get("levelMessageBackground.png", Texture.class);
 
         tileValueImage = new Texture[11];
         tileValueImage[0] = game.assets.get("tile0.png", Texture.class);
@@ -1070,7 +1069,7 @@ public class PlayingScreen implements Screen {
         }
 
         // Draw the background based on the "galaxy," which is just the level#/10. Every ten levels is a new background (i.e., a new galaxy)
-        game.batch.setColor(1f,1f,1f,0.25f);
+        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
         game.batch.draw(backgroundImage[thisLevelBackgroundImageNumber], 0,0,screenWidth, screenHeight);
 
 
@@ -1103,7 +1102,8 @@ public class PlayingScreen implements Screen {
             switch(tile.type) {
                 case NONE:
                     // Flip these if you want the text brighter. right now it's behind the transparent tileir
-                    game.batch.setColor(0.5f,0.5f,0.5f,0.5f);
+                    //game.batch.setColor(0.5f,0.5f,0.5f,0.5f);
+                    game.batch.setColor(0.5f,0.5f,0.5f,tile.value/10.0f);
                     game.batch.draw(tileBlankImage, tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     game.batch.setColor(1f,1f,1f,.8f);
                     game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
@@ -1213,7 +1213,7 @@ public class PlayingScreen implements Screen {
         float redScoreX = 0-(Gdx.graphics.getWidth()/4); // use 1/4 distance
         float greenScoreX = (Gdx.graphics.getWidth()/4);
 
-        game.pixelFont.setColor(0.87f,0.84f,0.22f,1f);
+        game.pixelFont.setColor(game.colorOrange);
         game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
 
         game.regularFont.setColor(1f,1f,1f,1f);
