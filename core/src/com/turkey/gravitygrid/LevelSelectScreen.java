@@ -142,10 +142,11 @@ public class LevelSelectScreen implements Screen {
 
         }
 
-        // Now we need to iterate through the level icons again to find the one that the player is currently on.
-        // We might be able to just use currentLevel
-        //this.levelIcons.get(this.game.currentLevel).type = 1;
-        // No this needs to be computed on the fly right here because we're not writing currentLevel to the filesystem
+        if(game.currentLevel <= 25) {
+            game.currentGalaxy = 0;
+        } else {
+            game.currentGalaxy = game.currentLevel / 25;
+        }
     }
 
     // Call this to change the currentGalaxy so that we map the levelCompletionInfo to the tiles appropriately
