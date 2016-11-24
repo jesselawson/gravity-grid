@@ -38,6 +38,13 @@ public class PlayingScreen implements Screen {
     Rectangle inGameMenuResetButtonRect;
     Rectangle inGameMenuLevelSelectButtonRect;
     Rectangle inGameMenuHelpButtonRect;
+    Rectangle inGameMenuPrevHelpScreenRect; // turn the page
+    Rectangle inGameMenuNextHelpScreenRect; // turn back a page
+    private int inGameMenuHelpScreenNum;    // Our current help screen
+    private boolean helpScreenMaximized; // If you click on one of the help screens, it fills the screen?
+    // Help screens:
+    // When state = IN_GAME_MENU, player can
+
 
 
     // On create, these are loaded according to the currentLevel that is managed in the GravityGrid class
@@ -434,6 +441,12 @@ public class PlayingScreen implements Screen {
     Texture singularityImage;
     Texture backgroundStarfieldImage;
     TextureRegion backgroundStarfieldRegion;
+    Texture tileSelectedTopImage;
+    Texture tileSelectedBottomImage;
+    TextureRegion tileSelectedTopRegion;
+    TextureRegion tileSelectedBottomRegion;
+    private int tileSelectedTopDirection;
+    private int tileSelectedBottomDirection;
     Sound tileSelectSound;
     Sound tileDeselectSound;
     Sound goodMoveAttemptSound;
@@ -492,7 +505,7 @@ public class PlayingScreen implements Screen {
 
         // create the camera
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1080, 1920); // Hard-set these to control for multiple display sizes
+        camera.setToOrtho(false, game.screenWidth, game.screenHeight);
 
 
         // The amount of space we want for the top of the grid where the numbers will be displayed.
@@ -664,6 +677,12 @@ public class PlayingScreen implements Screen {
         tileOverlayRegion[6] = new TextureRegion(tileOverlayImage[6]);
         buttonFailImage = game.assets.get("buttonFail.png", Texture.class);
         buttonLevelCompleteImage = game.assets.get("buttonLevelComplete.png", Texture.class);
+
+        tileSelectedBottomImage =  this.game.assets.get("tileSelected.png", Texture.class);
+        tileSelectedTopImage = this.game.assets.get("tileSelected2.png", Texture.class);
+        tileSelectedTopRegion = new TextureRegion(tileSelectedTopImage);
+        tileSelectedBottomRegion = new TextureRegion(tileSelectedBottomImage);
+
 
         tryingToReset = false;
         inGameMenuButtonRect = new Rectangle((screenWidth/7)*6.0f, screenHeight-(screenWidth/7.0f), screenWidth/7.0f, screenWidth/7.0f); // Draw one tile big in upper-right corner
@@ -1143,17 +1162,21 @@ public class PlayingScreen implements Screen {
             switch(tile.status) {
                 case SELECTED:
 
-                    // When a square is selected we'll superimpose the first frame of the overlay and spin it.
-                    // Update the tuner rotation and draw the tuner
-                    if(tile.overlayRotation >= 359f) {
+                    if(tileSelectedBottomDirection <= 0.0f) {
+                        tile.overlayRotation = 360.0f;
+                    }
+                    if(tileSelectedTopDirection >= 360.0f) {
                         tile.overlayRotation = 0.0f;
                     }
 
-                    game.batch.setColor(game.colorYellow);
-                    game.batch.draw(tileOverlayRegion[0], tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, 1.0f, 1.0f, tile.overlayRotation);
+                    // Draw the bottom one
+                    game.batch.setColor(1.0f,1.0f,1.0f,0.5f);
+                    game.batch.draw(tileSelectedBottomRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, 1.0f, 1.0f, tileSelectedBottomDirection);
+                    game.batch.draw(tileSelectedTopRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, 1.0f, 1.0f, tileSelectedTopDirection);
 
                     // Rotate that bad boy
-                    tile.overlayRotation += 3.0f;
+                    tileSelectedBottomDirection -= 3.0f;
+                    tileSelectedTopDirection += 6.0f;
 
                     //game.regularFont.setColor(1f,1f,1f,0.5f);
                     //game.regularFont.draw(game.batch, "Tile Selected!", 0,30);

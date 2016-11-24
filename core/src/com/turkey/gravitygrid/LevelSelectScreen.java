@@ -72,9 +72,12 @@ public class LevelSelectScreen implements Screen {
     public LevelSelectScreen(GravityGrid game) {
         this.game = game;
 
+
+
         // Setup the camera
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1080, 1920); // Hard-set these to control for multiple display sizes
+        //camera.setToOrtho(false, 1080, 1920); // Hard-set these to control for multiple display sizes
+        camera.setToOrtho(false, game.screenWidth, game.screenHeight);
 
         // Get our textures
         screenBackground = game.assets.get("menu/blackBackground.png", Texture.class);

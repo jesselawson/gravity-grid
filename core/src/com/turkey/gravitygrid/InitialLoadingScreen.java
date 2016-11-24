@@ -33,7 +33,7 @@ public class InitialLoadingScreen implements Screen {
     private int screenWidth = Gdx.graphics.getWidth();
     private int screenHeight = Gdx.graphics.getHeight();
 
-    private float gravityGridSphereDir; // keeps track of the astronaut direction
+    private float spaceTurkeyGamesLogoDirection; // keeps track of the astronaut direction
 
     // Screen constructor
     public InitialLoadingScreen(GravityGrid game) {
@@ -44,7 +44,7 @@ public class InitialLoadingScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, screenWidth, screenHeight);
 
-        gravityGridSphereDir = 359.0f;
+        spaceTurkeyGamesLogoDirection = 359.0f;
 
         // Load the loading screen astronaut and the font first
         this.game.assets.load("spaceturkeylogosquare.png", Texture.class);
@@ -62,13 +62,13 @@ public class InitialLoadingScreen implements Screen {
         // Generate our pixelFont (Our big fancy one)
         FreetypeFontLoader.FreeTypeFontLoaderParameter pixelFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         pixelFontParams.fontFileName = "agencyfb.ttf";
-        pixelFontParams.fontParameters.size = this.game.fontSize+8;
+        pixelFontParams.fontParameters.size = this.game.fontSize+16;
         this.game.assets.load("agencyfb.ttf", BitmapFont.class, pixelFontParams);
 
         this.game.assets.finishLoading(); // Wait for all the assets to load, then go ahead and get our initial assets for the loading screen
 
         this.game.gravityGridSphereLogoImage = this.game.assets.get("spaceturkeylogosquare.png", Texture.class);
-        this.game.gravityGridSphereLogoRegion = new TextureRegion(this.game.gravityGridSphereLogoImage);
+        this.game.spaceTurkeyLogoRegion = new TextureRegion(this.game.gravityGridSphereLogoImage);
         this.game.pixelFont = this.game.assets.get("agencyfb.ttf", BitmapFont.class);
         this.game.regularFont = this.game.assets.get("turkey.ttf", BitmapFont.class);
 
@@ -111,6 +111,8 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("tile6.png", Texture.class);
         this.game.assets.load("tile8.png", Texture.class);
         this.game.assets.load("tile10.png", Texture.class);
+        this.game.assets.load("tileSelected.png", Texture.class);
+        this.game.assets.load("tileSelected2.png", Texture.class);
         this.game.assets.load("tileOverlayAnim0.png", Texture.class);
         this.game.assets.load("tileOverlayAnim1.png", Texture.class);
         this.game.assets.load("tileOverlayAnim2.png", Texture.class);
@@ -185,16 +187,16 @@ public class InitialLoadingScreen implements Screen {
 
         game.batch.setColor(1f,1f,1f,1f);
 
-        game.batch.draw(game.gravityGridSphereLogoRegion, (Gdx.graphics.getWidth()/2)-250, (Gdx.graphics.getHeight()/2)-250, 250, 250, 500, 500, 1.0f, 1.0f, gravityGridSphereDir);
+        game.batch.draw(game.spaceTurkeyLogoRegion, (Gdx.graphics.getWidth()/2)-250, (Gdx.graphics.getHeight()/2)-250, 250, 250, 500, 500, 1.0f, 1.0f, spaceTurkeyGamesLogoDirection);
 
         game.pixelFont.setColor(1.0f,1.0f,1.0f,1.0f);
 
         game.batch.end();
 
-        // Update gravityGridSphereDir so that our astronaut spins
-        gravityGridSphereDir -= 0.5f;
-        if(gravityGridSphereDir <= 0.0f) {
-            gravityGridSphereDir = 359.0f;
+        // Update spaceTurkeyGamesLogoDirection so that our astronaut spins
+        spaceTurkeyGamesLogoDirection -= 0.5f;
+        if(spaceTurkeyGamesLogoDirection <= 0.0f) {
+            spaceTurkeyGamesLogoDirection = 359.0f;
         }
     }
 

@@ -58,7 +58,7 @@ public class GravityGrid extends Game {
 	BitmapFont regularFont; // The Roboto Slab font called "turkey.ttf"
 	BitmapFont pixelFont; // The big GravityGridder font used for planet gravity values and special things.
 	Texture gravityGridSphereLogoImage; // Used for our loading screen
-	TextureRegion gravityGridSphereLogoRegion;
+	TextureRegion spaceTurkeyLogoRegion;
 
 	public static int fontSize = 60;
 
@@ -142,13 +142,13 @@ public class GravityGrid extends Game {
 			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 90
 			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 95
 			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, //100
-
 	};
 
 	/* Level messages. Displayed at the bottom of each grid for its associated level */
 	public static String[] levelMessage = new String[100];
 
-	// Most levels will be randomly generated.
+	// Most levels will be randomly generated. This string holds them all!
+	// Future releases of the game simply need to increase the total number of levels
 	public int[][] gravityGridLevel = new int[100][52];
 
 	// Some levels are specifically constructed by me, like tutorial levels.
@@ -157,11 +157,11 @@ public class GravityGrid extends Game {
 					0,0,0,0,0,0,0,
 					0,0,0,0,0,0,0,
 					0,0,0,0,0,0,0,
-					0,0,0,0,1,0,0,
-					0,0,0,1,0,0,0,
-					0,0,1,0,0,0,0,
 					0,0,0,0,0,0,0,
-					16,0,0,1
+					0,0,0,0,1,0,0,
+					0,0,0,0,0,0,0,
+					0,0,0,0,0,0,1,
+					8,0,0,1
 			},
 
 			{	// Level 2
@@ -597,18 +597,6 @@ public class GravityGrid extends Game {
 
 		gravityGridLevel[26] = new int[] {0,0,2,0,2,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,2,0,0,0,4,1,2,2,0,0,0,1,1,2,4,0,0,0,0,0,0,26,15,0,3};
 
-		/*
-		gravityGridLevel[4] = levelGenerator.GenerateLevel(2,5,0,0);
-
-		gravityGridLevel[5] = levelGenerator.GenerateLevel(2,5,0,0);
-		gravityGridLevel[6] = myCustomLevel[3];
-		//gravityGridLevel[4] = myCustomLevel[3]; an example of how I can inject my custom levels here and there
-		gravityGridLevel[7] = myCustomLevel[4];
-		gravityGridLevel[8] = levelGenerator.GenerateLevel(2,3,4,0);
-		gravityGridLevel[9] = levelGenerator.GenerateLevel(2,3,4,0);
-		gravityGridLevel[10] = levelGenerator.GenerateLevel(3,5,5,0);
-		//gravityGridLevel[11] = levelGenerator.GenerateLevel(2,4,0,0);
-		*/
 
 		fingerOnScreen = false;
 
@@ -626,6 +614,7 @@ public class GravityGrid extends Game {
 
 		// Head to our InitialLoading screen, which loads all our assets
 		this.setScreen(new InitialLoadingScreen(this));
+
 	}
 
 	public void render() {
