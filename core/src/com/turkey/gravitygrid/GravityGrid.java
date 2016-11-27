@@ -70,8 +70,8 @@ public class GravityGrid extends Game {
 	// Each set of 25 levels is part of a new galaxy
 	public static final String[] galaxyName = new String[] {
 			"Andromeda",
-			"Black Eye",
 			"Bode's",
+			"Black Eye",
 			"Cartwheel",
 			"Cigar",
 			"Pinwheel",
@@ -151,17 +151,24 @@ public class GravityGrid extends Game {
 	// Future releases of the game simply need to increase the total number of levels
 	public int[][] gravityGridLevel = new int[100][52];
 
+	// This will correspond to the level#TutorialOverlay.png in our tutorials/* folder.
+	// If our current level has an associated tutorial overlay (i.e., it = 1), then we will
+	// Display at the start of that level the level#TutorialOverlay.png picture.
+	// 0 = no tutorial
+	// 1 = has an associated tutorial
+	public int[] levelsWithTutorialOverlays = new int[100];
+
 	// Some levels are specifically constructed by me, like tutorial levels.
 	public static final int[][] myCustomLevel = new int[][] {
 			{	// Level 1
 					0,0,0,0,0,0,0,
 					0,0,0,0,0,0,0,
-					0,0,0,0,0,0,0,
+					0,0,1,0,0,0,0,
 					0,0,0,0,0,0,0,
 					0,0,0,0,1,0,0,
 					0,0,0,0,0,0,0,
-					0,0,0,0,0,0,1,
-					8,0,0,1
+					0,0,0,0,0,0,0,
+					16,0,0,1
 			},
 
 			{	// Level 2
@@ -510,49 +517,34 @@ public class GravityGrid extends Game {
 		}
 	}
 
-	/*{
-		"Move the red planets so that their total score equals 16. Tap a planet to select it, then tap a blank tile to move it there.", // 1
-				"Planets in some systems start out misaligned. That's okay! But if you MOVE a planet, you must follow that planet's rules.", //2
-				"Red planets are always diagonal.", //3
-				"Blue planets can only be moved next to other blue planets, on any side except diagonally.", //4
-				"Planets that start out in violation of their rules can finish that way, too, as long as you don't move them.",//5
-				"",//6
-				"Anytime you move a planet you must follow the movement rules for that planet color.",//7
-				"",//8
-				"Sometimes you need to move planets of one color out of the way to make room for planets of a different color.",//9
-				"Asteroids mean you can't use that tile. You'll have to work around it.",//10
-				"",//11
-				"If the planets are aligned, we can save the universe!",//12
-				"Do you see the astronaut on this level? No? That's because there isn't one.",//13
-				"",//14
-				"Suns are just like asteroids, but take up a lot more space. You cannot move a planet into any tile that is under any part of a sun.",//15
-				"Saturn's moon Titan has plenty of evidence of organic (life) chemicals in its atmosphere.",//16
-				"A day in Mercury lasts approximately as long as 59 days on earth.",//17
-				"The left pillar of the Pillars of Creation is 40 trillion kilometers long!",//18
-				"If you think our sun is big, compare it to VY Canis Majoris.",//19
-				"Well that's all, folks!",//20
-				"",//21
-				"",//22
-				"",//23
-				""//24
-	};*/
-
 	public void create() {
 
+		// Instantiate the tutorial overlays
+		for(int i=0; i<levelsWithTutorialOverlays.length; i++) {
+			levelsWithTutorialOverlays[i] = 0;
+		}
+
+		// Manually set the levels with tutorial overlays
+		levelsWithTutorialOverlays[0] = 1;	// level1TutorialOverlay.png on level 1
+		levelsWithTutorialOverlays[1] = 1;	// level2TutorialOverlay.png on level 2
+		levelsWithTutorialOverlays[2] = 1;  // level3TutorialOverlay.png on level 3
+
+
+
 		gravityGridLevel[0] = myCustomLevel[0];
-		levelMessage[0] = "Red planets can only be moved to a tile diagonal to another red planet. Move planets so that the sum of all red planets is 16.";
+		levelMessage[0] = "";
 		gravityGridLevel[1] = myCustomLevel[1];
-		levelMessage[1] = "Perfect! There are two red numbers above the grid. The first (35) is the current sum of red planets; 32 is the sum you need to get to.";
-		gravityGridLevel[2] = myCustomLevel[2];
-		levelMessage[2] = "Great! Each level has planets that must be moved. Your goal is to move the least number of planets to achieve the required score.";
+		levelMessage[1] = "Remember: Red planets can only be moved to a tile that is diagonal to another red planet.";
+		gravityGridLevel[2] = new int[] {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,9,0,0,1};
+		levelMessage[2] = "Fantastic! Now I suppose it's time to tell you why you're here: In 500 years, the universe will collapse.";
 		gravityGridLevel[3] = new int[] {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,1};
-		levelMessage[3] = "Sometimes planetary systems only require one planet to be moved. You can see the par moves required at the top of the screen.";
-		gravityGridLevel[4] = new int[] {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,9,0,0,1};
-		levelMessage[4] = "Planetary systems often have more than one solution. Try to think a few moves ahead.";
-		gravityGridLevel[5] = new int[] {0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,1};
-		levelMessage[5] = "";
-		gravityGridLevel[6] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,24,0,0,1};
-		levelMessage[6] = "";
+		levelMessage[3] = "An ultrastar will explode, causing huge gravity tidal waves. Thankfully, there's a way to prevent it. ";
+		gravityGridLevel[4] = new int[] {0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,1};
+		levelMessage[4] = "Time travellers from the future have given you the Gravity Grid device to realign planetary systems.";
+		gravityGridLevel[5] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,24,0,0,1};
+		levelMessage[5] = "To save the universe, you must realign all the planets in each system's Gravity Grid.";
+		gravityGridLevel[6] = myCustomLevel[3];
+		levelMessage[6] = "You will encounter red, blue, and green planets, asteroids, and burning stars. It will be challenging. Can you save the universe?";
 		gravityGridLevel[7] = myCustomLevel[4]; // First blue
 		levelMessage[7] = "Blue planets can only be moved to the top, bottom, left, or right of other blue planets.";
 		gravityGridLevel[8] = myCustomLevel[5];

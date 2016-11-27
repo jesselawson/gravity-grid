@@ -35,6 +35,8 @@ public class PlayingScreen implements Screen {
     private int screenWidth = Gdx.graphics.getWidth();
     private int screenHeight = Gdx.graphics.getHeight();
 
+    public int levelCompleteMultiplier;
+
     Rectangle inGameMenuResetButtonRect;
     Rectangle inGameMenuLevelSelectButtonRect;
     Rectangle inGameMenuHelpButtonRect;
@@ -45,7 +47,8 @@ public class PlayingScreen implements Screen {
     // Help screens:
     // When state = IN_GAME_MENU, player can
 
-
+    // Tutorial overlay
+    Texture[] tutorialOverlayImage;
 
     // On create, these are loaded according to the currentLevel that is managed in the GravityGrid class
     public int thisLevelRedNeeded;
@@ -409,6 +412,8 @@ public class PlayingScreen implements Screen {
     private int headSpace; // This accounts for the header column numbers
     private int leftSpace; // This accounts for the left column numbers
 
+    private float levelCompleteBackgroundZoom;
+    private float levelCompleteTrophyZoom;
 
 
     // All the textures we use
@@ -438,6 +443,9 @@ public class PlayingScreen implements Screen {
     TextureRegion blackHoleRegion;
     Texture buttonFailImage;
     Texture buttonLevelCompleteImage;
+    TextureRegion levelCompleteRegion;
+    Texture levelCompleteTrophyImage;
+    TextureRegion levelCompleteTrophyRegion;
     Texture singularityImage;
     Texture backgroundStarfieldImage;
     TextureRegion backgroundStarfieldRegion;
@@ -485,7 +493,7 @@ public class PlayingScreen implements Screen {
 
         // Init our levelComplete particle effects
         levelCompleteFireworks = new ParticleEffect();
-        levelCompleteFireworks.load(Gdx.files.internal("particles/bigstarburst.p"), Gdx.files.internal("particles"));
+        levelCompleteFireworks.load(Gdx.files.internal("particles/levelCompleteStarburst.p"), Gdx.files.internal("particles"));
 
         goodMoveStarburst = game.assets.get("particles/goodmovestarburst.p", ParticleEffect.class); // Template effect
         goodMoveStarburstPool = new ParticleEffectPool(goodMoveStarburst, 0, 50);                   // Pool for the template
@@ -641,9 +649,11 @@ public class PlayingScreen implements Screen {
 
         backgroundImage[0] = game.assets.get("bg0.jpg", Texture.class); // Levels 0-
         backgroundImage[1] = game.assets.get("bg1.jpg", Texture.class);
-        backgroundImage[2] = game.assets.get("bg2.png", Texture.class);
-        backgroundImage[3] = game.assets.get("bg3.png", Texture.class);
 
+        // Tutorial overlay images
+        tutorialOverlayImage = new Texture[3];
+        tutorialOverlayImage[0] = game.assets.get("tutorials/level1TutorialOverlay.png", Texture.class);
+        tutorialOverlayImage[1] = game.assets.get("tutorials/level2TutorialOverlay.png", Texture.class);
 
         //levelMessageBackgroundImage = game.assets.get("levelMessageBackground.png", Texture.class);
 
@@ -677,6 +687,12 @@ public class PlayingScreen implements Screen {
         tileOverlayRegion[6] = new TextureRegion(tileOverlayImage[6]);
         buttonFailImage = game.assets.get("buttonFail.png", Texture.class);
         buttonLevelCompleteImage = game.assets.get("buttonLevelComplete.png", Texture.class);
+        levelCompleteRegion = new TextureRegion(buttonLevelCompleteImage);
+        levelCompleteTrophyImage = game.assets.get("levelCompleteTrophy.png", Texture.class);
+        levelCompleteTrophyRegion = new TextureRegion(levelCompleteTrophyImage);
+        levelCompleteBackgroundZoom = 100.0f;
+        levelCompleteTrophyZoom = 100.0f;
+        levelCompleteMultiplier = 1;
 
         tileSelectedBottomImage =  this.game.assets.get("tileSelected.png", Texture.class);
         tileSelectedTopImage = this.game.assets.get("tileSelected2.png", Texture.class);
@@ -701,7 +717,6 @@ public class PlayingScreen implements Screen {
         inGameMenuResetButtonRect = new Rectangle(0, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
         inGameMenuLevelSelectButtonRect = new Rectangle(this.screenWidth/3.0f, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
         inGameMenuHelpButtonRect = new Rectangle((this.screenWidth/3)*2, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
-
 
 
         // Call this once before the level starts so that we have some initial values
@@ -805,6 +820,9 @@ public class PlayingScreen implements Screen {
         readyForInput = true;
         theGameState = gameState.READY;
         tryingToReset = false;
+        levelCompleteTrophyZoom = 100.0f;
+        levelCompleteBackgroundZoom = 100.0f;
+        levelCompleteMultiplier = 1;
 
         restartLevelSound.play();
     }
@@ -824,6 +842,7 @@ public class PlayingScreen implements Screen {
         // Check for input
             if (Gdx.input.justTouched()) {
 
+
                 Vector3 finger = new Vector3();
                 camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
@@ -831,7 +850,7 @@ public class PlayingScreen implements Screen {
 
                     // Did we tap cancel button?
                     if (pointInRectangle(inGameMenuButtonRect, finger.x, finger.y)) {
-                        System.out.println("Exiting in-game menu");
+
                         theGameState = gameState.READY;
                         readyForInput = false;
                     }
@@ -1041,8 +1060,10 @@ public class PlayingScreen implements Screen {
                                             thisLevelGreenNeeded == thisLevelCurrentGreenTotal) {
                                         theGameState = gameState.LEVEL_COMPLETE;
                                         levelCompleteSound.play();
-                                        //Gdx.input.vibrate(500);
 
+                                        // Add a group of particle effects on complete level
+                                        levelCompleteFireworks.setPosition(0.5f*game.screenWidth, 0.5f*game.screenHeight);
+                                        levelCompleteFireworks.start();
                                     } else {
                                         // We have not beaten the level, so let's
                                         //if(thisLevelCurrentMoves > thisLevelMaxMoves) {
@@ -1215,16 +1236,6 @@ public class PlayingScreen implements Screen {
             cellNumber++;
         }
 
-        // Draw all particle effects from our array that holds all currently running particle effect systems
-        for (int i = particleEffects.size - 1; i >= 0; i--) {
-            ParticleEffectPool.PooledEffect effect = particleEffects.get(i);
-            effect.draw(game.batch, delta*1.5f);
-            if (effect.isComplete()) {
-                effect.free();
-                particleEffects.removeIndex(i);
-            }
-        }
-
         // Trick to get accurate lines:
         // Set the Y value of the rendered fonts to (lineNumberFromTop*(screenHeight-this.game.fontSize))
 
@@ -1270,6 +1281,13 @@ public class PlayingScreen implements Screen {
             game.regularFont.setColor(1f,1f,1f,1f);  //reset the regularFont color to white
         }
 
+        // Let's check to see if this level has a tutorial overlay assigned to it. If it does, then let's display it!
+        if(game.levelsWithTutorialOverlays[game.currentLevel] == 1) {
+            // We do have a tutorial overlay, so let's display it
+            game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+            game.batch.draw(tutorialOverlayImage[game.currentLevel], 0, 0, game.screenWidth, game.screenHeight);
+        }
+
 
 
 
@@ -1278,12 +1296,38 @@ public class PlayingScreen implements Screen {
 
             game.batch.setColor(1f,1f,1f,1f);
 
-            // Render our fireworks
-            levelCompleteFireworks.setPosition(0,0);
-            levelCompleteFireworks.draw(game.batch, delta);
+            if(levelCompleteBackgroundZoom > 0.0f) {
+                levelCompleteBackgroundZoom -= 1.0f*levelCompleteMultiplier;
+            } else {
+                levelCompleteBackgroundZoom = 0.0f; // prevent weird rendering from a < 0.0f result from the above
+            }
+
+            if(levelCompleteTrophyZoom > 0.0f) {
+                levelCompleteTrophyZoom -= 1.0f*levelCompleteMultiplier;
+                levelCompleteMultiplier += 1;
+            } else {
+                levelCompleteBackgroundZoom = 0.0f;
+            }
+
+            float bx = (0.5f*screenWidth/100.0f)*levelCompleteBackgroundZoom;
+            float by = (0.5f*screenHeight/100.0f)*levelCompleteBackgroundZoom;
+            float bw = screenWidth - bx;
+            float bh = screenHeight - by;
+
+            float tx = -levelCompleteTrophyZoom*(0.5f*screenWidth/100.0f);
+            float ty = -levelCompleteTrophyZoom*(0.5f*screenHeight/100.0f);
+            float tw = screenWidth + tx;
+            float th = screenHeight + ty;
 
             // Draw the level complete modal
-            game.batch.draw(buttonLevelCompleteImage, 0, 0, this.screenWidth, this.whiteSpace);
+            game.batch.setColor(1.0f,1.0f,1.0f, 1.0f-(levelCompleteBackgroundZoom/100.0f));
+            game.batch.draw(levelCompleteRegion, 0, 0, 0.5f*screenWidth, 0.5f*screenHeight, screenWidth, screenHeight, 1+(5*(levelCompleteBackgroundZoom/100.0f)), 1+(5*(levelCompleteBackgroundZoom/100.0f)), 0.0f);
+
+            // Render our fireworks
+            levelCompleteFireworks.draw(game.batch, Gdx.graphics.getDeltaTime());
+
+            // Draw the trophy
+            game.batch.draw(levelCompleteTrophyRegion, 0, 0, 0.5f*screenWidth, 0.5f*screenHeight, screenWidth, screenHeight, 1+(8*(levelCompleteBackgroundZoom/100.0f)), 1+(8*(levelCompleteBackgroundZoom/100.0f)), 0.0f);
 
             if(Gdx.input.isTouched()) {
 
@@ -1313,6 +1357,16 @@ public class PlayingScreen implements Screen {
             game.batch.draw(inGameMenuHelpButtonImage, inGameMenuHelpButtonRect.x, inGameMenuHelpButtonRect.y, inGameMenuHelpButtonRect.width, inGameMenuHelpButtonRect.height);
 
             game.batch.draw(inGameMenuCancelButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
+        }
+
+        // Draw all particle effects from our array that holds all currently running particle effect systems
+        for (int i = particleEffects.size - 1; i >= 0; i--) {
+            ParticleEffectPool.PooledEffect effect = particleEffects.get(i);
+            effect.draw(game.batch, delta*1.5f);
+            if (effect.isComplete()) {
+                effect.free();
+                particleEffects.removeIndex(i);
+            }
         }
 
         game.batch.end();
