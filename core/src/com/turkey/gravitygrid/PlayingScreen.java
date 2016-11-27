@@ -1243,9 +1243,9 @@ public class PlayingScreen implements Screen {
         // NOTE: when using halign=1 in regularFont.draw, you are setting the X value RELATIVE to the center of the screen. Don't forget, dummy!
         // ALSO: 0-(Gdx.graphics.getWidth()/2); will put the center RIGHT on the edge of the screen, so you'll need to shift (pad) the X value a bit
         // (19-Nov-2016 Jesse) Only display the color score if we have that planet type on this level
-        float blueScoreX = 0; // center
-        float redScoreX = 0-(Gdx.graphics.getWidth()/4); // use 1/4 distance
-        float greenScoreX = (Gdx.graphics.getWidth()/4);
+        float middleScoreStripX = 0; // center
+        float leftScoreStripX = 0-(Gdx.graphics.getWidth()/4); // use 1/4 distance
+        float rightScoreStripX = (Gdx.graphics.getWidth()/4);
 
         game.pixelFont.setColor(game.colorOrange);
         game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
@@ -1253,14 +1253,72 @@ public class PlayingScreen implements Screen {
         game.regularFont.setColor(1f,1f,1f,1f);
         game.regularFont.draw(game.batch, "Level "+(game.currentLevel+1)+", Par "+thisLevelMaxMoves+". You: "+thisLevelCurrentMoves, 5, screenHeight-(1.5f*this.game.fontSize), this.screenWidth-10, 1, false);
 
-        game.pixelFont.setColor(game.colorRed);
-        game.pixelFont.draw(game.batch, ""+thisLevelCurrentRedTotal+"/"+thisLevelRedNeeded+"", redScoreX, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
-        game.pixelFont.setColor(game.colorBlue);
-        game.pixelFont.draw(game.batch, ""+thisLevelCurrentBlueTotal+"/"+thisLevelBlueNeeded+"", blueScoreX, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
-        game.pixelFont.setColor(game.colorGreen);
-        game.pixelFont.draw(game.batch, ""+thisLevelCurrentGreenTotal+"/"+thisLevelGreenNeeded+"", greenScoreX, screenHeight-(4*this.game.fontSize), this.screenWidth-10, 1, false);
+        // (26-Nov-2016 Jesse) Check to see if this level has any blue or green. If it does not, don't bother showing it. Only show
+        // the scores needed for the types of planets we actually have.
+        // 7 Possible combos: red, blue, green, red blue, red green, blue green, red blue green.
 
-        // Draw the menu button
+        // First, determine which ones we have
+        boolean haveRed = false;
+        boolean haveGreen = false;
+        boolean haveBlue = false;
+        int count = 0;
+        if(thisLevelRedNeeded > 0) { haveRed = true; count++;}
+        if(thisLevelBlueNeeded > 0) { haveBlue = true; count++;}
+        if(thisLevelGreenNeeded > 0) { haveGreen = true; count++;}
+
+        // Next, since count can only be 1,2,or 3, figure out what pattern we have and display the counters appropriately
+        switch(count) {
+            case 1:
+                if (haveRed) {
+                    game.pixelFont.setColor(game.colorRed);
+                    game.pixelFont.draw(game.batch, "" + thisLevelCurrentRedTotal + "/" + thisLevelRedNeeded + "", middleScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                }
+                if (haveBlue) {
+                    game.pixelFont.setColor(game.colorBlue);
+                    game.pixelFont.draw(game.batch, "" + thisLevelCurrentBlueTotal + "/" + thisLevelBlueNeeded + "", middleScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                }
+                if (haveGreen) {
+                    game.pixelFont.setColor(game.colorGreen);
+                    game.pixelFont.draw(game.batch, "" + thisLevelCurrentGreenTotal + "/" + thisLevelGreenNeeded + "", middleScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                }
+                break;
+
+            case 2:
+                if (haveRed && haveBlue) {
+                    game.pixelFont.setColor(game.colorRed);
+                    game.pixelFont.draw(game.batch, "" + thisLevelCurrentRedTotal + "/" + thisLevelRedNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                    game.pixelFont.setColor(game.colorBlue);
+                    game.pixelFont.draw(game.batch, "" + thisLevelCurrentBlueTotal + "/" + thisLevelBlueNeeded + "", rightScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                }
+                if (haveBlue && haveGreen) {
+                    game.pixelFont.setColor(game.colorBlue);
+                    game.pixelFont.draw(game.batch, "" + thisLevelCurrentBlueTotal + "/" + thisLevelBlueNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                    game.pixelFont.setColor(game.colorGreen);
+                    game.pixelFont.draw(game.batch, "" + thisLevelCurrentGreenTotal + "/" + thisLevelGreenNeeded + "", rightScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                }
+                if (haveRed && haveGreen) {
+                    game.pixelFont.setColor(game.colorRed);
+                    game.pixelFont.draw(game.batch, "" + thisLevelCurrentRedTotal + "/" + thisLevelRedNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                    game.pixelFont.setColor(game.colorGreen);
+                    game.pixelFont.draw(game.batch, "" + thisLevelCurrentGreenTotal + "/" + thisLevelGreenNeeded + "", rightScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                }
+                break;
+            case 3:
+                game.pixelFont.setColor(game.colorRed);
+                game.pixelFont.draw(game.batch, "" + thisLevelCurrentRedTotal + "/" + thisLevelRedNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                game.pixelFont.setColor(game.colorBlue);
+                game.pixelFont.draw(game.batch, "" + thisLevelCurrentBlueTotal + "/" + thisLevelBlueNeeded + "", middleScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                game.pixelFont.setColor(game.colorGreen);
+                game.pixelFont.draw(game.batch, "" + thisLevelCurrentGreenTotal + "/" + thisLevelGreenNeeded + "", rightScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+                break;
+            default:
+                break;
+        }
+
+
+
+
+                // Draw the menu button
         game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         game.batch.draw(inGameMenuButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
 
