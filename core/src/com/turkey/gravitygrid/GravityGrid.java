@@ -520,7 +520,7 @@ public class GravityGrid extends Game {
 	public void create() {
 
 		// Instantiate the tutorial overlays
-		for(int i=0; i<levelsWithTutorialOverlays.length; i++) {
+		for(int i=0; i<100; i++) {
 			levelsWithTutorialOverlays[i] = 0;
 		}
 
@@ -528,6 +528,10 @@ public class GravityGrid extends Game {
 		levelsWithTutorialOverlays[0] = 1;	// level1TutorialOverlay.png on level 1
 		levelsWithTutorialOverlays[1] = 1;	// level2TutorialOverlay.png on level 2
 		levelsWithTutorialOverlays[2] = 1;  // level3TutorialOverlay.png on level 3
+		levelsWithTutorialOverlays[3] = 0;
+		levelsWithTutorialOverlays[4] = 0;
+		levelsWithTutorialOverlays[5] = 0;
+		levelsWithTutorialOverlays[6] = 1;  // level7TutorialOverlay.png on level 7
 
 
 
@@ -546,7 +550,7 @@ public class GravityGrid extends Game {
 		gravityGridLevel[6] = myCustomLevel[3];
 		levelMessage[6] = "Your mission is to realign all the planets in each system's Gravity Grid. Do this, and you will save the universe!";
 		gravityGridLevel[7] = myCustomLevel[4]; // First blue
-		levelMessage[7] = "Blue planets can only be moved to the top, bottom, left, or right of other blue planets.";
+		levelMessage[7] = "Remember: Blue planets can only be moved to the top, bottom, left, or right of other blue planets.";
 		gravityGridLevel[8] = myCustomLevel[5];
 		levelMessage[8] = "Great! Just like red planets, blue planets might start in violation of their rules. Only when moving must the rules be followed.";
 		gravityGridLevel[9] = myCustomLevel[6];

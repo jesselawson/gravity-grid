@@ -649,10 +649,11 @@ public class PlayingScreen implements Screen {
         backgroundImage[1] = game.assets.get("bg1.jpg", Texture.class);
 
         // Tutorial overlay images
-        tutorialOverlayImage = new Texture[3];
+        tutorialOverlayImage = new Texture[8];
         tutorialOverlayImage[0] = game.assets.get("tutorials/level1TutorialOverlay.png", Texture.class);
         tutorialOverlayImage[1] = game.assets.get("tutorials/level2TutorialOverlay.png", Texture.class);
         tutorialOverlayImage[2] = game.assets.get("tutorials/level3TutorialOverlay.png", Texture.class);
+        tutorialOverlayImage[6] = game.assets.get("tutorials/level7TutorialOverlay.png", Texture.class);
 
         //levelMessageBackgroundImage = game.assets.get("levelMessageBackground.png", Texture.class);
         doneCheckmarkImage = game.assets.get("levelicons/done.png", Texture.class);

@@ -228,11 +228,11 @@ public class LevelSelectScreen implements Screen {
 
             // loop through the levels and find the touched one
             for(LevelSelectScreen.LevelIcon level : this.levelIcons) {
-                if (GravityGrid.pointInRectangle(level.rect, finger.x, finger.y)) {
+                if (game.pointInRectangle(level.rect, finger.x, finger.y)) {
 
                     // If it's a playable level, then set that as the current level and load that bad boy
                     if(level.type == 1 || level.type == 2) {
-                        GravityGrid.currentLevel = level.levelNum+(game.currentGalaxy*25);
+                        game.currentLevel = level.levelNum+(game.currentGalaxy*25);
                         game.setScreen(new PlayingScreen(game)); // Will pickup based on what we read from the player files (the ini)
                     } else {
                         message = "You can't play that one yet!";
