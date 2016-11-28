@@ -471,9 +471,12 @@ public class PlayingScreen implements Screen {
 
     gameState theGameState;
 
-    public PlayingScreen(GravityGrid game) {
+    LevelSelectScreen parentScreen;
+
+    public PlayingScreen(GravityGrid game, LevelSelectScreen parent) {
 
         this.game = game;
+        parentScreen = parent;
 
         fingerOnScreen = false;
         readyForInput = true;
@@ -867,7 +870,7 @@ public class PlayingScreen implements Screen {
                     }
                     // Did we tap level select?
                     if (pointInRectangle(inGameMenuLevelSelectButtonRect, finger.x, finger.y)) {
-                        game.setScreen(new LevelSelectScreen(game));
+                        game.setScreen(this.parentScreen);
                     }
 
 
@@ -1483,7 +1486,9 @@ public class PlayingScreen implements Screen {
 
                 // RestartLevel uses game.currentLevel to determine which level to load, so it's imperative that
                 // game.UpdateLevelCompletionInfo is called first!
-                RestartLevel();
+
+                parentScreen.PlayNextLevel();
+
             }
 
 

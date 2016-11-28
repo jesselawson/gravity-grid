@@ -26,6 +26,7 @@ import static com.turkey.gravitygrid.GravityGrid.levelCompletionInfo;
 public class LevelSelectScreen implements Screen {
 
     private GravityGrid game;
+    private PlayingScreen playingScreen;
 
     private int tileWidth;
     private int tileHeight;
@@ -72,7 +73,8 @@ public class LevelSelectScreen implements Screen {
     public LevelSelectScreen(GravityGrid game) {
         this.game = game;
 
-
+        // Create our playing screen so we aren't recreating it every damned time we beat a level
+        playingScreen = new PlayingScreen(this.game, this);
 
         // Setup the camera
         camera = new OrthographicCamera();
@@ -175,6 +177,18 @@ public class LevelSelectScreen implements Screen {
         }
     }
 
+    public void PlayLevel(int levelNum) {
+        game.currentLevel = levelNum;
+        this.playingScreen.RestartLevel();
+        game.setScreen(this.playingScreen);
+    }
+
+    public void PlayNextLevel() {
+        // This function is called in PlayingScreen and assumes that UpdateLevelCompletionInfo has already been called, which should have updated game.currentLevel
+        this.playingScreen.RestartLevel();
+        game.setScreen(this.playingScreen);
+    }
+
     @Override
     public void render(float delta) {
 
@@ -228,12 +242,13 @@ public class LevelSelectScreen implements Screen {
 
             // loop through the levels and find the touched one
             for(LevelSelectScreen.LevelIcon level : this.levelIcons) {
-                if (game.pointInRectangle(level.rect, finger.x, finger.y)) {
+                if (GravityGrid.pointInRectangle(level.rect, finger.x, finger.y)) {
 
                     // If it's a playable level, then set that as the current level and load that bad boy
                     if(level.type == 1 || level.type == 2) {
                         game.currentLevel = level.levelNum+(game.currentGalaxy*25);
-                        game.setScreen(new PlayingScreen(game)); // Will pickup based on what we read from the player files (the ini)
+                        System.out.println("Loading level "+game.currentLevel+"...");
+                        PlayLevel(game.currentLevel);
                     } else {
                         message = "You can't play that one yet!";
                         messageAlpha = 1.0f;
