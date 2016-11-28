@@ -113,14 +113,21 @@ public class LevelSelectScreen implements Screen {
         int worldCol = 0;
         int levelNum = 0;
 
-        // Load the Map
+        // Figure out our current galaxy
+        if(game.currentLevel <= 25) {
+            game.currentGalaxy = 0;
+        } else {
+            game.currentGalaxy = game.currentLevel / 25;
+        }
+
+        // Load the Map, based on our current galaxy
         // Loop through the tiles and assign rect values, load values from the values table, and
         // also load the tile type from the levels tables.
         for(int r = 4; r >= 0; r--) {
             for(int c = 0; c < 5; c++) {
 
                 // Figure out the type of this level icon
-                int thisLevelIconType = levelCompletionInfo[levelNum][0];
+                int thisLevelIconType = levelCompletionInfo[(game.currentGalaxy*25)+levelNum][0];
                 //System.out.println("Max: "+game.levelCompletionInfo.length+":: At levelNum "+levelNum+" I found "+thisLevelIconType);
 
                 // Create a placeholder for the rect values
@@ -147,11 +154,7 @@ public class LevelSelectScreen implements Screen {
 
         }
 
-        if(game.currentLevel <= 25) {
-            game.currentGalaxy = 0;
-        } else {
-            game.currentGalaxy = game.currentLevel / 25;
-        }
+
     }
 
     // Call this to change the currentGalaxy so that we map the levelCompletionInfo to the tiles appropriately
@@ -186,6 +189,10 @@ public class LevelSelectScreen implements Screen {
     public void PlayNextLevel() {
         // This function is called in PlayingScreen and assumes that UpdateLevelCompletionInfo has already been called, which should have updated game.currentLevel
         this.playingScreen.RestartLevel();
+
+        // Update the levelSelectScreen, too
+        ChangeToGalaxy(0); // This will just force us to redraw all the thisLevelIconType's in the levelIcons so that they reflect our progress. If you get rid of this, the levelIcons wont update unless you go Prev then Next galaxy.
+
         game.setScreen(this.playingScreen);
     }
 
@@ -267,6 +274,8 @@ public class LevelSelectScreen implements Screen {
 
         game.batch.begin();
 
+        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+
         game.batch.draw(screenBackground, 0, 0, screenWidth, screenHeight);
 
         // Loop through tiles and draw them
@@ -312,7 +321,7 @@ public class LevelSelectScreen implements Screen {
             game.batch.draw(previousGalaxyButtonImage, previousGalaxyButtonRect.x, previousGalaxyButtonRect.y, previousGalaxyButtonRect.width, previousGalaxyButtonRect.height);
         }
         if(game.currentGalaxy != 4) { // Don't draw "next galaxy" on our 4th galaxy
-            // Now let's lock the "next galaxy" button if we haven't completed it
+            // Now let's lock the "next galaxy" button if we haven't completed the 25th level in oru current galaxy
             if(levelCompletionInfo[(GravityGrid.currentGalaxy*25)+24][0] != 2) {
                 // display a lock icon over the button
                 game.batch.draw(levelIcon[0], nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
