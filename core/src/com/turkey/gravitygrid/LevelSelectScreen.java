@@ -289,10 +289,25 @@ public class LevelSelectScreen implements Screen {
 
 
         // Display any messages AND the "next galaxy" button
+        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
 
         // Prev and Next galaxy buttons
-        game.batch.draw(previousGalaxyButtonImage, previousGalaxyButtonRect.x, previousGalaxyButtonRect.y, previousGalaxyButtonRect.width, previousGalaxyButtonRect.height);
-        game.batch.draw(nextGalaxyButtonImage, nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
+        // Check to see if our currentGalaxy*25 level is completed. If it is, we can display the "Next galaxy" button
+        if(game.currentGalaxy > 0) { // dont draw "previous galaxy" on our first galaxy
+            game.batch.draw(previousGalaxyButtonImage, previousGalaxyButtonRect.x, previousGalaxyButtonRect.y, previousGalaxyButtonRect.width, previousGalaxyButtonRect.height);
+        }
+        if(game.currentGalaxy != 4) { // Don't draw "next galaxy" on our 4th galaxy
+            // Now let's lock the "next galaxy" button if we haven't completed it
+            if(levelCompletionInfo[(GravityGrid.currentGalaxy*25)+24][0] != 2) {
+                // display a lock icon over the button
+                game.batch.draw(levelIcon[0], nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
+                game.batch.setColor(0.5f,0.5f,0.5f,0.5f);
+            }
+            game.batch.draw(nextGalaxyButtonImage, nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
+
+        }
+
+
 
         // The location of the top line should be below the last tile. We can find this easily:
         float tileHeight = Gdx.graphics.getWidth() / 7;

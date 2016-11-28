@@ -807,9 +807,12 @@ public class PlayingScreen implements Screen {
                 tileNum++;
 
                 // (4-Nov-2016 Jesse) Add a new particle system on each and every tile so that when the level starts, there's a huge burst of stars
-                ParticleEffectPool.PooledEffect levelStartEffect = goodMoveStarburstPool.obtain();
-                levelStartEffect.setPosition(rect.x+(rect.width/2), rect.y+(rect.height/2));
-                particleEffects.add(levelStartEffect);
+                // (19-Nov-2016 Jesse) Only do this on tiles with planets, otherwise there's lots of lag
+                if(rcType == TileType.REDPLANET || rcType == TileType.BLUEPLANET || rcType == TileType.GREENPLANET) {
+                    ParticleEffectPool.PooledEffect levelStartEffect = goodMoveStarburstPool.obtain();
+                    levelStartEffect.setPosition(rect.x + (rect.width / 2), rect.y + (rect.height / 2));
+                    particleEffects.add(levelStartEffect);
+                }
 
             }
             worldCol = 0; // Reset column counter
