@@ -130,6 +130,7 @@ public class InitialLoadingScreen implements Screen {
         // Tutorial Overlays
         this.game.assets.load("tutorials/level1TutorialOverlay.png", Texture.class);
         this.game.assets.load("tutorials/level2TutorialOverlay.png", Texture.class);
+        this.game.assets.load("tutorials/level3TutorialOverlay.png", Texture.class);
 
 
         // Buttons
@@ -156,6 +157,7 @@ public class InitialLoadingScreen implements Screen {
         game.assets.load("menu/helpButton.png", Texture.class);
         game.assets.load("menu/resetButton.png", Texture.class);
         game.assets.load("menu/menuButton.png", Texture.class);
+        game.assets.load("doitnow.png", Texture.class);
 
         // Assets for help screen
         //game.assets.load("menu/helpScreen0.png", Texture.class);

@@ -534,9 +534,9 @@ public class GravityGrid extends Game {
 		gravityGridLevel[0] = myCustomLevel[0];
 		levelMessage[0] = "";
 		gravityGridLevel[1] = myCustomLevel[1];
-		levelMessage[1] = "Remember: Red planets can only be moved to a tile that is diagonal to another red planet.";
+		levelMessage[1] = "";
 		gravityGridLevel[2] = new int[] {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,9,0,0,1};
-		levelMessage[2] = "";
+		levelMessage[2] = "Remember: Red planets can only be moved to a tile that is diagonal to another red planet.";
 		gravityGridLevel[3] = new int[] {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,1};
 		levelMessage[3] = "Fantastic! Now I suppose it's time to tell you why you're here: In 500 years, the universe will collapse.";
 		gravityGridLevel[4] = new int[] {0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,1};
@@ -544,7 +544,7 @@ public class GravityGrid extends Game {
 		gravityGridLevel[5] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,24,0,0,1};
 		levelMessage[5] = "Time travellers from the future have given you the Gravity Grid device to realign planetary systems.";
 		gravityGridLevel[6] = myCustomLevel[3];
-		levelMessage[6] = "Your missions is to realign all the planets in each system's Gravity Grid. Do this, and you will save the universe!";
+		levelMessage[6] = "Your mission is to realign all the planets in each system's Gravity Grid. Do this, and you will save the universe!";
 		gravityGridLevel[7] = myCustomLevel[4]; // First blue
 		levelMessage[7] = "Blue planets can only be moved to the top, bottom, left, or right of other blue planets.";
 		gravityGridLevel[8] = myCustomLevel[5];
@@ -561,8 +561,8 @@ public class GravityGrid extends Game {
 		levelMessage[13] = "Sometimes you need to move planets of one color out of the way to make room for planets of a different color.";
 		gravityGridLevel[14] = myCustomLevel[8];
 		levelMessage[13] = "Sometimes it seems like you need to make room for different color planets, but there might also be a different solution.";
-		gravityGridLevel[14] = new int[] {0,0,0,0,1,0,2,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,11,16,0,2};
-		levelMessage[14] = "Here, try to get the red AND blue scores aligned in only two moves. Can you do it?";
+		gravityGridLevel[14] = new int[] {0,0,0,0,1,2,0,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,11,16,0,3};
+		levelMessage[14] = "Here, try to get the red AND blue scores aligned in only three moves. Can you do it?";
 		gravityGridLevel[15] = new int[] {2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,12,18,0,2};
 		levelMessage[15] = "Remember that everything in our universe is connected. Could there be multiple ways to solve this problem?";
 		gravityGridLevel[16] = myCustomLevel[9];

@@ -76,6 +76,7 @@ public class PlayingScreen implements Screen {
     public Texture inGameMenuResetButtonImage;
     public Texture inGameMenuLevelSelectButtonImage;
     public Texture inGameMenuHelpButtonImage;
+    Texture doneCheckmarkImage;
 
     // An array of pooled effects to manage all our particle effect systems
     Array<ParticleEffectPool.PooledEffect> particleEffects = new Array();
@@ -627,14 +628,11 @@ public class PlayingScreen implements Screen {
         tileBlankImage = game.assets.get("tileBlankImage.png", Texture.class);
         //tilePlanetImage = new Texture[4]; // remember: [4] = [0,1,2,3].
         //tilePlanetRegion = new TextureRegion[4];
-        tileRedPlanetImage = new Texture(Gdx.files.internal("planet-red.png"), true);
-        tileRedPlanetImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
+        tileRedPlanetImage = game.assets.get("planet-red.png", Texture.class);
         tileRedPlanetRegion = new TextureRegion(tileRedPlanetImage);
-        tileBluePlanetImage = new Texture(Gdx.files.internal("planet-blue.png"), true);
-        tileBluePlanetImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
+        tileBluePlanetImage = game.assets.get("planet-blue.png", Texture.class);
         tileBluePlanetRegion = new TextureRegion(tileBluePlanetImage);
-        tileGreenPlanetImage = new Texture(Gdx.files.internal("planet-green.png"), true);
-        tileGreenPlanetImage.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
+        tileGreenPlanetImage = game.assets.get("planet-green.png", Texture.class);
         tileGreenPlanetRegion = new TextureRegion(tileGreenPlanetImage);
         tileSunImage = game.assets.get("sun.png", Texture.class);
         tileSunRegion = new TextureRegion(tileSunImage);
@@ -654,8 +652,10 @@ public class PlayingScreen implements Screen {
         tutorialOverlayImage = new Texture[3];
         tutorialOverlayImage[0] = game.assets.get("tutorials/level1TutorialOverlay.png", Texture.class);
         tutorialOverlayImage[1] = game.assets.get("tutorials/level2TutorialOverlay.png", Texture.class);
+        tutorialOverlayImage[2] = game.assets.get("tutorials/level3TutorialOverlay.png", Texture.class);
 
         //levelMessageBackgroundImage = game.assets.get("levelMessageBackground.png", Texture.class);
+        doneCheckmarkImage = game.assets.get("levelicons/done.png", Texture.class);
 
         tileValueImage = new Texture[11];
         tileValueImage[0] = game.assets.get("tile0.png", Texture.class);
@@ -714,9 +714,11 @@ public class PlayingScreen implements Screen {
         inGameMenuHelpButtonImage = game.assets.get("menu/helpButton.png", Texture.class);
         inGameMenuButtonImage = game.assets.get("menu/menuButton.png", Texture.class);
 
-        inGameMenuResetButtonRect = new Rectangle(0, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
-        inGameMenuLevelSelectButtonRect = new Rectangle(this.screenWidth/3.0f, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
-        inGameMenuHelpButtonRect = new Rectangle((this.screenWidth/3)*2, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
+        float buttonWidth = this.screenWidth/3.0f;
+
+        inGameMenuResetButtonRect = new Rectangle(0.66f*this.screenWidth-buttonWidth-(this.screenWidth/6.0f), this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
+        inGameMenuLevelSelectButtonRect = new Rectangle(0.33f*this.screenWidth+(this.screenWidth/6.0f), this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
+        //inGameMenuHelpButtonRect = new Rectangle((this.screenWidth/3)*2, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
 
 
         // Call this once before the level starts so that we have some initial values
@@ -864,10 +866,7 @@ public class PlayingScreen implements Screen {
                         game.setScreen(new LevelSelectScreen(game));
                     }
 
-                    // Did we tap help button?
-                    if (pointInRectangle(inGameMenuHelpButtonRect, finger.x, finger.y)) {
-                        // TODO: Add a help screen
-                    }
+
                 }
             }
 
@@ -1054,6 +1053,29 @@ public class PlayingScreen implements Screen {
                                     // Add our new particle system to the particleeffects array
                                     particleEffects.add(effect);
 
+                                    // Add a burst if we completed one planet color gravity goal
+                                    // Removing this because I don't like having a burst on scores we didn't complete, and I
+                                    // don't want to spend the time writing a system to do it correctly.
+                                    /*if(	thisLevelRedNeeded == thisLevelCurrentRedTotal ||
+                                            thisLevelBlueNeeded == thisLevelCurrentBlueTotal ||
+                                            thisLevelGreenNeeded == thisLevelCurrentGreenTotal) {
+                                        float checkmarkLeft = (Gdx.graphics.getWidth()/2) - Gdx.graphics.getWidth()/4;
+                                        float checkmarkMiddle = Gdx.graphics.getWidth()/2;
+                                        float checkmarkRight = (Gdx.graphics.getWidth()/2) + Gdx.graphics.getWidth()/4;
+                                        float burstY = this.screenHeight - (4*game.fontSize);
+
+                                        ParticleEffectPool.PooledEffect burstLeft = goodMoveStarburstPool.obtain();
+                                        burstLeft.setPosition(checkmarkLeft, burstY);
+                                        particleEffects.add(burstLeft);
+
+                                        ParticleEffectPool.PooledEffect burstMiddle = goodMoveStarburstPool.obtain();
+                                        burstMiddle.setPosition(checkmarkMiddle, burstY);
+                                        particleEffects.add(burstMiddle);
+
+                                        ParticleEffectPool.PooledEffect burstRight = goodMoveStarburstPool.obtain();
+                                        burstRight.setPosition(checkmarkRight, burstY);
+                                        particleEffects.add(burstRight);
+                                    }*/
 
                                     if(	thisLevelRedNeeded == thisLevelCurrentRedTotal &&
                                             thisLevelBlueNeeded == thisLevelCurrentBlueTotal &&
@@ -1245,7 +1267,10 @@ public class PlayingScreen implements Screen {
         // (19-Nov-2016 Jesse) Only display the color score if we have that planet type on this level
         float middleScoreStripX = 0; // center
         float leftScoreStripX = 0-(Gdx.graphics.getWidth()/4); // use 1/4 distance
-        float rightScoreStripX = (Gdx.graphics.getWidth()/4);
+        float rightScoreStripX = Gdx.graphics.getWidth()/4;
+        float checkmarkLeft = (Gdx.graphics.getWidth()/2) - Gdx.graphics.getWidth()/4;
+        float checkmarkMiddle = Gdx.graphics.getWidth()/2;
+        float checkmarkRight = (Gdx.graphics.getWidth()/2) + Gdx.graphics.getWidth()/4;
 
         game.pixelFont.setColor(game.colorOrange);
         game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
@@ -1266,12 +1291,23 @@ public class PlayingScreen implements Screen {
         if(thisLevelBlueNeeded > 0) { haveBlue = true; count++;}
         if(thisLevelGreenNeeded > 0) { haveGreen = true; count++;}
 
+        boolean redsAreDone = (thisLevelCurrentRedTotal == thisLevelRedNeeded && thisLevelRedNeeded != 0 ? true : false);
+        boolean bluesAreDone = (thisLevelCurrentBlueTotal == thisLevelBlueNeeded && thisLevelBlueNeeded != 0 ? true : false);
+        boolean greensAreDone = (thisLevelCurrentGreenTotal == thisLevelGreenNeeded && thisLevelGreenNeeded != 0 ? true : false);
+
+
         // Next, since count can only be 1,2,or 3, figure out what pattern we have and display the counters appropriately
         switch(count) {
             case 1:
+                // Draw checkmark on center numbers regardless of which planet type they're for (since we'll draw the checkmark in the same spot
+                if(redsAreDone || bluesAreDone || greensAreDone) {
+                    game.batch.setColor(game.colorOrange);
+                    game.batch.draw(doneCheckmarkImage, checkmarkMiddle-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                }
                 if (haveRed) {
-                    game.pixelFont.setColor(game.colorRed);
+                    game.pixelFont.setColor( game.colorRed );
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentRedTotal + "/" + thisLevelRedNeeded + "", middleScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+
                 }
                 if (haveBlue) {
                     game.pixelFont.setColor(game.colorBlue);
@@ -1281,42 +1317,90 @@ public class PlayingScreen implements Screen {
                     game.pixelFont.setColor(game.colorGreen);
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentGreenTotal + "/" + thisLevelGreenNeeded + "", middleScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
                 }
+
+
+
                 break;
 
             case 2:
                 if (haveRed && haveBlue) {
+                    if(redsAreDone) {
+                        game.batch.setColor(game.colorOrange);
+                        game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                    }
+
+                    if(bluesAreDone) {
+                        game.batch.setColor(game.colorOrange);
+                        game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                    }
                     game.pixelFont.setColor(game.colorRed);
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentRedTotal + "/" + thisLevelRedNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
                     game.pixelFont.setColor(game.colorBlue);
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentBlueTotal + "/" + thisLevelBlueNeeded + "", rightScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+
+
                 }
                 if (haveBlue && haveGreen) {
+                    if(bluesAreDone) {
+                        game.batch.setColor(game.colorOrange);
+                        game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                    }
+
+                    if(greensAreDone) {
+                        game.batch.setColor(game.colorOrange);
+                        game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                    }
                     game.pixelFont.setColor(game.colorBlue);
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentBlueTotal + "/" + thisLevelBlueNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
                     game.pixelFont.setColor(game.colorGreen);
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentGreenTotal + "/" + thisLevelGreenNeeded + "", rightScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+
                 }
                 if (haveRed && haveGreen) {
+                    if(redsAreDone) {
+                        game.batch.setColor(game.colorOrange);
+                        game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                    }
+
+                    if(greensAreDone) {
+                        game.batch.setColor(game.colorOrange);
+                        game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                    }
+
                     game.pixelFont.setColor(game.colorRed);
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentRedTotal + "/" + thisLevelRedNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
                     game.pixelFont.setColor(game.colorGreen);
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentGreenTotal + "/" + thisLevelGreenNeeded + "", rightScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+
                 }
                 break;
             case 3:
+
+                if(redsAreDone) {
+                    game.batch.setColor(game.colorOrange);
+                    game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                }
+
+                if(bluesAreDone) {
+                    game.batch.setColor(game.colorOrange);
+                    game.batch.draw(doneCheckmarkImage, checkmarkMiddle-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                }
+
+                if(redsAreDone) {
+                    game.batch.setColor(game.colorOrange);
+                    game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                }
                 game.pixelFont.setColor(game.colorRed);
                 game.pixelFont.draw(game.batch, "" + thisLevelCurrentRedTotal + "/" + thisLevelRedNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
                 game.pixelFont.setColor(game.colorBlue);
                 game.pixelFont.draw(game.batch, "" + thisLevelCurrentBlueTotal + "/" + thisLevelBlueNeeded + "", middleScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
                 game.pixelFont.setColor(game.colorGreen);
                 game.pixelFont.draw(game.batch, "" + thisLevelCurrentGreenTotal + "/" + thisLevelGreenNeeded + "", rightScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
+
                 break;
             default:
                 break;
         }
-
-
-
 
                 // Draw the menu button
         game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -1402,7 +1486,6 @@ public class PlayingScreen implements Screen {
         }
 
         if(theGameState == gameState.IN_GAME_MENU) {
-            game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
 
             // Draw the background
             game.batch.setColor(1.0f,1.0f,1.0f,0.5f);
@@ -1412,7 +1495,7 @@ public class PlayingScreen implements Screen {
 
             game.batch.draw(inGameMenuResetButtonImage, inGameMenuResetButtonRect.x, inGameMenuResetButtonRect.y, inGameMenuResetButtonRect.width, inGameMenuResetButtonRect.height);
             game.batch.draw(inGameMenuLevelSelectButtonImage, inGameMenuLevelSelectButtonRect.x, inGameMenuLevelSelectButtonRect.y, inGameMenuLevelSelectButtonRect.width, inGameMenuLevelSelectButtonRect.height);
-            game.batch.draw(inGameMenuHelpButtonImage, inGameMenuHelpButtonRect.x, inGameMenuHelpButtonRect.y, inGameMenuHelpButtonRect.width, inGameMenuHelpButtonRect.height);
+            //game.batch.draw(inGameMenuHelpButtonImage, inGameMenuHelpButtonRect.x, inGameMenuHelpButtonRect.y, inGameMenuHelpButtonRect.width, inGameMenuHelpButtonRect.height);
 
             game.batch.draw(inGameMenuCancelButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
         }

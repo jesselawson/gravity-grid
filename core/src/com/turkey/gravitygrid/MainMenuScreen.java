@@ -39,6 +39,7 @@ public class MainMenuScreen implements Screen {
 	Texture buttonContinue;
 	TextureRegion buttonContinueRegion;
 	Rectangle buttonContinueRect;
+	Texture doItNowImage;
 
 	int mainMenuState; 
 	
@@ -59,10 +60,11 @@ public class MainMenuScreen implements Screen {
 		buttonNewGameRegion = new TextureRegion(buttonNewGame);
 		buttonContinue = game.assets.get("button/continue.png", Texture.class);
 		buttonContinueRegion = new TextureRegion(buttonContinue);
+		doItNowImage = game.assets.get("doitnow.png", Texture.class);
 
 		buttonNewGameRect = new Rectangle((Gdx.graphics.getWidth()/4)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
 
-		buttonContinueRect = new Rectangle((Gdx.graphics.getWidth()/2)+(Gdx.graphics.getWidth()/4)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
+		buttonContinueRect = new Rectangle((Gdx.graphics.getWidth()/2)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
 
 	}
 
@@ -92,7 +94,9 @@ public class MainMenuScreen implements Screen {
 
 			game.batch.draw(buttonContinueRegion, buttonContinueRect.x, buttonContinueRect.y, buttonContinueRect.width/2, buttonContinueRect.height/2, buttonContinueRect.width, buttonContinueRect.height, 1.0f, 1.0f, 0.0f);
 
-			game.batch.draw(buttonNewGameRegion, buttonNewGameRect.x, buttonNewGameRect.y, buttonNewGameRect.width/2, buttonNewGameRect.height/2, buttonNewGameRect.width, buttonNewGameRect.height, 1.0f, 1.0f, 0.0f);
+			game.batch.draw(doItNowImage, 0, 10, this.screenWidth, 285.0f);
+
+			//game.batch.draw(buttonNewGameRegion, buttonNewGameRect.x, buttonNewGameRect.y, buttonNewGameRect.width/2, buttonNewGameRect.height/2, buttonNewGameRect.width, buttonNewGameRect.height, 1.0f, 1.0f, 0.0f);
 				
 			game.batch.end();
 				
