@@ -80,6 +80,16 @@ public class InitialLoadingScreen implements Screen {
         this.game.assets.load("outOfMovesSound.wav", Sound.class);
         this.game.assets.load("levelCompleteSound.wav", Sound.class);
 
+        // Sound assets
+
+        this.game.assets.load("sounds/inGameMenuOpenSound.wav", Sound.class);
+        this.game.assets.load("sounds/inGameMenuButtonSound.wav", Sound.class);
+        this.game.assets.load("sounds/inGameMenuResetButtonSound.wav", Sound.class);
+        this.game.assets.load("sounds/levelSelectMenuPlayLevelButtonSound.wav", Sound.class);
+        this.game.assets.load("sounds/nextGalaxyButtonSound.wav.wav", Sound.class);
+        this.game.assets.load("sounds/previousGalaxyButtonSound.wav.wav", Sound.class);
+
+
         // Tutorial assets
         this.game.assets.load("tap-here.png", Texture.class);
 
