@@ -54,13 +54,13 @@ public class MainMenuScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, game.screenWidth, game.screenHeight);
 		
-		mainMenuBackground = game.assets.get("mainmenubg.png", Texture.class);
+		mainMenuBackground = game.assets.getAssetManager().get("mainmenubg.png", Texture.class);
 		mainMenuBackgroundRegion = new TextureRegion(mainMenuBackground);
-		buttonNewGame = game.assets.get("button/newgame.png", Texture.class);
+		buttonNewGame = game.assets.getAssetManager().get("button/newgame.png", Texture.class);
 		buttonNewGameRegion = new TextureRegion(buttonNewGame);
-		buttonContinue = game.assets.get("button/continue.png", Texture.class);
+		buttonContinue = game.assets.getAssetManager().get("button/continue.png", Texture.class);
 		buttonContinueRegion = new TextureRegion(buttonContinue);
-		doItNowImage = game.assets.get("doitnow.png", Texture.class);
+		doItNowImage = game.assets.getAssetManager().get("doitnow.png", Texture.class);
 
 		buttonNewGameRect = new Rectangle((Gdx.graphics.getWidth()/4)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
 

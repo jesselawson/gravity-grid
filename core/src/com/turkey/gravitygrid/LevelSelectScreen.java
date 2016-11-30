@@ -76,19 +76,19 @@ public class LevelSelectScreen implements Screen {
         camera.setToOrtho(false, game.screenWidth, game.screenHeight);
 
         // Get our textures
-        screenBackground = game.assets.get("menu/blackBackground.png", Texture.class);
-        this.levelTileBackground = game.assets.get("levelicons/background.png", Texture.class);
+        screenBackground = game.assets.getAssetManager().get("menu/blackBackground.png", Texture.class);
+        this.levelTileBackground = game.assets.getAssetManager().get("levelicons/background.png", Texture.class);
 
         this.tileWidth = screenWidth / 5; // So it's 7 segments of our screenwidth minus the space we've reserved for the tile labels.
         this.tileHeight = screenWidth / 5;
 
         this.levelIcon = new Texture[3];
-        this.levelIcon[0] = game.assets.get("levelicons/locked.png", Texture.class);
-        this.levelIcon[1] = game.assets.get("levelicons/play.png", Texture.class);
-        this.levelIcon[2] = game.assets.get("levelicons/done.png", Texture.class);
+        this.levelIcon[0] = game.assets.getAssetManager().get("levelicons/locked.png", Texture.class);
+        this.levelIcon[1] = game.assets.getAssetManager().get("levelicons/play.png", Texture.class);
+        this.levelIcon[2] = game.assets.getAssetManager().get("levelicons/done.png", Texture.class);
 
-        previousGalaxyButtonImage = game.assets.get("levelicons/previousGalaxyButton.png", Texture.class);
-        nextGalaxyButtonImage = game.assets.get("levelicons/nextGalaxyButton.png", Texture.class);
+        previousGalaxyButtonImage = game.assets.getAssetManager().get("levelicons/previousGalaxyButton.png", Texture.class);
+        nextGalaxyButtonImage = game.assets.getAssetManager().get("levelicons/nextGalaxyButton.png", Texture.class);
 
         // The whitespace variable sets a modifier for the rect.x values of each tile so that the grid is in the center of the screen.
         this.whiteSpace = (int)(0.5*screenHeight) + (int)(0.33*(screenWidth/5)*5);
@@ -175,7 +175,7 @@ public class LevelSelectScreen implements Screen {
     }
 
     public void PlayLevel(int levelNum) {
-        game.currentLevel = levelNum;
+        //game.currentLevel = levelNum;
         //this.playingScreen.RestartLevel();
         //game.setScreen(this.playingScreen);
         game.setScreen(new PlayingScreen(this.game, this));

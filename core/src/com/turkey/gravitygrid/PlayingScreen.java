@@ -473,7 +473,7 @@ public class PlayingScreen implements Screen {
 
     LevelSelectScreen parentScreen;
 
-    public PlayingScreen(GravityGrid game, LevelSelectScreen parent) {
+    PlayingScreen(GravityGrid game, LevelSelectScreen parent) {
 
         this.game = game;
         parentScreen = parent;
@@ -484,10 +484,10 @@ public class PlayingScreen implements Screen {
         holdToResetCounter = 0;
 
         // Initialize the required color values and the max moves, which are specific elements in the gravityGridLevel array
-        thisLevelRedNeeded = game.gravityGridLevel[game.currentLevel][49];
-        thisLevelBlueNeeded = game.gravityGridLevel[game.currentLevel][50];
-        thisLevelGreenNeeded = game.gravityGridLevel[game.currentLevel][51];
-        thisLevelMaxMoves = game.gravityGridLevel[game.currentLevel][52];
+        thisLevelRedNeeded= this.game.gravityGridLevel[game.currentLevel][49];
+        thisLevelBlueNeeded= this.game.gravityGridLevel[game.currentLevel][50];
+        thisLevelGreenNeeded= this.game.gravityGridLevel[game.currentLevel][51];
+        thisLevelMaxMoves= this.game.gravityGridLevel[game.currentLevel][52];
         thisLevelCurrentRedTotal = 0;
         thisLevelCurrentBlueTotal = 0;
         thisLevelCurrentGreenTotal = 0;
@@ -499,13 +499,13 @@ public class PlayingScreen implements Screen {
         levelCompleteFireworks = new ParticleEffect();
         levelCompleteFireworks.load(Gdx.files.internal("particles/levelCompleteStarburst.p"), Gdx.files.internal("particles"));
 
-        goodMoveStarburst = game.assets.get("particles/goodmovestarburst.p", ParticleEffect.class); // Template effect
+        goodMoveStarburst= this.game.assets.getAssetManager().get("particles/goodmovestarburst.p", ParticleEffect.class); // Template effect
         goodMoveStarburstPool = new ParticleEffectPool(goodMoveStarburst, 0, 50);                   // Pool for the template
 
-        badMoveStarburst = game.assets.get("particles/badmovestarburst.p", ParticleEffect.class);   // Template effect
+        badMoveStarburst= this.game.assets.getAssetManager().get("particles/badmovestarburst.p", ParticleEffect.class);   // Template effect
         badMoveStarburstPool = new ParticleEffectPool(badMoveStarburst, 0, 50);                     // Pool for the template
 
-        backgroundStarfieldParticles = game.assets.get("particles/starfield.p", ParticleEffect.class);
+        backgroundStarfieldParticles= this.game.assets.getAssetManager().get("particles/starfield.p", ParticleEffect.class);
 
         theGameState = gameState.READY;
 
@@ -553,7 +553,7 @@ public class PlayingScreen implements Screen {
                 TileType rcType;
 
                 // Determine the tile type
-                switch(game.gravityGridLevel[game.currentLevel][(r*7)+c]) {
+                switch(game.gravityGridLevel[this.game.currentLevel][(r*7)+c]) {
                     case 0:
                         rcType = TileType.NONE;
                         break;
@@ -610,14 +610,14 @@ public class PlayingScreen implements Screen {
 
         // TODO: lOAD ALL OF THESE FROM THE ASSET MANAGER
         // Load the sounds before the textures so the assetmanager isn't busy by the time we're clicking things
-        //restartLevelSound = game.assets.get("startup.wav"));
-        tileSelectSound = game.assets.get("sounds/tileSelectSound.wav", Sound.class);
-        tileDeselectSound = game.assets.get("tileDeselectSound.wav",Sound.class);
-        goodMoveAttemptSound = game.assets.get("sounds/goodMoveSound.wav",Sound.class);
+        //restartLevelSound= this.game.assets.getAssetManager().get("startup.wav"));
+        tileSelectSound= this.game.assets.getAssetManager().get("sounds/tileSelectSound.wav", Sound.class);
+        tileDeselectSound= this.game.assets.getAssetManager().get("tileDeselectSound.wav",Sound.class);
+        goodMoveAttemptSound= this.game.assets.getAssetManager().get("sounds/goodMoveSound.wav",Sound.class);
         restartLevelSound = goodMoveAttemptSound;
-        cannotMoveSound = game.assets.get("cannotMoveSound.wav",Sound.class);
-        outOfMovesSound = game.assets.get("outOfMovesSound.wav",Sound.class);
-        levelCompleteSound = game.assets.get("sounds/levelCompleteSound.ogg",Sound.class);
+        cannotMoveSound= this.game.assets.getAssetManager().get("cannotMoveSound.wav",Sound.class);
+        outOfMovesSound= this.game.assets.getAssetManager().get("outOfMovesSound.wav",Sound.class);
+        levelCompleteSound= this.game.assets.getAssetManager().get("sounds/levelCompleteSound.ogg",Sound.class);
 
        /* 0 = blank
         1 = red
@@ -628,78 +628,82 @@ public class PlayingScreen implements Screen {
         9 = blocked*/
 
         // Load the textures
-        tileBlankImage = game.assets.get("tileBlankImage.png", Texture.class);
+        tileBlankImage= this.game.assets.getAssetManager().get("tileBlankImage.png", Texture.class);
         //tilePlanetImage = new Texture[4]; // remember: [4] = [0,1,2,3].
         //tilePlanetRegion = new TextureRegion[4];
-        tileRedPlanetImage = game.assets.get("planet-red.png", Texture.class);
+        tileRedPlanetImage= this.game.assets.getAssetManager().get("planet-red.png", Texture.class);
         tileRedPlanetRegion = new TextureRegion(tileRedPlanetImage);
-        tileBluePlanetImage = game.assets.get("planet-blue.png", Texture.class);
+        tileBluePlanetImage= this.game.assets.getAssetManager().get("planet-blue.png", Texture.class);
         tileBluePlanetRegion = new TextureRegion(tileBluePlanetImage);
-        tileGreenPlanetImage = game.assets.get("planet-green.png", Texture.class);
+        tileGreenPlanetImage= this.game.assets.getAssetManager().get("planet-green.png", Texture.class);
         tileGreenPlanetRegion = new TextureRegion(tileGreenPlanetImage);
-        tileSunImage = game.assets.get("sun.png", Texture.class);
+        tileSunImage= this.game.assets.getAssetManager().get("sun.png", Texture.class);
         tileSunRegion = new TextureRegion(tileSunImage);
-        tileSunFlareImage = game.assets.get("sunflare0.png", Texture.class);
+        tileSunFlareImage= this.game.assets.getAssetManager().get("sunflare0.png", Texture.class);
         tileSunFlareRegion = new TextureRegion(tileSunFlareImage);
         tileAsteroidImage = new Texture[4];
-        tileAsteroidImage[0] = game.assets.get("asteroid0.png", Texture.class);
-        tileAsteroidImage[1] = game.assets.get("asteroid1.png", Texture.class);
-        tileAsteroidImage[2] = game.assets.get("asteroid2.png", Texture.class);
-        tileAsteroidImage[3] = game.assets.get("asteroid3.png", Texture.class);
+        tileAsteroidImage[0]= this.game.assets.getAssetManager().get("asteroid0.png", Texture.class);
+        tileAsteroidImage[1]= this.game.assets.getAssetManager().get("asteroid1.png", Texture.class);
+        tileAsteroidImage[2]= this.game.assets.getAssetManager().get("asteroid2.png", Texture.class);
+        tileAsteroidImage[3]= this.game.assets.getAssetManager().get("asteroid3.png", Texture.class);
+
+
         backgroundImage = new Texture[4];
 
-        backgroundImage[0] = game.assets.get("bg0.jpg", Texture.class); // Levels 0-
-        backgroundImage[1] = game.assets.get("bg1.jpg", Texture.class);
+        backgroundImage[0]= this.game.assets.getAssetManager().get("bg0.jpg", Texture.class); // Levels 0-
+        backgroundImage[1]= this.game.assets.getAssetManager().get("bg1.jpg", Texture.class);
+        backgroundImage[2]= this.game.assets.getAssetManager().get("bg1.jpg", Texture.class);
+        backgroundImage[3]= this.game.assets.getAssetManager().get("bg1.jpg", Texture.class);
 
         // Tutorial overlay images
         tutorialOverlayImage = new Texture[8];
-        tutorialOverlayImage[0] = game.assets.get("tutorials/level1TutorialOverlay.png", Texture.class);
-        tutorialOverlayImage[1] = game.assets.get("tutorials/level2TutorialOverlay.png", Texture.class);
-        tutorialOverlayImage[2] = game.assets.get("tutorials/level3TutorialOverlay.png", Texture.class);
-        tutorialOverlayImage[6] = game.assets.get("tutorials/level7TutorialOverlay.png", Texture.class);
+        tutorialOverlayImage[0]= this.game.assets.getAssetManager().get("tutorials/level1TutorialOverlay.png", Texture.class);
+        tutorialOverlayImage[1]= this.game.assets.getAssetManager().get("tutorials/level2TutorialOverlay.png", Texture.class);
+        tutorialOverlayImage[2]= this.game.assets.getAssetManager().get("tutorials/level3TutorialOverlay.png", Texture.class);
+        tutorialOverlayImage[6]= this.game.assets.getAssetManager().get("tutorials/level7TutorialOverlay.png", Texture.class);
 
-        //levelMessageBackgroundImage = game.assets.get("levelMessageBackground.png", Texture.class);
-        doneCheckmarkImage = game.assets.get("levelicons/done.png", Texture.class);
+        //levelMessageBackgroundImage= this.game.assets.getAssetManager().get("levelMessageBackground.png", Texture.class);
+        doneCheckmarkImage= this.game.assets.getAssetManager().get("levelicons/done.png", Texture.class);
 
         tileValueImage = new Texture[11];
-        tileValueImage[0] = game.assets.get("tile0.png", Texture.class);
-        tileValueImage[1] = game.assets.get("tile1.png", Texture.class);
-        tileValueImage[2] = game.assets.get("tile2.png", Texture.class);
-        tileValueImage[3] = game.assets.get("tile3.png", Texture.class);
-        tileValueImage[4] = game.assets.get("tile4.png", Texture.class);
-        tileValueImage[5] = game.assets.get("tile5.png", Texture.class);
-        tileValueImage[6] = game.assets.get("tile6.png", Texture.class);
+        tileValueImage[0]= this.game.assets.getAssetManager().get("tile0.png", Texture.class);
+        tileValueImage[1]= this.game.assets.getAssetManager().get("tile1.png", Texture.class);
+        tileValueImage[2]= this.game.assets.getAssetManager().get("tile2.png", Texture.class);
+        tileValueImage[3]= this.game.assets.getAssetManager().get("tile3.png", Texture.class);
+        tileValueImage[4]= this.game.assets.getAssetManager().get("tile4.png", Texture.class);
+        tileValueImage[5]= this.game.assets.getAssetManager().get("tile5.png", Texture.class);
+        tileValueImage[6]= this.game.assets.getAssetManager().get("tile6.png", Texture.class);
         tileValueImage[7] = null; // We don't actually use this value
-        tileValueImage[8] = game.assets.get("tile8.png", Texture.class);
+        tileValueImage[8]= this.game.assets.getAssetManager().get("tile8.png", Texture.class);
         tileValueImage[9] = null; // We don't actually use this value
-        tileValueImage[10] = game.assets.get("tile10.png", Texture.class);
+        tileValueImage[10]= this.game.assets.getAssetManager().get("tile10.png", Texture.class);
         tileOverlayImage = new Texture[7];
         tileOverlayRegion = new TextureRegion[7];
-        tileOverlayImage[0] = game.assets.get("tileOverlayAnim0.png", Texture.class);
+        tileOverlayImage[0]= this.game.assets.getAssetManager().get("tileOverlayAnim0.png", Texture.class);
         tileOverlayRegion[0] = new TextureRegion(tileOverlayImage[0]);
-        tileOverlayImage[1] = game.assets.get("tileOverlayAnim1.png", Texture.class);
+        tileOverlayImage[1]= this.game.assets.getAssetManager().get("tileOverlayAnim1.png", Texture.class);
         tileOverlayRegion[1] = new TextureRegion(tileOverlayImage[1]);
-        tileOverlayImage[2] = game.assets.get("tileOverlayAnim2.png", Texture.class);
+        tileOverlayImage[2]= this.game.assets.getAssetManager().get("tileOverlayAnim2.png", Texture.class);
         tileOverlayRegion[2] = new TextureRegion(tileOverlayImage[2]);
-        tileOverlayImage[3] = game.assets.get("tileOverlayAnim3.png", Texture.class);
+        tileOverlayImage[3]= this.game.assets.getAssetManager().get("tileOverlayAnim3.png", Texture.class);
         tileOverlayRegion[3] = new TextureRegion(tileOverlayImage[3]);
-        tileOverlayImage[4] = game.assets.get("tileOverlayAnim4.png", Texture.class);
+        tileOverlayImage[4]= this.game.assets.getAssetManager().get("tileOverlayAnim4.png", Texture.class);
         tileOverlayRegion[4] = new TextureRegion(tileOverlayImage[4]);
-        tileOverlayImage[5] = game.assets.get("tileOverlayAnim5.png", Texture.class);
+        tileOverlayImage[5]= this.game.assets.getAssetManager().get("tileOverlayAnim5.png", Texture.class);
         tileOverlayRegion[5] = new TextureRegion(tileOverlayImage[5]);
-        tileOverlayImage[6] = game.assets.get("tileOverlayAnim6.png", Texture.class);
+        tileOverlayImage[6]= this.game.assets.getAssetManager().get("tileOverlayAnim6.png", Texture.class);
         tileOverlayRegion[6] = new TextureRegion(tileOverlayImage[6]);
-        buttonFailImage = game.assets.get("buttonFail.png", Texture.class);
-        buttonLevelCompleteImage = game.assets.get("buttonLevelComplete.png", Texture.class);
+        buttonFailImage= this.game.assets.getAssetManager().get("buttonFail.png", Texture.class);
+        buttonLevelCompleteImage= this.game.assets.getAssetManager().get("buttonLevelComplete.png", Texture.class);
         levelCompleteRegion = new TextureRegion(buttonLevelCompleteImage);
-        levelCompleteTrophyImage = game.assets.get("levelCompleteTrophy.png", Texture.class);
+        levelCompleteTrophyImage= this.game.assets.getAssetManager().get("levelCompleteTrophy.png", Texture.class);
         levelCompleteTrophyRegion = new TextureRegion(levelCompleteTrophyImage);
         levelCompleteBackgroundZoom = 100.0f;
         levelCompleteTrophyZoom = 100.0f;
         levelCompleteMultiplier = 1;
 
-        tileSelectedBottomImage =  this.game.assets.get("tileSelected.png", Texture.class);
-        tileSelectedTopImage = this.game.assets.get("tileSelected2.png", Texture.class);
+        tileSelectedBottomImage =  this.game.assets.getAssetManager().get("tileSelected.png", Texture.class);
+        tileSelectedTopImage = this.game.assets.getAssetManager().get("tileSelected2.png", Texture.class);
         tileSelectedTopRegion = new TextureRegion(tileSelectedTopImage);
         tileSelectedBottomRegion = new TextureRegion(tileSelectedBottomImage);
 
@@ -707,16 +711,16 @@ public class PlayingScreen implements Screen {
         tryingToReset = false;
         inGameMenuButtonRect = new Rectangle((screenWidth/7)*6.0f, screenHeight-(screenWidth/7.0f), screenWidth/7.0f, screenWidth/7.0f); // Draw one tile big in upper-right corner
 
-        blackHoleImage = game.assets.get("galaxyOverlay.png", Texture.class);
+        blackHoleImage= this.game.assets.getAssetManager().get("galaxyOverlay.png", Texture.class);
         blackHoleRegion = new TextureRegion(blackHoleImage);
 
         inGameMenuActive = false;
-        inGameMenuBackgroundImage = game.assets.get("menu/blackBackground.png", Texture.class);
-        inGameMenuCancelButtonImage = game.assets.get("menu/cancelButton.png", Texture.class);
-        inGameMenuResetButtonImage = game.assets.get("menu/resetButton.png", Texture.class);
-        inGameMenuLevelSelectButtonImage = game.assets.get("menu/levelSelectButton.png", Texture.class);
-        inGameMenuHelpButtonImage = game.assets.get("menu/helpButton.png", Texture.class);
-        inGameMenuButtonImage = game.assets.get("menu/menuButton.png", Texture.class);
+        inGameMenuBackgroundImage= this.game.assets.getAssetManager().get("menu/blackBackground.png", Texture.class);
+        inGameMenuCancelButtonImage= this.game.assets.getAssetManager().get("menu/cancelButton.png", Texture.class);
+        inGameMenuResetButtonImage= this.game.assets.getAssetManager().get("menu/resetButton.png", Texture.class);
+        inGameMenuLevelSelectButtonImage= this.game.assets.getAssetManager().get("menu/levelSelectButton.png", Texture.class);
+        inGameMenuHelpButtonImage= this.game.assets.getAssetManager().get("menu/helpButton.png", Texture.class);
+        inGameMenuButtonImage= this.game.assets.getAssetManager().get("menu/menuButton.png", Texture.class);
 
         float buttonWidth = this.screenWidth/3.0f;
 
@@ -728,6 +732,8 @@ public class PlayingScreen implements Screen {
         // Call this once before the level starts so that we have some initial values
 
         updateCurrentLevelValueTotals();
+
+        //
 
     }
 
@@ -746,10 +752,10 @@ public class PlayingScreen implements Screen {
         // essentially loading up a new level. 
 
         // Let's reset the value totals needed just in case this is a new level. If we don't do this, the old values from the previous level seep through.
-        thisLevelRedNeeded = game.gravityGridLevel[game.currentLevel][49];
-        thisLevelBlueNeeded = game.gravityGridLevel[game.currentLevel][50];
-        thisLevelGreenNeeded = game.gravityGridLevel[game.currentLevel][51];
-        thisLevelMaxMoves = game.gravityGridLevel[game.currentLevel][52];
+        thisLevelRedNeeded= this.game.gravityGridLevel[game.currentLevel][49];
+        thisLevelBlueNeeded= this.game.gravityGridLevel[game.currentLevel][50];
+        thisLevelGreenNeeded= this.game.gravityGridLevel[game.currentLevel][51];
+        thisLevelMaxMoves= this.game.gravityGridLevel[game.currentLevel][52];
 
         // Reset the tiles
         int worldRow = 0;

@@ -31,8 +31,6 @@ public class GravityGrid extends Game {
 
 	private Preferences ini;
 
-	AssetManager assets = new AssetManager(); // Asset manager
-
 	public int currentLevel;	// The current level
 	public int currentGalaxy; // The current galaxy (currentLevel / 25)
 
@@ -57,6 +55,7 @@ public class GravityGrid extends Game {
 	BitmapFont pixelFont; // The big GravityGridder font used for planet gravity values and special things.
 	Texture gravityGridSphereLogoImage; // Used for our loading screen
 	TextureRegion spaceTurkeyLogoRegion;
+	AssetLoader assets;
 
 	public int fontSize = 60;
 
@@ -141,11 +140,146 @@ public class GravityGrid extends Game {
 	};
 
 	/* Level messages. Displayed at the bottom of each grid for its associated level */
-	public String[] levelMessage = new String[100];
+	public String[] levelMessage = new String[] {
+			"Remember: Red planets can only be moved to a tile that is diagonal to another red planet.",
+			"Fantastic! Now I suppose it's time to tell you why you're here: In 500 years, the universe will collapse.",
+			"An ultrastar will explode, causing huge gravity tidal waves. Thankfully, there's a way to prevent it.",
+			"Time travellers from the future have given you the Gravity Grid device to realign the gravity patterns in planetary systems across the universe.",
+			"Your mission is to realign all the planets in each system's Gravity Grid. Do this, and you will save the universe!",
+			"Remember: Blue planets can only be moved to the top, bottom, left, or right of other blue planets.",
+			"Great! Just like red planets, blue planets might start in violation of their rules. Only when moving must the rules be followed.",
+			"Who knows how a planetary system will present itself. It's up to you to come up with the smartest solution.",
+			"",
+			"",
+			"",
+			"Sometimes you need to move planets of one color out of the way to make room for planets of a different color.",
+			"Sometimes it seems like you need to make room for different color planets, but there might also be a different solution.",
+			"Here, try to get the red AND blue scores aligned in only three moves. Can you do it?",
+			"Remember that everything in our universe is connected. Could there be multiple ways to solve this problem?",
+			"Each galaxy consists of 25 planetary systems (or levels). When you beat the 25th level of a galaxy, you unlock the next galaxy!",
+			"Just seven more levels in this galaxy, including this one!",
+			"Six more levels--you're almost there!",
+			"Five levels left!",
+			"Four more levels in this galaxy. Keep going!",
+			"Three levels left!",
+			"Two more levels until you unlock the next galaxy!",
+			"This is the last level in this galaxy! After you beat this level, you can unlock the next galaxy!",
+			"Woohoo! You've unlocked the second galaxy, which has ASTEROIDS. Asteroids mean you can't use that tile.",
+			"Asteroids cannot be moved, and no planet can be moved onto a tile that has an asteroid.",
+
+			"",
+			""
+
+	};
 
 	// Most levels will be randomly generated. This string holds them all!
 	// Future releases of the game simply need to increase the total number of levels
-	public int[][] gravityGridLevel = new int[100][52];
+	public final int[][] gravityGridLevel = new int[][] {
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,1}, // Custom 1
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,32,0,0,2}, // Custom 2
+			{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,9,0,0,1}, // Level 3
+			{0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,1},
+			{0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,1},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,24,0,0,1},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,2,0,4,0,1}, // Custom 3 (blue introduction)
+			{0,2,0,0,0,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,2,0,0,2,0,2,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,13,0,3},
+			{
+					0,0,0,0,0,0,0,
+					0,0,0,0,2,0,0,
+					0,2,2,0,2,0,0,
+					0,0,0,0,0,0,0,
+					0,0,2,0,2,2,0,
+					0,0,2,0,0,0,0,
+					0,0,0,0,0,0,0,
+					0,56,0,4
+			},
+			{
+					0,2,0,0,0,0,0,
+					0,2,1,0,0,0,0,
+					0,0,0,1,0,0,0,
+					0,0,0,0,0,0,0,
+					0,0,0,0,0,0,0,
+					0,0,0,0,0,0,0,
+					0,0,0,0,0,0,0,
+					5,6,0,2
+			},
+			{0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,8,0,1}, // level[10]
+			{0,0,0,2,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,0,1},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,18,0,1},
+			{ // [7]
+					0,0,0,0,0,0,0,
+					0,0,2,0,2,0,0,
+					0,0,0,0,0,0,0,
+					0,0,2,0,2,0,0,
+					0,0,1,0,1,0,0,
+					0,1,0,0,0,1,0,
+					0,0,0,1,0,0,0,
+					15,28,0,4
+			},
+			{	// [8]
+					0,0,0,0,0,0,1,
+					0,0,0,0,0,0,0,
+					0,0,2,2,2,0,0,
+					0,0,2,1,2,0,0,
+					0,0,2,2,2,0,0,
+					0,0,0,0,0,0,0,
+					0,0,0,0,0,0,0,
+					16,50,0,5
+			},
+			{0,0,0,0,1,2,0,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,11,16,0,3}, // level[15]
+			{2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,12,18,0,2},
+			{0,0,0,0,0,0,2,0,0,0,1,0,2,0,0,0,1,0,0,0,0,1,0,2,2,0,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,1,0,2,1,0,0,0,17,25,0,3},
+			{0,0,0,0,0,2,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,2,0,0,0,1,0,0,2,2,0,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,17,14,0,2},
+			{0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,2,2,0,1,0,0,0,0,0,0,0,2,0,2,0,0,0,1,2,0,0,0,32,19,0,3},
+			{0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1,0,0,0,2,2,0,2,1,0,2,0,0,0,1,1,0,2,0,0,0,7,24,0,3}, // level[20]
+			{0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,2,2,2,0,0,1,2,0,0,1,0,0,2,0,0,0,2,0,2,2,0,0,0,0,0,0,0,0,19,38,0,3},
+			{0,2,0,1,0,0,0,0,0,2,0,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,2,0,1,1,0,0,0,1,0,1,0,1,0,0,27,10,0,3},
+			{0,0,0,0,0,2,2,2,1,0,0,0,0,2,0,0,2,0,1,0,0,1,0,0,0,1,0,1,0,1,0,0,2,1,0,0,0,0,0,2,2,2,1,0,0,1,0,0,0,34,29,0,3},
+			{0,0,0,1,0,0,2,0,1,0,0,0,0,2,1,2,0,0,1,0,2,0,0,0,0,0,0,0,1,1,0,2,1,0,0,0,1,0,1,2,0,0,2,0,2,0,2,0,0,41,24,0,4},
+			{	// [9]
+					0,0,0,0,0,0,1,
+					0,0,0,0,0,0,0,
+					0,0,2,2,2,0,0,
+					0,0,2,1,2,0,0,
+					0,0,2,2,2,0,0,
+					0,0,0,0,0,0,0,
+					0,0,0,0,0,0,0,
+					16,50,0,5
+			},
+			{0,0,2,0,2,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,2,0,0,0,4,1,2,2,0,0,0,1,1,2,4,0,0,0,0,0,0,26,15,0,3}, // level[26]
+			{1,0,4,4,0,2,1,0,4,2,0,2,1,0,2,0,0,0,2,2,0,0,0,0,0,0,1,0,0,4,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,27,0,3},
+			{2,4,0,0,0,0,0,2,0,0,0,0,0,0,2,2,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,4,0,1,1,2,0,0,0,0,2,0,2,0,0,0,4,1,0,14,18,0,3},
+			{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,2,0,0,0,0,0,0,4,2,4,0,1,1,2,2,0,0,0,0,0,0,0,0,2,0,1,0,2,0,0,28,17,0,3},
+			{0,0,0,0,0,0,0,0,0,0,0,1,0,4,0,4,0,1,0,0,4,0,0,0,0,0,0,2,0,0,0,0,4,2,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,15,15,0,4},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,1,0,0,0,0,1,0,2,2,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,4,4,0,0,15,11,0,4},
+			{0,0,0,0,2,0,1,1,0,2,0,1,1,0,0,0,0,2,2,0,4,0,4,0,0,0,0,2,0,0,1,0,0,2,0,0,1,0,0,0,4,0,1,0,2,0,0,0,0,22,31,0,4},
+			{1,0,0,0,0,0,0,4,1,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,0,4,0,0,1,0,0,4,0,0,1,0,0,0,1,0,0,0,40,0,0,4},
+			{0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,4,0,1,0,0,4,0,0,1,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,0,38,0,0,4},
+			{4,0,0,0,0,0,4,0,0,0,1,0,0,0,0,0,0,0,1,1,0,1,4,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,4,1,0,0,37,0,0,4},
+			{0,0,0,1,2,0,1,2,2,1,0,0,0,0,0,2,0,0,0,0,0,2,0,1,4,1,4,0,2,0,0,0,0,2,1,0,0,0,0,0,4,0,0,0,1,0,0,0,0,34,20,0,4},
+			{0,0,0,0,0,1,0,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,2,0,0,1,0,4,4,0,0,2,0,1,4,0,7,12,0,4},
+			{2,2,0,0,0,0,4,2,2,0,2,0,1,4,4,4,4,2,0,1,2,0,2,0,4,0,2,1,2,0,1,1,1,2,0,0,0,4,4,1,4,0,0,1,2,1,2,4,0,38,45,0,4},
+			{4,1,1,0,4,4,0,2,0,4,2,4,2,4,0,1,1,0,4,2,1,1,1,0,0,4,0,0,0,2,0,0,0,4,1,1,2,2,2,0,0,2,2,4,0,2,2,2,4,32,39,0,4},
+			{0,0,1,0,2,2,0,2,0,4,4,0,0,2,0,1,0,4,1,0,0,2,0,0,1,0,1,0,0,0,0,1,0,4,4,0,0,1,0,1,2,2,1,0,0,1,1,4,0,46,11,0,4}, // level [40]
+			{1,0,2,1,2,1,4,0,1,4,4,0,4,4,4,2,0,4,0,1,4,4,2,0,4,0,4,4,4,0,0,0,0,4,4,2,1,0,1,4,2,1,0,4,1,1,1,2,0,41,21,0,4},
+			{2,0,4,4,1,0,1,0,0,0,0,0,4,1,2,4,0,4,4,4,0,2,2,2,2,0,2,2,0,0,2,0,0,0,2,2,0,4,4,4,2,0,0,2,2,2,4,4,4,4,52,0,4},
+			{0,2,2,0,0,0,0,0,0,0,0,4,0,0,2,0,0,0,0,1,0,0,4,0,2,2,0,2,0,1,0,2,0,0,2,2,0,2,2,2,0,2,1,0,2,0,0,2,0,8,70,0,4},
+			{0,0,1,2,0,4,1,1,1,4,0,1,0,0,4,0,1,1,0,4,1,4,4,4,4,0,0,1,4,0,0,1,0,4,0,4,0,2,2,1,0,1,1,4,2,1,0,0,4,45,12,0,4},
+			{0,0,4,2,0,4,0,0,4,1,4,4,4,4,0,4,2,2,4,2,2,2,0,2,4,2,1,2,0,4,0,2,0,1,1,0,2,4,4,4,2,4,2,0,0,0,0,2,0,14,70,0,4},
+			{1,0,4,1,4,0,1,1,1,1,4,0,1,1,4,1,0,1,1,0,1,4,4,2,0,1,4,4,0,0,0,4,4,0,2,0,1,4,4,0,0,4,0,2,0,4,2,4,0,59,15,0,4},
+			{2,1,1,4,2,1,2,1,4,2,0,2,1,0,4,2,4,2,0,2,1,4,0,2,2,2,1,0,1,1,4,0,4,2,0,1,1,2,0,1,2,0,4,4,1,0,1,4,4,41,61,0,4},
+			{0,2,4,2,0,0,2,1,2,4,2,4,0,0,4,4,2,2,4,4,2,1,0,0,1,0,0,2,0,0,0,1,1,1,2,0,4,0,1,1,0,4,0,4,4,1,1,0,4,40,37,0,5},
+			{1,4,2,0,0,2,2,4,2,2,1,0,1,2,2,0,0,0,4,0,0,4,0,0,0,1,0,2,0,0,0,1,0,0,0,1,4,0,0,0,4,2,1,1,0,1,1,2,0,31,26,0,5},
+			{2,4,1,1,0,0,0,0,2,0,2,2,0,0,0,4,0,2,0,4,4,0,4,0,4,4,4,1,4,2,2,2,1,1,2,0,4,1,1,0,1,4,0,1,4,2,1,4,4,35,43,0,5}, // level[50]
+			{0,2,0,0,0,0,2,0,1,4,0,0,0,1,0,4,0,0,0,0,1,0,4,0,4,4,2,2,4,0,0,1,1,0,4,2,2,4,1,1,4,0,2,0,0,0,0,4,0,22,15,0,5},
+			{2,0,1,1,0,0,1,4,1,1,0,4,4,0,4,2,0,0,0,4,0,4,2,4,4,2,0,2,0,1,0,0,0,0,2,0,0,4,2,0,4,0,1,0,0,4,4,0,4,19,32,0,5}
+
+	};
+
+
+
+
+
 
 	// This will correspond to the level#TutorialOverlay.png in our tutorials/* folder.
 	// If our current level has an associated tutorial overlay (i.e., it = 1), then we will
@@ -513,6 +647,10 @@ public class GravityGrid extends Game {
 		}
 	}
 
+	public AssetLoader getAssetLoader() {
+		return this.assets;
+	}
+
 	public void create() {
 
 		// Instantiate the tutorial overlays
@@ -531,114 +669,6 @@ public class GravityGrid extends Game {
 
 
 
-		gravityGridLevel[0] = myCustomLevel[0];
-		levelMessage[0] = "";
-		gravityGridLevel[1] = myCustomLevel[1];
-		levelMessage[1] = "";
-		gravityGridLevel[2] = new int[] {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,9,0,0,1};
-		levelMessage[2] = "Remember: Red planets can only be moved to a tile that is diagonal to another red planet.";
-		gravityGridLevel[3] = new int[] {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,1};
-		levelMessage[3] = "Fantastic! Now I suppose it's time to tell you why you're here: In 500 years, the universe will collapse.";
-		gravityGridLevel[4] = new int[] {0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,0,0,1};
-		levelMessage[4] = "An ultrastar will explode, causing huge gravity tidal waves. Thankfully, there's a way to prevent it.";
-		gravityGridLevel[5] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,24,0,0,1};
-		levelMessage[5] = "Time travellers from the future have given you the Gravity Grid device to realign the gravity patterns in planetary systems across the universe.";
-		gravityGridLevel[6] = myCustomLevel[3];
-		levelMessage[6] = "Your mission is to realign all the planets in each system's Gravity Grid. Do this, and you will save the universe!";
-		gravityGridLevel[7] = myCustomLevel[4]; // First blue
-		levelMessage[7] = "Remember: Blue planets can only be moved to the top, bottom, left, or right of other blue planets.";
-		gravityGridLevel[8] = myCustomLevel[5];
-		levelMessage[8] = "Great! Just like red planets, blue planets might start in violation of their rules. Only when moving must the rules be followed.";
-		gravityGridLevel[9] = myCustomLevel[6];
-		levelMessage[9] = "Who knows how a planetary system will present itself. It's up to you to come up with the smartest solution.";
-		gravityGridLevel[10] = new int[] {0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,8,0,1};
-		levelMessage[10] = "";
-		gravityGridLevel[11] = new int[] {0,0,0,2,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,0,1};
-		levelMessage[11] = "";
-		gravityGridLevel[12] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,18,0,1};
-		levelMessage[12] = "";
-		gravityGridLevel[13] = myCustomLevel[7];
-		levelMessage[13] = "Sometimes you need to move planets of one color out of the way to make room for planets of a different color.";
-		gravityGridLevel[14] = myCustomLevel[8];
-		levelMessage[14] = "Sometimes it seems like you need to make room for different color planets, but there might also be a different solution.";
-		gravityGridLevel[15] = new int[] {0,0,0,0,1,2,0,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,11,16,0,3};
-		levelMessage[15] = "Here, try to get the red AND blue scores aligned in only three moves. Can you do it?";
-		gravityGridLevel[16] = new int[] {2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,12,18,0,2};
-		levelMessage[16] = "Remember that everything in our universe is connected. Could there be multiple ways to solve this problem?";
-		gravityGridLevel[17] = new int[] {0,0,0,0,0,0,2,0,0,0,1,0,2,0,0,0,1,0,0,0,0,1,0,2,2,0,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,1,0,2,1,0,0,0,17,25,0,3};
-		levelMessage[17] = "Each galaxy consists of 25 planetary systems (or levels). When you beat the 25th level of a galaxy, you unlock the next galaxy!";
-		gravityGridLevel[18] = new int[] {0,0,0,0,0,2,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,2,0,0,0,1,0,0,2,2,0,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,17,14,0,2};
-		levelMessage[18] = "Just seven more levels in this galaxy, including this one!";
-		gravityGridLevel[19] = new int[] {0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,2,2,0,1,0,0,0,0,0,0,0,2,0,2,0,0,0,1,2,0,0,0,32,19,0,3};
-		levelMessage[19] = "Six more levels--you're almost there!";
-		gravityGridLevel[20] = new int[] {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1,0,0,0,2,2,0,2,1,0,2,0,0,0,1,1,0,2,0,0,0,7,24,0,3};
-		levelMessage[20] = "Five levels left!";
-		gravityGridLevel[21] = new int[] {0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,2,2,2,0,0,1,2,0,0,1,0,0,2,0,0,0,2,0,2,2,0,0,0,0,0,0,0,0,19,38,0,3};
-		levelMessage[21] = "Four more levels in this galaxy. Keep going!";
-		gravityGridLevel[22] = new int[] {0,2,0,1,0,0,0,0,0,2,0,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,2,0,1,1,0,0,0,1,0,1,0,1,0,0,27,10,0,3};
-		levelMessage[22] = "Three levels left!";
-		gravityGridLevel[23] = new int[] {0,0,0,0,0,2,2,2,1,0,0,0,0,2,0,0,2,0,1,0,0,1,0,0,0,1,0,1,0,1,0,0,2,1,0,0,0,0,0,2,2,2,1,0,0,1,0,0,0,34,29,0,3};
-		levelMessage[23] = "Two more levels until you unlock the next galaxy!";
-		gravityGridLevel[24] = new int[] {0,0,0,1,0,0,2,0,1,0,0,0,0,2,1,2,0,0,1,0,2,0,0,0,0,0,0,0,1,1,0,2,1,0,0,0,1,0,1,2,0,0,2,0,2,0,2,0,0,41,24,0,4};
-		levelMessage[24] = "This is the last level in this galaxy! After you beat this level, you can unlock the next galaxy!";
-
-		gravityGridLevel[25] = myCustomLevel[10];
-		levelMessage[25] = "Woohoo! You've unlocked the second galaxy, which has ASTEROIDS. Asteroids mean you can't use that tile.";
-		gravityGridLevel[26] = new int[] {0,0,2,0,2,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,2,0,0,0,4,1,2,2,0,0,0,1,1,2,4,0,0,0,0,0,0,26,15,0,3};
-		levelMessage[26] = "Asteroids cannot be moved, and no planet can be moved onto a tile that has an asteriod.";
-		gravityGridLevel[27] = new int[] {1,0,4,4,0,2,1,0,4,2,0,2,1,0,2,0,0,0,2,2,0,0,0,0,0,0,1,0,0,4,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,27,0,3};
-		levelMessage[27] = "";
-		gravityGridLevel[28] = new int[] {2,4,0,0,0,0,0,2,0,0,0,0,0,0,2,2,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,4,0,1,1,2,0,0,0,0,2,0,2,0,0,0,4,1,0,14,18,0,3};
-		levelMessage[28] = "";
-		gravityGridLevel[29] =  new int[] {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,2,0,0,0,0,0,0,4,2,4,0,1,1,2,2,0,0,0,0,0,0,0,0,2,0,1,0,2,0,0,28,17,0,3};
-		    levelMessage[29] = "";
-		gravityGridLevel[30] = new int[] {0,0,0,0,0,0,0,0,0,0,0,1,0,4,0,4,0,1,0,0,4,0,0,0,0,0,0,2,0,0,0,0,4,2,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,15,15,0,4};
-		    levelMessage[30] = "";
-		gravityGridLevel[31] = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,1,0,0,0,0,1,0,2,2,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,4,4,0,0,15,11,0,4};
-		levelMessage[31] = "";
-		gravityGridLevel[32] = new int[] {0,0,0,0,2,0,1,1,0,2,0,1,1,0,0,0,0,2,2,0,4,0,4,0,0,0,0,2,0,0,1,0,0,2,0,0,1,0,0,0,4,0,1,0,2,0,0,0,0,22,31,0,4};
-		levelMessage[32] = "";
-		gravityGridLevel[33] = new int[] {1,0,0,0,0,0,0,4,1,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,0,4,0,0,1,0,0,4,0,0,1,0,0,0,1,0,0,0,40,0,0,4};
-		levelMessage[33] = "";
-		gravityGridLevel[34] = new int[] {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,4,0,1,0,0,4,0,0,1,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,0,38,0,0,4};
-		levelMessage[34] = "";
-		gravityGridLevel[35] = new int[] {4,0,0,0,0,0,4,0,0,0,1,0,0,0,0,0,0,0,1,1,0,1,4,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,4,1,0,0,37,0,0,4};
-		levelMessage[35] = "";
-		gravityGridLevel[36] = new int[] {0,0,0,1,2,0,1,2,2,1,0,0,0,0,0,2,0,0,0,0,0,2,0,1,4,1,4,0,2,0,0,0,0,2,1,0,0,0,0,0,4,0,0,0,1,0,0,0,0,34,20,0,4};
-		levelMessage[36] = "";
-		gravityGridLevel[37] = new int[] {0,0,0,0,0,1,0,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,2,0,0,1,0,4,4,0,0,2,0,1,4,0,7,12,0,4};
-		levelMessage[37] = "";
-		gravityGridLevel[38] = new int[] {2,2,0,0,0,0,4,2,2,0,2,0,1,4,4,4,4,2,0,1,2,0,2,0,4,0,2,1,2,0,1,1,1,2,0,0,0,4,4,1,4,0,0,1,2,1,2,4,0,38,45,0,4};
-		levelMessage[38] = "";
-		gravityGridLevel[39] = new int[] {4,1,1,0,4,4,0,2,0,4,2,4,2,4,0,1,1,0,4,2,1,1,1,0,0,4,0,0,0,2,0,0,0,4,1,1,2,2,2,0,0,2,2,4,0,2,2,2,4,32,39,0,4};
-		levelMessage[39] = "";
-		gravityGridLevel[40] = new int[] {0,0,1,0,2,2,0,2,0,4,4,0,0,2,0,1,0,4,1,0,0,2,0,0,1,0,1,0,0,0,0,1,0,4,4,0,0,1,0,1,2,2,1,0,0,1,1,4,0,46,11,0,4};
-		levelMessage[40] = "";
-		gravityGridLevel[41] = new int[] {1,0,2,1,2,1,4,0,1,4,4,0,4,4,4,2,0,4,0,1,4,4,2,0,4,0,4,4,4,0,0,0,0,4,4,2,1,0,1,4,2,1,0,4,1,1,1,2,0,41,21,0,4};
-		levelMessage[41] = "";
-		gravityGridLevel[42] = new int[] {2,0,4,4,1,0,1,0,0,0,0,0,4,1,2,4,0,4,4,4,0,2,2,2,2,0,2,2,0,0,2,0,0,0,2,2,0,4,4,4,2,0,0,2,2,2,4,4,4,4,52,0,4};
-		levelMessage[42] = "";
-		gravityGridLevel[43] = new int[] {0,2,2,0,0,0,0,0,0,0,0,4,0,0,2,0,0,0,0,1,0,0,4,0,2,2,0,2,0,1,0,2,0,0,2,2,0,2,2,2,0,2,1,0,2,0,0,2,0,8,70,0,4};
-		levelMessage[43] = "";
-		gravityGridLevel[44] = new int[] {0,0,1,2,0,4,1,1,1,4,0,1,0,0,4,0,1,1,0,4,1,4,4,4,4,0,0,1,4,0,0,1,0,4,0,4,0,2,2,1,0,1,1,4,2,1,0,0,4,45,12,0,4};
-		levelMessage[44] = "";
-		gravityGridLevel[45] = new int[] {0,0,4,2,0,4,0,0,4,1,4,4,4,4,0,4,2,2,4,2,2,2,0,2,4,2,1,2,0,4,0,2,0,1,1,0,2,4,4,4,2,4,2,0,0,0,0,2,0,14,70,0,4};
-		levelMessage[45] = "";
-		gravityGridLevel[46] = new int[] {1,0,4,1,4,0,1,1,1,1,4,0,1,1,4,1,0,1,1,0,1,4,4,2,0,1,4,4,0,0,0,4,4,0,2,0,1,4,4,0,0,4,0,2,0,4,2,4,0,59,15,0,4};
-		levelMessage[46] = "";
-		gravityGridLevel[47] = new int[] {2,1,1,4,2,1,2,1,4,2,0,2,1,0,4,2,4,2,0,2,1,4,0,2,2,2,1,0,1,1,4,0,4,2,0,1,1,2,0,1,2,0,4,4,1,0,1,4,4,41,61,0,4};
-		levelMessage[47] = "";
-		gravityGridLevel[48] = new int[] {0,2,4,2,0,0,2,1,2,4,2,4,0,0,4,4,2,2,4,4,2,1,0,0,1,0,0,2,0,0,0,1,1,1,2,0,4,0,1,1,0,4,0,4,4,1,1,0,4,40,37,0,5};
-		levelMessage[48] = "";
-		gravityGridLevel[49] = new int[] {1,4,2,0,0,2,2,4,2,2,1,0,1,2,2,0,0,0,4,0,0,4,0,0,0,1,0,2,0,0,0,1,0,0,0,1,4,0,0,0,4,2,1,1,0,1,1,2,0,31,26,0,5};
-		levelMessage[49] = "";
-		gravityGridLevel[50] = new int[] {2,4,1,1,0,0,0,0,2,0,2,2,0,0,0,4,0,2,0,4,4,0,4,0,4,4,4,1,4,2,2,2,1,1,2,0,4,1,1,0,1,4,0,1,4,2,1,4,4,35,43,0,5};
-		levelMessage[50] = "";
-		gravityGridLevel[51] = new int[] {0,2,0,0,0,0,2,0,1,4,0,0,0,1,0,4,0,0,0,0,1,0,4,0,4,4,2,2,4,0,0,1,1,0,4,2,2,4,1,1,4,0,2,0,0,0,0,4,0,22,15,0,5};
-		levelMessage[51] = "";
-		gravityGridLevel[52] = new int[] {2,0,1,1,0,0,1,4,1,1,0,4,4,0,4,2,0,0,0,4,0,4,2,4,4,2,0,2,0,1,0,0,0,0,2,0,0,4,2,0,4,0,1,0,0,4,4,0,4,19,32,0,5};
-		levelMessage[52] = "";
-
 		fingerOnScreen = false;
 
 		// Prepopulate our screen geometry
@@ -653,29 +683,31 @@ public class GravityGrid extends Game {
 
 		batch = new SpriteBatch(); // Initialize our spritebatch used to draw everything in the world
 
+		assets = new AssetLoader(this, new AssetManager());
+
 		// Head to our InitialLoading screen, which loads all our assets
 		this.setScreen(new InitialLoadingScreen(this));
-
 	}
 
 	public void render() {
-
 		super.render(); // important!
+	}
+
+	public void resume() {
+
 	}
 
 	public void pause() {
 		// In the app lifecycle, this function is called both when the app loses focus AND right before the application closes, so it makes sense to store our save state here. 
 
 		this.storeSaveState();
+
 	}
 
 	public void dispose() {
-
 		batch.dispose();
 		//regularFont.dispose();
-
-		assets.clear(); // Clear out all assets that have been loaded.
-		assets.dispose(); // Dispose of all our assets
+		this.assets.dispose();
 		Gdx.app.exit();
 	}
 }
