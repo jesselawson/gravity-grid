@@ -35,8 +35,8 @@ public class GravityGrid extends Game {
 
 	AssetManager assets = new AssetManager(); // Asset manager
 
-	public static int currentLevel;	// The current level
-	public static int currentGalaxy; // The current galaxy (currentLevel / 25)
+	public int currentLevel;	// The current level
+	public int currentGalaxy; // The current galaxy (currentLevel / 25)
 
 	public int screenWidth;
 	public int screenHeight;
@@ -60,15 +60,13 @@ public class GravityGrid extends Game {
 	Texture gravityGridSphereLogoImage; // Used for our loading screen
 	TextureRegion spaceTurkeyLogoRegion;
 
-	public static int fontSize = 60;
+	public int fontSize = 60;
 
 	// This array holds the values of each tile
-	public static final int[] tileValueTable = new int[] { 0,1,3,5,3,1,0,1,2,4,6,4,2,1,3,4,6,8,6,4,3,5,6,8,10,8,6,5,3,4,6,8,6,4,3,1,2,4,6,4,2,1,0,1,3,5,3,1,0 };
-
-
+	public final int[] tileValueTable = new int[] { 0,1,3,5,3,1,0,1,2,4,6,4,2,1,3,4,6,8,6,4,3,5,6,8,10,8,6,5,3,4,6,8,6,4,3,1,2,4,6,4,2,1,0,1,3,5,3,1,0 };
 
 	// Each set of 25 levels is part of a new galaxy
-	public static final String[] galaxyName = new String[] {
+	public final String[] galaxyName = new String[] {
 			"Andromeda",
 			"Bode's",
 			"Black Eye",
@@ -106,8 +104,8 @@ public class GravityGrid extends Game {
 			*/
 
 	/* Board components. Helps differentiate between edges/corners and middle of board. */
-	public static final int[] boardMiddle = new int[] { 36,37,38,39,40,29,30,31,32,33,22,23,24,25,26,15,16,17,18,19,8,9,10,11,12 };
-	public static final int[] boardEdge = new int[] { 42,43,44,45,46,47,48,35,28,21,14,7,0,1,2,3,4,5,6,13,20,27,34,41 };
+	public final int[] boardMiddle = new int[] { 36,37,38,39,40,29,30,31,32,33,22,23,24,25,26,15,16,17,18,19,8,9,10,11,12 };
+	public final int[] boardEdge = new int[] { 42,43,44,45,46,47,48,35,28,21,14,7,0,1,2,3,4,5,6,13,20,27,34,41 };
 
 	// IntArrayContains is used specifically for the above boardMiddle and boardEdge arrays and in the canMoveAccordingToLogic function
 	public boolean IntArrayContains(int[] list, int number) {
@@ -121,7 +119,7 @@ public class GravityGrid extends Game {
 	}
 
 	/* Default values for level progress. Stores the <status,total_attempts,total_moves_attempted,moves_to_win,points_earned> of each level */
-	public static int[][] levelCompletionInfo = new int[][] { // This will ALWAYS instantiate to zero values
+	public int[][] levelCompletionInfo = new int[][] { // This will ALWAYS instantiate to zero values
 			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 05	// TODO: TURN ALL THESE BACK TO ZERO BEFORE PUSHING TO PUBLIC {1,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0},
 			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 10
 			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 15
@@ -145,7 +143,7 @@ public class GravityGrid extends Game {
 	};
 
 	/* Level messages. Displayed at the bottom of each grid for its associated level */
-	public static String[] levelMessage = new String[100];
+	public String[] levelMessage = new String[100];
 
 	// Most levels will be randomly generated. This string holds them all!
 	// Future releases of the game simply need to increase the total number of levels
@@ -159,7 +157,7 @@ public class GravityGrid extends Game {
 	public int[] levelsWithTutorialOverlays = new int[100];
 
 	// Some levels are specifically constructed by me, like tutorial levels.
-	public static final int[][] myCustomLevel = new int[][] {
+	public final int[][] myCustomLevel = new int[][] {
 			{	// Level 1
 					0,0,0,0,0,0,0,
 					0,0,0,0,0,0,0,
@@ -373,13 +371,13 @@ public class GravityGrid extends Game {
 	}*/
 
 	// A custom point-in-rectangle collision checker
-	public static boolean pointInRectangle (Rectangle r, float x, float y) {
+	public boolean pointInRectangle (Rectangle r, float x, float y) {
 		return r.x <= x && r.x + r.width >= x && r.y <= y && r.y + r.height >= y;
 	}
 
 	// toPrettyDate helps us create a MM:SS string for displaying the next time our dark matter
 	// will regenerate
-	public static String toPrettyDate(long nanotime) {
+	public String toPrettyDate(long nanotime) {
 		long days = TimeUnit.NANOSECONDS.toDays(nanotime);
 		nanotime -= TimeUnit.DAYS.toNanos(days);
 		long hours = TimeUnit.NANOSECONDS.toHours(nanotime);
@@ -645,11 +643,6 @@ public class GravityGrid extends Game {
 		gravityGridLevel[52] = new int[] {2,0,1,1,0,0,1,4,1,1,0,4,4,0,4,2,0,0,0,4,0,4,2,4,4,2,0,2,0,1,0,0,0,0,2,0,0,4,2,0,4,0,1,0,0,4,4,0,4,19,32,0,5};
 		levelMessage[52] = "";
 
-
-
-
-
-
 		fingerOnScreen = false;
 
 		// Prepopulate our screen geometry
@@ -687,7 +680,6 @@ public class GravityGrid extends Game {
 
 		assets.clear(); // Clear out all assets that have been loaded.
 		assets.dispose(); // Dispose of all our assets
-
 	}
 }
 /*

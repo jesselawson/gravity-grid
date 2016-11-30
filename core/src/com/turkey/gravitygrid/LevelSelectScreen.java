@@ -17,8 +17,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
 
-import static com.turkey.gravitygrid.GravityGrid.levelCompletionInfo;
-
 /**
  * Created by jesse on 10/30/16.
  */
@@ -40,7 +38,7 @@ public class LevelSelectScreen implements Screen {
 
     Texture screenBackground;
     Texture levelTileBackground;
-    Texture[] levelIcon; // levelIcon[0] corresponds to levelcompletioninfo[level].[0] value. see `type` below
+    Texture[] levelIcon; // levelIcon[0] corresponds to game.levelCompletionInfo[level].[0] value. see `type` below
     ArrayList<LevelIcon> levelIcons; // The tiles for our level selector
 
     Texture previousGalaxyButtonImage;
@@ -55,7 +53,7 @@ public class LevelSelectScreen implements Screen {
 
     // Simple instance of a level icon on the level select screen
     public class LevelIcon {
-        public int type; // corresponds to levelCompletionInfo; 0 = locked, 1 = playable, 2 =beat
+        public int type; // corresponds to game.levelCompletionInfo; 0 = locked, 1 = playable, 2 =beat
         public Rectangle rect;
         public int levelNum; // corresponds to the level num to make currentLevel
 
@@ -127,7 +125,7 @@ public class LevelSelectScreen implements Screen {
             for(int c = 0; c < 5; c++) {
 
                 // Figure out the type of this level icon
-                int thisLevelIconType = levelCompletionInfo[(game.currentGalaxy*25)+levelNum][0];
+                int thisLevelIconType = game.levelCompletionInfo[(game.currentGalaxy*25)+levelNum][0];
                 //System.out.println("Max: "+game.levelCompletionInfo.length+":: At levelNum "+levelNum+" I found "+thisLevelIconType);
 
                 // Create a placeholder for the rect values
@@ -144,7 +142,7 @@ public class LevelSelectScreen implements Screen {
                 levelIcons.add(new LevelSelectScreen.LevelIcon(rect, levelNum, thisLevelIconType));
 
                 worldCol++;
-                if(levelNum <= levelCompletionInfo.length-1) {
+                if(levelNum <= game.levelCompletionInfo.length-1) {
                     levelNum++; // make sure we aren't going to throw an index out of bounds exception
                 }
             }
@@ -157,7 +155,7 @@ public class LevelSelectScreen implements Screen {
 
     }
 
-    // Call this to change the currentGalaxy so that we map the levelCompletionInfo to the tiles appropriately
+    // Call this to change the currentGalaxy so that we map the game.levelCompletionInfo to the tiles appropriately
     public void ChangeToGalaxy(int direction) {
 
         game.currentGalaxy += direction;
@@ -168,12 +166,12 @@ public class LevelSelectScreen implements Screen {
             for(int c = 0; c < 5; c++) {
 
                 // Get the icon we need
-                int thisLevelIconType = levelCompletionInfo[(game.currentGalaxy*25)+levelNum][0];
+                int thisLevelIconType = game.levelCompletionInfo[(game.currentGalaxy*25)+levelNum][0];
 
                 // set the level icon appropriately
                 levelIcons.get(levelNum).type = thisLevelIconType;
 
-                if(levelNum <= levelCompletionInfo.length-1) {
+                if(levelNum <= game.levelCompletionInfo.length-1) {
                     levelNum++; // make sure we aren't going to throw an index out of bounds exception
                 }
             }
@@ -223,9 +221,9 @@ public class LevelSelectScreen implements Screen {
             // First check if the player is touching one of the prev/next galaxy buttons
             if(game.currentGalaxy < 5) { // so: 0,1,2,3,4
                 // Don't bother with previous button if this is our current galaxy
-                if(GravityGrid.pointInRectangle(nextGalaxyButtonRect, finger.x, finger.y)) {
+                if(game.pointInRectangle(nextGalaxyButtonRect, finger.x, finger.y)) {
                     // Has the player beaten level 25 yet?
-                    if(levelCompletionInfo[(GravityGrid.currentGalaxy *25)+24][0] == 2) {
+                    if(game.levelCompletionInfo[(game.currentGalaxy *25)+24][0] == 2) {
                         // Yep, so let's increment our galaxy
                         ChangeToGalaxy(1);
                         message = "Now entering the "+game.galaxyName[game.currentGalaxy]+" Galaxy";
@@ -238,7 +236,7 @@ public class LevelSelectScreen implements Screen {
             // What about the prev galaxy button?
             if(game.currentGalaxy > 0) { // so: 0,1,2,3,4
                 // Don't bother with previous button if this is our current galaxy
-                if(GravityGrid.pointInRectangle(previousGalaxyButtonRect, finger.x, finger.y)) {
+                if(game.pointInRectangle(previousGalaxyButtonRect, finger.x, finger.y)) {
                     // We can assume that if the player can go back that they beat the previous galaxies
                         ChangeToGalaxy(-1);
                         message = "Now entering the "+game.galaxyName[game.currentGalaxy]+" Galaxy";
@@ -249,7 +247,7 @@ public class LevelSelectScreen implements Screen {
 
             // loop through the levels and find the touched one
             for(LevelSelectScreen.LevelIcon level : this.levelIcons) {
-                if (GravityGrid.pointInRectangle(level.rect, finger.x, finger.y)) {
+                if (game.pointInRectangle(level.rect, finger.x, finger.y)) {
 
                     // If it's a playable level, then set that as the current level and load that bad boy
                     if(level.type == 1 || level.type == 2) {
@@ -305,7 +303,7 @@ public class LevelSelectScreen implements Screen {
 
             // Draw the level number in the middle
             game.regularFont.setColor(1f,1.0f, 1f, 1f);
-            float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*(GravityGrid.fontSize));
+            float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*(game.fontSize));
             game.regularFont.draw(game.batch, ""+(level.levelNum+1), level.rect.x, y, level.rect.width, 1, true);
 
 
@@ -322,7 +320,7 @@ public class LevelSelectScreen implements Screen {
         }
         if(game.currentGalaxy != 4) { // Don't draw "next galaxy" on our 4th galaxy
             // Now let's lock the "next galaxy" button if we haven't completed the 25th level in oru current galaxy
-            if(levelCompletionInfo[(GravityGrid.currentGalaxy*25)+24][0] != 2) {
+            if(game.levelCompletionInfo[(game.currentGalaxy*25)+24][0] != 2) {
                 // display a lock icon over the button
                 game.batch.draw(levelIcon[0], nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
                 game.batch.setColor(0.5f,0.5f,0.5f,0.5f);
@@ -349,8 +347,8 @@ public class LevelSelectScreen implements Screen {
 
         game.pixelFont.setColor(0.87f,0.84f,0.22f,1f);
         game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
-        game.regularFont.draw(game.batch, GravityGrid.galaxyName[GravityGrid.currentGalaxy]+" Galaxy", 5, screenHeight-(1.5f* GravityGrid.fontSize), this.screenWidth-10, 1, false);
-        game.regularFont.draw(game.batch, "Select a Planetary System:", 5, screenHeight-(2.5f* GravityGrid.fontSize), this.screenWidth-10, 1, false);
+        game.regularFont.draw(game.batch, game.galaxyName[game.currentGalaxy]+" Galaxy", 5, screenHeight-(1.5f* game.fontSize), this.screenWidth-10, 1, false);
+        game.regularFont.draw(game.batch, "Select a Planetary System:", 5, screenHeight-(2.5f* game.fontSize), this.screenWidth-10, 1, false);
 
         game.batch.end();
     }
