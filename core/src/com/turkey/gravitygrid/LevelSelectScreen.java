@@ -24,7 +24,6 @@ import java.util.ArrayList;
 public class LevelSelectScreen implements Screen {
 
     private GravityGrid game;
-    private PlayingScreen playingScreen;
 
     private int tileWidth;
     private int tileHeight;
@@ -70,9 +69,6 @@ public class LevelSelectScreen implements Screen {
     // Screen constructor
     public LevelSelectScreen(GravityGrid game) {
         this.game = game;
-
-        // Create our playing screen so we aren't recreating it every damned time we beat a level
-        playingScreen = new PlayingScreen(this.game, this);
 
         // Setup the camera
         camera = new OrthographicCamera();
@@ -180,18 +176,19 @@ public class LevelSelectScreen implements Screen {
 
     public void PlayLevel(int levelNum) {
         game.currentLevel = levelNum;
-        this.playingScreen.RestartLevel();
-        game.setScreen(this.playingScreen);
+        //this.playingScreen.RestartLevel();
+        //game.setScreen(this.playingScreen);
+        game.setScreen(new PlayingScreen(this.game, this));
     }
 
     public void PlayNextLevel() {
         // This function is called in PlayingScreen and assumes that UpdateLevelCompletionInfo has already been called, which should have updated game.currentLevel
-        this.playingScreen.RestartLevel();
+        //this.playingScreen.RestartLevel();
 
         // Update the levelSelectScreen, too
         ChangeToGalaxy(0); // This will just force us to redraw all the thisLevelIconType's in the levelIcons so that they reflect our progress. If you get rid of this, the levelIcons wont update unless you go Prev then Next galaxy.
 
-        game.setScreen(this.playingScreen);
+        game.setScreen(new PlayingScreen(this.game, this));
     }
 
     @Override

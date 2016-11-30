@@ -611,13 +611,13 @@ public class PlayingScreen implements Screen {
         // TODO: lOAD ALL OF THESE FROM THE ASSET MANAGER
         // Load the sounds before the textures so the assetmanager isn't busy by the time we're clicking things
         //restartLevelSound = game.assets.get("startup.wav"));
-        tileSelectSound = game.assets.get("consoleBeep.wav", Sound.class);
+        tileSelectSound = game.assets.get("sounds/tileSelectSound.wav", Sound.class);
         tileDeselectSound = game.assets.get("tileDeselectSound.wav",Sound.class);
-        goodMoveAttemptSound = game.assets.get("goodMoveAttempt.ogg",Sound.class);
+        goodMoveAttemptSound = game.assets.get("sounds/goodMoveSound.wav",Sound.class);
         restartLevelSound = goodMoveAttemptSound;
         cannotMoveSound = game.assets.get("cannotMoveSound.wav",Sound.class);
         outOfMovesSound = game.assets.get("outOfMovesSound.wav",Sound.class);
-        levelCompleteSound = game.assets.get("levelCompleteSound.wav",Sound.class);
+        levelCompleteSound = game.assets.get("sounds/levelCompleteSound.ogg",Sound.class);
 
        /* 0 = blank
         1 = red

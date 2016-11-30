@@ -75,19 +75,20 @@ public class InitialLoadingScreen implements Screen {
         // Load all assetmanager assets
         this.game.assets.load("consoleBeep.wav", Sound.class);
         this.game.assets.load("tileDeselectSound.wav", Sound.class);
-        this.game.assets.load("goodMoveAttempt.ogg", Sound.class);
+        this.game.assets.load("sounds/goodMoveSound.wav", Sound.class);
         this.game.assets.load("cannotMoveSound.wav", Sound.class);
         this.game.assets.load("outOfMovesSound.wav", Sound.class);
-        this.game.assets.load("levelCompleteSound.wav", Sound.class);
+        this.game.assets.load("sounds/levelCompleteSound.ogg", Sound.class);
 
         // Sound assets
 
-        this.game.assets.load("sounds/inGameMenuOpenSound.wav", Sound.class);
+        this.game.assets.load("sounds/inGameMenuOpenButtonSound.wav", Sound.class);
         this.game.assets.load("sounds/inGameMenuButtonSound.wav", Sound.class);
-        this.game.assets.load("sounds/inGameMenuResetButtonSound.wav", Sound.class);
+        this.game.assets.load("sounds/inGameMenuResetLevelButtonSound.wav", Sound.class);
         this.game.assets.load("sounds/levelSelectMenuPlayLevelButtonSound.wav", Sound.class);
         this.game.assets.load("sounds/nextGalaxyButtonSound.wav", Sound.class);
         this.game.assets.load("sounds/previousGalaxyButtonSound.wav", Sound.class);
+        this.game.assets.load("sounds/tileSelectSound.wav", Sound.class);
 
         // Tutorial assets
         this.game.assets.load("tap-here.png", Texture.class);

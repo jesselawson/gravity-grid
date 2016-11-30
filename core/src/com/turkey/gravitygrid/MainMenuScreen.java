@@ -18,7 +18,7 @@ import com.badlogic.gdx.math.Vector3;
 public class MainMenuScreen implements Screen {
 
 	// A custom point-in-rectangle collision checker
-	public static boolean pointInRectangle (Rectangle r, float x, float y) {
+	public boolean pointInRectangle (Rectangle r, float x, float y) {
 		return r.x <= x && r.x + r.width >= x && r.y <= y && r.y + r.height >= y;
 	}
 

@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.concurrent.TimeUnit;
 
-import static com.badlogic.gdx.utils.JsonWriter.OutputType.json;
-
 public class GravityGrid extends Game {
 
 	private Preferences ini;
@@ -366,7 +364,7 @@ public class GravityGrid extends Game {
 	};
 
 	// GetLevel(#) is used to preload the PlayingScreen main playing array.
-	/*public static int[] GetLevel(int levelNum) {
+	/*public int[] GetLevel(int levelNum) {
 		return gravityGridLevel[levelNum];
 	}*/
 
@@ -562,15 +560,13 @@ public class GravityGrid extends Game {
 		gravityGridLevel[13] = myCustomLevel[7];
 		levelMessage[13] = "Sometimes you need to move planets of one color out of the way to make room for planets of a different color.";
 		gravityGridLevel[14] = myCustomLevel[8];
-		levelMessage[13] = "Sometimes it seems like you need to make room for different color planets, but there might also be a different solution.";
-		gravityGridLevel[14] = new int[] {0,0,0,0,1,2,0,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,11,16,0,3};
-		levelMessage[14] = "Here, try to get the red AND blue scores aligned in only three moves. Can you do it?";
-		gravityGridLevel[15] = new int[] {2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,12,18,0,2};
-		levelMessage[15] = "Remember that everything in our universe is connected. Could there be multiple ways to solve this problem?";
-		gravityGridLevel[16] = new int[] {0,0,0,0,0,0,2,0,0,0,1,0,2,0,0,0,1,0,0,0,0,1,0,2,2,0,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,1,0,2,1,0,0,0,17,25,0,3};
-		levelMessage[16] = "Each galaxy consists of 25 planetary systems (or levels). When you beat the 25th level of a galaxy, you unlock the next galaxy!";
-		gravityGridLevel[17] = new int[] {0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,2,0,1,0,0,0,0,0,0,0,1,0,0,0,21,30,0,2};
-		levelMessage[17] = "";
+		levelMessage[14] = "Sometimes it seems like you need to make room for different color planets, but there might also be a different solution.";
+		gravityGridLevel[15] = new int[] {0,0,0,0,1,2,0,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,11,16,0,3};
+		levelMessage[15] = "Here, try to get the red AND blue scores aligned in only three moves. Can you do it?";
+		gravityGridLevel[16] = new int[] {2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,12,18,0,2};
+		levelMessage[16] = "Remember that everything in our universe is connected. Could there be multiple ways to solve this problem?";
+		gravityGridLevel[17] = new int[] {0,0,0,0,0,0,2,0,0,0,1,0,2,0,0,0,1,0,0,0,0,1,0,2,2,0,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,1,0,2,1,0,0,0,17,25,0,3};
+		levelMessage[17] = "Each galaxy consists of 25 planetary systems (or levels). When you beat the 25th level of a galaxy, you unlock the next galaxy!";
 		gravityGridLevel[18] = new int[] {0,0,0,0,0,2,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,2,0,0,0,1,0,0,2,2,0,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,17,14,0,2};
 		levelMessage[18] = "Just seven more levels in this galaxy, including this one!";
 		gravityGridLevel[19] = new int[] {0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,2,2,0,1,0,0,0,0,0,0,0,2,0,2,0,0,0,1,2,0,0,0,32,19,0,3};
@@ -680,6 +676,7 @@ public class GravityGrid extends Game {
 
 		assets.clear(); // Clear out all assets that have been loaded.
 		assets.dispose(); // Dispose of all our assets
+		Gdx.app.exit();
 	}
 }
 /*
