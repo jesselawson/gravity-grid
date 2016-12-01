@@ -345,14 +345,14 @@ public class PlayingScreen implements Screen {
                 if (this.game.IntArrayContains(this.game.boardMiddle, destinationTileNum)) {
                     // Check the middle section of the board (i.e., all tiles except edges and corners)
                     if (    // For green planets, it's left, right, and all three on top and three on bottom
-                            GoodMoveVerified(destinationTileNum - 1, selectedType, selectedNum)
-                            || GoodMoveVerified(destinationTileNum - 8, selectedType, selectedNum)
-                            || GoodMoveVerified(destinationTileNum - 7, selectedType, selectedNum)
-                            || GoodMoveVerified(destinationTileNum - 6, selectedType, selectedNum)
-                            || GoodMoveVerified(destinationTileNum + 1, selectedType, selectedNum)
-                            || GoodMoveVerified(destinationTileNum + 6, selectedType, selectedNum)
-                            || GoodMoveVerified(destinationTileNum + 7, selectedType, selectedNum)
-                            || GoodMoveVerified(destinationTileNum + 8, selectedType, selectedNum)
+                            !GoodMoveVerified(destinationTileNum - 1, selectedType, selectedNum)
+                            && !GoodMoveVerified(destinationTileNum - 8, selectedType, selectedNum)
+                            && !GoodMoveVerified(destinationTileNum - 7, selectedType, selectedNum)
+                            && !GoodMoveVerified(destinationTileNum - 6, selectedType, selectedNum)
+                            && !GoodMoveVerified(destinationTileNum + 1, selectedType, selectedNum)
+                            && !GoodMoveVerified(destinationTileNum + 6, selectedType, selectedNum)
+                            && !GoodMoveVerified(destinationTileNum + 7, selectedType, selectedNum)
+                            && !GoodMoveVerified(destinationTileNum + 8, selectedType, selectedNum)
                             ) {
                         outcome = true;
                         //System.out.println("destinationTileNum: " + destinationTileNum + ". SelectedNum: " + selectedNum);
@@ -364,30 +364,30 @@ public class PlayingScreen implements Screen {
                     // So why not this switch in a switch?
 
                     switch (destinationTileNum) {
-                        case 42: outcome = ( GoodMoveVerified(35,selectedType,selectedNum) || GoodMoveVerified(43,selectedType,selectedNum) || GoodMoveVerified(36,selectedType,selectedNum) ); break;
+                        case 42: outcome = ( !GoodMoveVerified(35,selectedType,selectedNum) && !GoodMoveVerified(43,selectedType,selectedNum) && !GoodMoveVerified(36,selectedType,selectedNum) ); break;
                         case 43:
                         case 44:
                         case 45:
                         case 46:
-                        case 47: outcome = (GoodMoveVerified(destinationTileNum-1,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum+1,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-6,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-8,selectedType,selectedNum)); break;
-                        case 48: outcome = ( GoodMoveVerified(47,selectedType,selectedNum) || GoodMoveVerified(40,selectedType,selectedNum) || GoodMoveVerified(41,selectedType,selectedNum)); break;
+                        case 47: outcome = (!GoodMoveVerified(destinationTileNum-1,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+1,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-8,selectedType,selectedNum)); break;
+                        case 48: outcome = ( !GoodMoveVerified(47,selectedType,selectedNum) && !GoodMoveVerified(40,selectedType,selectedNum) && !GoodMoveVerified(41,selectedType,selectedNum)); break;
                         case 41:
                         case 34:
                         case 27:
                         case 20:
-                        case 13: outcome = ( GoodMoveVerified(destinationTileNum+6,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-1,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-6,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum)); break;
-                        case  6: outcome = ( GoodMoveVerified(5,selectedType,selectedNum) || GoodMoveVerified(12,selectedType,selectedNum) || GoodMoveVerified(13,selectedType,selectedNum) ); break;
+                        case 13: outcome = ( !GoodMoveVerified(destinationTileNum+6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-1,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum)); break;
+                        case  6: outcome = ( !GoodMoveVerified(5,selectedType,selectedNum) && !GoodMoveVerified(12,selectedType,selectedNum) && !GoodMoveVerified(13,selectedType,selectedNum) ); break;
                         case  5:
                         case  4:
                         case  3:
                         case  2:
-                        case  1: outcome = ( GoodMoveVerified(destinationTileNum+6,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum+8,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-1,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum+1,selectedType,selectedNum)); break;
-                        case  0: outcome = ( GoodMoveVerified(7,selectedType,selectedNum) || GoodMoveVerified(8,selectedType,selectedNum) || GoodMoveVerified(1,selectedType,selectedNum) ); break;
+                        case  1: outcome = ( !GoodMoveVerified(destinationTileNum+6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+8,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-1,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+1,selectedType,selectedNum)); break;
+                        case  0: outcome = ( !GoodMoveVerified(7,selectedType,selectedNum) && !GoodMoveVerified(8,selectedType,selectedNum) && !GoodMoveVerified(1,selectedType,selectedNum) ); break;
                         case  7:
                         case 14:
                         case 21:
                         case 28:
-                        case 35: outcome = ( GoodMoveVerified(destinationTileNum+6,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum+1,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-6,selectedType,selectedNum) || GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum)); break;
+                        case 35: outcome = ( !GoodMoveVerified(destinationTileNum+6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+1,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum)); break;
                         default: break;
                     }
 
