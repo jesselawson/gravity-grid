@@ -5,6 +5,7 @@
 package com.turkey.gravitygrid;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -27,12 +28,19 @@ public class AndroidLauncher extends AndroidApplication {
 
 		RelativeLayout layout = new RelativeLayout(this);
 
+		// Create layout parameters for our ad
+		RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		adParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		adParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+
 		// Create the game view
 		View gameView = initializeForView(new GravityGrid(), config);
 
 		// Create a banner ad
 		AdView theAdView = new AdView(this);
-		theAdView.setAdSize(AdSize.BANNER);
+		theAdView.setAdSize(AdSize.SMART_BANNER);
+
+
 		theAdView.setAdUnitId(getResources().getString(R.string.banner_ad_unit_id)); // Get the banner_ad_unit_id which we set as a string in strings.xml
 
 		// Create an ad request
@@ -42,7 +50,7 @@ public class AndroidLauncher extends AndroidApplication {
 		layout.addView(gameView);
 
 		// Add the AdView to the view hierarchy
-		layout.addView(theAdView);
+		//layout.addView(theAdView, adParams);
 
 		// Start loading the add
 		theAdView.loadAd(adRequestBuilder.build());

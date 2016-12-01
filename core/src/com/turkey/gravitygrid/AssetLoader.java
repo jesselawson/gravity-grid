@@ -67,11 +67,11 @@ public final class AssetLoader {
     public void LoadAllAssets() {
 
         // Load all assetmanager assets
-        getAssetManager().load("consoleBeep.wav", Sound.class);
-        getAssetManager().load("tileDeselectSound.wav", Sound.class);
+        //getAssetManager().load("consoleBeep.wav", Sound.class);
+        getAssetManager().load("sounds/tileDeselectSound.wav", Sound.class);
         getAssetManager().load("sounds/goodMoveSound.wav", Sound.class);
-        getAssetManager().load("cannotMoveSound.wav", Sound.class);
-        getAssetManager().load("outOfMovesSound.wav", Sound.class);
+        getAssetManager().load("sounds/cannotMoveSound.wav", Sound.class);
+        //getAssetManager().load("outOfMovesSound.wav", Sound.class);
         getAssetManager().load("sounds/levelCompleteSound.ogg", Sound.class);
 
         // Sound assets
@@ -92,9 +92,9 @@ public final class AssetLoader {
 
         // Load the textures
         getAssetManager().load("tileBlankImage.png", Texture.class);
-        getAssetManager().load("planet-red.png", Texture.class);
-        getAssetManager().load("planet-blue.png", Texture.class);
-        getAssetManager().load("planet-green.png", Texture.class);
+        getAssetManager().load("planetRed.png", Texture.class);
+        getAssetManager().load("planetBlue.png", Texture.class);
+        getAssetManager().load("planetGreen.png", Texture.class);
         getAssetManager().load("sun.png", Texture.class);
         getAssetManager().load("sunflare0.png", Texture.class);
         getAssetManager().load("asteroid0.png", Texture.class);

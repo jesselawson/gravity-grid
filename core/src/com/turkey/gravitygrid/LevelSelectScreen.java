@@ -95,8 +95,8 @@ public class LevelSelectScreen implements Screen {
 
         // Generate rect's for buttons
 
-        previousGalaxyButtonRect = new Rectangle(this.tileWidth, 5, this.tileWidth, this.tileHeight);
-        nextGalaxyButtonRect = new Rectangle(3*this.tileWidth, 5, this.tileWidth, this.tileHeight);
+        previousGalaxyButtonRect = new Rectangle(this.tileWidth, this.tileHeight, this.tileWidth, this.tileHeight);
+        nextGalaxyButtonRect = new Rectangle(3*this.tileWidth, this.tileHeight, this.tileWidth, this.tileHeight);
 
 
         this.levelIcons = new ArrayList<LevelIcon>(); // Initialize our grid

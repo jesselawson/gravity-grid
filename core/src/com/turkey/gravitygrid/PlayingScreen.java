@@ -612,11 +612,11 @@ public class PlayingScreen implements Screen {
         // Load the sounds before the textures so the assetmanager isn't busy by the time we're clicking things
         //restartLevelSound= this.game.assets.getAssetManager().get("startup.wav"));
         tileSelectSound= this.game.assets.getAssetManager().get("sounds/tileSelectSound.wav", Sound.class);
-        tileDeselectSound= this.game.assets.getAssetManager().get("tileDeselectSound.wav",Sound.class);
+        tileDeselectSound= this.game.assets.getAssetManager().get("sounds/tileDeselectSound.wav",Sound.class);
         goodMoveAttemptSound= this.game.assets.getAssetManager().get("sounds/goodMoveSound.wav",Sound.class);
         restartLevelSound = goodMoveAttemptSound;
-        cannotMoveSound= this.game.assets.getAssetManager().get("cannotMoveSound.wav",Sound.class);
-        outOfMovesSound= this.game.assets.getAssetManager().get("outOfMovesSound.wav",Sound.class);
+        cannotMoveSound= this.game.assets.getAssetManager().get("sounds/cannotMoveSound.wav",Sound.class);
+
         levelCompleteSound= this.game.assets.getAssetManager().get("sounds/levelCompleteSound.ogg",Sound.class);
 
        /* 0 = blank
@@ -631,11 +631,11 @@ public class PlayingScreen implements Screen {
         tileBlankImage= this.game.assets.getAssetManager().get("tileBlankImage.png", Texture.class);
         //tilePlanetImage = new Texture[4]; // remember: [4] = [0,1,2,3].
         //tilePlanetRegion = new TextureRegion[4];
-        tileRedPlanetImage= this.game.assets.getAssetManager().get("planet-red.png", Texture.class);
+        tileRedPlanetImage= this.game.assets.getAssetManager().get("planetRed.png", Texture.class);
         tileRedPlanetRegion = new TextureRegion(tileRedPlanetImage);
-        tileBluePlanetImage= this.game.assets.getAssetManager().get("planet-blue.png", Texture.class);
+        tileBluePlanetImage= this.game.assets.getAssetManager().get("planetBlue.png", Texture.class);
         tileBluePlanetRegion = new TextureRegion(tileBluePlanetImage);
-        tileGreenPlanetImage= this.game.assets.getAssetManager().get("planet-green.png", Texture.class);
+        tileGreenPlanetImage= this.game.assets.getAssetManager().get("planetGreen.png", Texture.class);
         tileGreenPlanetRegion = new TextureRegion(tileGreenPlanetImage);
         tileSunImage= this.game.assets.getAssetManager().get("sun.png", Texture.class);
         tileSunRegion = new TextureRegion(tileSunImage);

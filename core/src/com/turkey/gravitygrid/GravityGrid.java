@@ -117,12 +117,12 @@ public class GravityGrid extends Game {
 
 	/* Default values for level progress. Stores the <status,total_attempts,total_moves_attempted,moves_to_win,points_earned> of each level */
 	public int[][] levelCompletionInfo = new int[][] { // This will ALWAYS instantiate to zero values
-			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 05	// TODO: TURN ALL THESE BACK TO ZERO BEFORE PUSHING TO PUBLIC {1,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0},
-			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 10
-			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 15
-			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 20
-			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 25
-			{2,0,0,0,0}, {1,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 30
+			{1,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 05
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 10
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 15
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 20
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 25
+			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 30
 			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 35
 			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 40
 			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 45
@@ -140,6 +140,9 @@ public class GravityGrid extends Game {
 	};
 
 	/* Level messages. Displayed at the bottom of each grid for its associated level */
+
+	// TODO: Rewrite all strings to fit on top of the banner ad.
+	// This fits: Sometimes it seems like you need to make room for different color planets, but there might also be
 	public String[] levelMessage = new String[] {
 			"Remember: Red planets can only be moved to a tile that is diagonal to another red planet.",
 			"Fantastic! Now I suppose it's time to tell you why you're here: In 500 years, the universe will collapse.",
