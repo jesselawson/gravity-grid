@@ -8,6 +8,7 @@ package com.turkey.gravitygrid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -41,6 +42,8 @@ public class MainMenuScreen implements Screen {
 	Rectangle buttonContinueRect;
 	Texture doItNowImage;
 
+	Sound touchSound; // Literally the only sound we have
+
 	int mainMenuState; 
 	
 	public MainMenuScreen(final GravityGrid game) {
@@ -65,6 +68,8 @@ public class MainMenuScreen implements Screen {
 		buttonNewGameRect = new Rectangle((Gdx.graphics.getWidth()/4)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
 
 		buttonContinueRect = new Rectangle((Gdx.graphics.getWidth()/2)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
+
+		touchSound = game.assets.getAssetManager().get("sounds/mainMenuButton.ogg", Sound.class);
 
 	}
 
@@ -106,9 +111,8 @@ public class MainMenuScreen implements Screen {
 				// Check which button is pressed
 				Vector3 finger = new Vector3();
 				camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-				if(pointInRectangle(buttonNewGameRect, finger.x, finger.y)) {
-					//game.setScreen(new NewGameScreen(game)); // maybe NewGameScreen goes through the intro story?
-				} else if(pointInRectangle(buttonContinueRect, finger.x, finger.y)) {
+				if(pointInRectangle(buttonContinueRect, finger.x, finger.y)) {
+					touchSound.play();
 					game.setScreen(new LevelSelectScreen(game)); // Will pickup based on what we read from the player files (the ini)
 					// Really, this should be sending us to the LevelSelectScreen
 				}

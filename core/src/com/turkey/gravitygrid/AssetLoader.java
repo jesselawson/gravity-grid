@@ -71,7 +71,7 @@ public final class AssetLoader {
         getAssetManager().load("sounds/tileDeselectSound.wav", Sound.class);
         getAssetManager().load("sounds/goodMoveSound.wav", Sound.class);
         getAssetManager().load("sounds/cannotMoveSound.wav", Sound.class);
-        //getAssetManager().load("outOfMovesSound.wav", Sound.class);
+        getAssetManager().load("sounds/mainMenuButton.ogg", Sound.class);
         getAssetManager().load("sounds/levelCompleteSound.ogg", Sound.class);
 
         // Sound assets
