@@ -331,7 +331,7 @@ public class LevelSelectScreen implements Screen {
         // The location of the top line should be below the last tile. We can find this easily:
         float tileHeight = Gdx.graphics.getWidth() / 7;
         float middle = Gdx.graphics.getHeight() / 2;
-        float startLineY = middle - 3.85f*tileHeight; // So we want to start 3.5*tileHeight from center of screen. That should get us to the bottom.
+        float startLineY = middle + 3.85f*tileHeight; // So we want to start 3.5*tileHeight from center of screen. That should get us to the bottom.
         // At 3.85f*tileHeight, we give ourselves a little padding between the text and grid
 
         if(messageAlpha > 0.0f) {

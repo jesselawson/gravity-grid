@@ -28,7 +28,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		RelativeLayout layout = new RelativeLayout(this);
 
-		// Create layout parameters for our ad
+		// Create layout parameters for our ad so that it shows up centered at the bottom of our screen
 		RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		adParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		adParams.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -39,8 +39,6 @@ public class AndroidLauncher extends AndroidApplication {
 		// Create a banner ad
 		AdView theAdView = new AdView(this);
 		theAdView.setAdSize(AdSize.SMART_BANNER);
-
-
 		theAdView.setAdUnitId(getResources().getString(R.string.banner_ad_unit_id)); // Get the banner_ad_unit_id which we set as a string in strings.xml
 
 		// Create an ad request
@@ -49,8 +47,8 @@ public class AndroidLauncher extends AndroidApplication {
 		// Add the game view
 		layout.addView(gameView);
 
-		// Add the AdView to the view hierarchy
-		//layout.addView(theAdView, adParams);
+		// Add the AdView to the view hierarchy (comment this out for ad-free version)
+		layout.addView(theAdView, adParams);
 
 		// Start loading the add
 		theAdView.loadAd(adRequestBuilder.build());
