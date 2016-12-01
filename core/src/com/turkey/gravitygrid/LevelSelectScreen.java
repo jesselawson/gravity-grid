@@ -318,7 +318,7 @@ public class LevelSelectScreen implements Screen {
             // Draw the level number in the middle
             game.regularFont.setColor(1f,1.0f, 1f, 1f);
             float y = level.rect.y+(0.5f*level.rect.height)+(0.5f*(game.fontSize));
-            game.regularFont.draw(game.batch, ""+(level.levelNum+1), level.rect.x, y, level.rect.width, 1, true);
+            game.regularFont.draw(game.batch, ""+((game.currentGalaxy*25)+level.levelNum+1), level.rect.x, y, level.rect.width, 1, true);
 
 
         }
@@ -349,7 +349,7 @@ public class LevelSelectScreen implements Screen {
 
         if(messageAlpha > 0.0f) {
             game.regularFont.setColor(1f, 0.5f, 1f, messageAlpha);
-            game.regularFont.draw(game.batch, "" + message, 0, screenHeight-(2.5f* game.fontSize), this.screenWidth, 1, true);
+            game.regularFont.draw(game.batch, "" + message, 0, screenHeight-(3.5f* game.fontSize), this.screenWidth, 1, true);
             game.regularFont.setColor(1f, 1f, 1f, 1f);  //reset the regularFont color to white
             messageAlpha -= 0.005f;
         }
@@ -361,6 +361,9 @@ public class LevelSelectScreen implements Screen {
         game.regularFont.draw(game.batch, "Select a Planetary System:", 5, screenHeight-(2.5f* game.fontSize), this.screenWidth-10, 1, false);
 
         game.batch.end();
+
+        // Now let's update our music
+
     }
 
     @Override

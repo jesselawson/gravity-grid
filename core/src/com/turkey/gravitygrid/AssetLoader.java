@@ -2,6 +2,7 @@ package com.turkey.gravitygrid;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -74,8 +75,9 @@ public final class AssetLoader {
         getAssetManager().load("sounds/levelCompleteSound.ogg", Sound.class);
         getAssetManager().load("sounds/nope.wav", Sound.class);
 
-        // Sound assets
+        getAssetManager().load("flare.png", Texture.class);
 
+        // Sound assets
         getAssetManager().load("sounds/inGameMenuOpenButtonSound.wav", Sound.class);
         //getAssetManager().load("sounds/inGameMenuButtonSound.wav", Sound.class);
         getAssetManager().load("sounds/inGameMenuResetLevelButtonSound.wav", Sound.class);
@@ -84,6 +86,12 @@ public final class AssetLoader {
         getAssetManager().load("sounds/nextGalaxyButtonSound.wav", Sound.class);
         getAssetManager().load("sounds/previousGalaxyButtonSound.wav", Sound.class);
         getAssetManager().load("sounds/tileSelectSound.wav", Sound.class);
+
+        // Music assets
+        getAssetManager().load("sounds/galaxy1music.mp3", Music.class);
+        //getAssetManager().load("sounds/galaxy1music.mp3", Music.class);
+       // getAssetManager().load("sounds/galaxy2music.mp3", Music.class);
+       // getAssetManager().load("sounds/galaxy3music.mp3", Music.class);
 
         // Tutorial assets
         getAssetManager().load("tap-here.png", Texture.class);

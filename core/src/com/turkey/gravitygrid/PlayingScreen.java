@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -77,6 +78,8 @@ public class PlayingScreen implements Screen {
     public Texture inGameMenuLevelSelectButtonImage;
     public Texture inGameMenuHelpButtonImage;
     Texture doneCheckmarkImage;
+
+    Music backgroundMusic;
 
     // An array of pooled effects to manage all our particle effect systems
     Array<ParticleEffectPool.PooledEffect> particleEffects = new Array();
@@ -454,6 +457,9 @@ public class PlayingScreen implements Screen {
     Texture tileSelectedBottomImage;
     TextureRegion tileSelectedTopRegion;
     TextureRegion tileSelectedBottomRegion;
+    Texture doneFlareBackgroundImage;
+    TextureRegion doneFlareBackgroundRegion;
+    private float doneFlareBackgroundDirection;
     private int tileSelectedTopDirection;
     private int tileSelectedBottomDirection;
     Sound tileSelectSound;
@@ -626,6 +632,10 @@ public class PlayingScreen implements Screen {
         inGameMenuLevelSelectButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuLevelSelectButtonSound.wav", Sound.class);
         inGameMenuResetLevelButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuResetLevelButtonSound.wav", Sound.class);
 
+        backgroundMusic = this.game.assets.getAssetManager().get("sounds/galaxy1music.mp3", Music.class);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0.4f);
+
        /* 0 = blank
         1 = red
         2 = blue
@@ -671,6 +681,9 @@ public class PlayingScreen implements Screen {
 
         //levelMessageBackgroundImage= this.game.assets.getAssetManager().get("levelMessageBackground.png", Texture.class);
         doneCheckmarkImage= this.game.assets.getAssetManager().get("levelicons/done.png", Texture.class);
+        doneFlareBackgroundImage = this.game.assets.getAssetManager().get("flare.png", Texture.class);
+        doneFlareBackgroundRegion = new TextureRegion(doneFlareBackgroundImage);
+        doneFlareBackgroundDirection = 0.0f;
 
         tileValueImage = new Texture[11];
         tileValueImage[0]= this.game.assets.getAssetManager().get("tile0.png", Texture.class);
@@ -1323,6 +1336,9 @@ public class PlayingScreen implements Screen {
             case 1:
                 // Draw checkmark on center numbers regardless of which planet type they're for (since we'll draw the checkmark in the same spot
                 if(redsAreDone || bluesAreDone || greensAreDone) {
+                    game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                    game.batch.draw(doneFlareBackgroundRegion, checkmarkMiddle-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
+
                     game.batch.setColor(game.colorOrange);
                     game.batch.draw(doneCheckmarkImage, checkmarkMiddle-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                 }
@@ -1347,11 +1363,17 @@ public class PlayingScreen implements Screen {
             case 2:
                 if (haveRed && haveBlue) {
                     if(redsAreDone) {
+                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
+
                         game.batch.setColor(game.colorOrange);
                         game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
 
                     if(bluesAreDone) {
+                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
+
                         game.batch.setColor(game.colorOrange);
                         game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
@@ -1364,11 +1386,17 @@ public class PlayingScreen implements Screen {
                 }
                 if (haveBlue && haveGreen) {
                     if(bluesAreDone) {
+                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
+
                         game.batch.setColor(game.colorOrange);
                         game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
 
                     if(greensAreDone) {
+                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
+
                         game.batch.setColor(game.colorOrange);
                         game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
@@ -1380,11 +1408,17 @@ public class PlayingScreen implements Screen {
                 }
                 if (haveRed && haveGreen) {
                     if(redsAreDone) {
+                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
+
                         game.batch.setColor(game.colorOrange);
                         game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
 
                     if(greensAreDone) {
+                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
+
                         game.batch.setColor(game.colorOrange);
                         game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
@@ -1399,16 +1433,25 @@ public class PlayingScreen implements Screen {
             case 3:
 
                 if(redsAreDone) {
+                    game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                    game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
+
                     game.batch.setColor(game.colorOrange);
                     game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                 }
 
                 if(bluesAreDone) {
+                    game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                    game.batch.draw(doneFlareBackgroundRegion, checkmarkMiddle-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
+
                     game.batch.setColor(game.colorOrange);
                     game.batch.draw(doneCheckmarkImage, checkmarkMiddle-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                 }
 
                 if(redsAreDone) {
+                    game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                    game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
+
                     game.batch.setColor(game.colorOrange);
                     game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                 }
@@ -1535,6 +1578,11 @@ public class PlayingScreen implements Screen {
         }
 
         game.batch.end();
+
+        doneFlareBackgroundDirection+=1.8f;
+        if(doneFlareBackgroundDirection >= 360.0f) {
+            doneFlareBackgroundDirection = 0.0f;
+        }
     }
 
     @Override
@@ -1578,6 +1626,9 @@ public class PlayingScreen implements Screen {
 
         PlayLevel(delta);
 
+        if(!backgroundMusic.isPlaying()) {
+            backgroundMusic.play();
+        }
     }
 
     @Override

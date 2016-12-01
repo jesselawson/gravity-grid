@@ -9,6 +9,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
@@ -31,6 +32,8 @@ public class GravityGrid extends Game {
 
 	private Preferences ini;
 
+	public boolean readyForMusicAndAds = false;
+
 	public int currentLevel;	// The current level
 	public int currentGalaxy; // The current galaxy (currentLevel / 25)
 
@@ -38,7 +41,6 @@ public class GravityGrid extends Game {
 	public int screenHeight;
 
 	public boolean fingerOnScreen;
-
 
 	// Explicitly set our colors for consistency
 	Color colorDarkBlue = new Color(.38f,.57f,.80f,0.75f);
