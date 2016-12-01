@@ -464,6 +464,10 @@ public class PlayingScreen implements Screen {
     Sound levelCompleteSound;
     Sound restartLevelSound;
 
+    Sound inGameMenuOpenButtonSound;
+    Sound inGameMenuResetLevelButtonSound;
+    Sound inGameMenuLevelSelectButtonSound;
+
     Rectangle finger;
     private GravityGrid game;
 
@@ -616,8 +620,11 @@ public class PlayingScreen implements Screen {
         goodMoveAttemptSound= this.game.assets.getAssetManager().get("sounds/goodMoveSound.wav",Sound.class);
         restartLevelSound = goodMoveAttemptSound;
         cannotMoveSound= this.game.assets.getAssetManager().get("sounds/cannotMoveSound.wav",Sound.class);
-
         levelCompleteSound= this.game.assets.getAssetManager().get("sounds/levelCompleteSound.ogg",Sound.class);
+
+        inGameMenuOpenButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuOpenButtonSound.wav", Sound.class);
+        inGameMenuLevelSelectButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuLevelSelectButtonSound.wav", Sound.class);
+        inGameMenuResetLevelButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuResetLevelButtonSound.wav", Sound.class);
 
        /* 0 = blank
         1 = red
@@ -857,7 +864,6 @@ public class PlayingScreen implements Screen {
         // Check for input
             if (Gdx.input.justTouched()) {
 
-
                 Vector3 finger = new Vector3();
                 camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
@@ -865,17 +871,19 @@ public class PlayingScreen implements Screen {
 
                     // Did we tap cancel button?
                     if (pointInRectangle(inGameMenuButtonRect, finger.x, finger.y)) {
-
+                        inGameMenuOpenButtonSound.play();
                         theGameState = gameState.READY;
                         readyForInput = false;
                     }
 
                     // Did we reset?
                     if (pointInRectangle(inGameMenuResetButtonRect, finger.x, finger.y)) {
+                        inGameMenuResetLevelButtonSound.play();
                         RestartLevel();
                     }
                     // Did we tap level select?
                     if (pointInRectangle(inGameMenuLevelSelectButtonRect, finger.x, finger.y)) {
+                        inGameMenuLevelSelectButtonSound.play();
                         game.setScreen(this.parentScreen);
                     }
 
@@ -892,6 +900,7 @@ public class PlayingScreen implements Screen {
 
                     if(theGameState != gameState.IN_GAME_MENU) {
                         if(pointInRectangle(inGameMenuButtonRect, finger.x, finger.y)) {
+                            inGameMenuOpenButtonSound.play();
                             // Make sure there was a separate touch than the one that caused the menu to appear
                                 theGameState = gameState.IN_GAME_MENU;
                         }

@@ -6,6 +6,7 @@ package com.turkey.gravitygrid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -45,6 +46,11 @@ public class LevelSelectScreen implements Screen {
     Rectangle previousGalaxyButtonRect;
     Rectangle nextGalaxyButtonRect;
 
+    Sound selectLevelSound;
+    Sound previousGalaxyButtonSound;
+    Sound nextGalaxyButtonSound;
+    Sound nopeSound;
+
     OrthographicCamera camera;
 
     public String message;
@@ -74,6 +80,11 @@ public class LevelSelectScreen implements Screen {
         camera = new OrthographicCamera();
         //camera.setToOrtho(false, 1080, 1920); // Hard-set these to control for multiple display sizes
         camera.setToOrtho(false, game.screenWidth, game.screenHeight);
+
+        selectLevelSound = game.assets.getAssetManager().get("sounds/levelSelectMenuPlayLevelButtonSound.wav", Sound.class);
+        previousGalaxyButtonSound = game.assets.getAssetManager().get("sounds/nextGalaxyButtonSound.wav", Sound.class);
+        nextGalaxyButtonSound = game.assets.getAssetManager().get("sounds/previousGalaxyButtonSound.wav", Sound.class);
+        nopeSound = game.assets.getAssetManager().get("sounds/nope.wav", Sound.class);
 
         // Get our textures
         screenBackground = game.assets.getAssetManager().get("menu/blackBackground.png", Texture.class);
@@ -221,10 +232,13 @@ public class LevelSelectScreen implements Screen {
                 if(game.pointInRectangle(nextGalaxyButtonRect, finger.x, finger.y)) {
                     // Has the player beaten level 25 yet?
                     if(game.levelCompletionInfo[(game.currentGalaxy *25)+24][0] == 2) {
+                        nextGalaxyButtonSound.play();
                         // Yep, so let's increment our galaxy
                         ChangeToGalaxy(1);
                         message = "Now entering the "+game.galaxyName[game.currentGalaxy]+" Galaxy";
                         messageAlpha = 1.0f;
+                    } else {
+                        nopeSound.play();
                     }
                     break processInput;
                 }
@@ -234,6 +248,7 @@ public class LevelSelectScreen implements Screen {
             if(game.currentGalaxy > 0) { // so: 0,1,2,3,4
                 // Don't bother with previous button if this is our current galaxy
                 if(game.pointInRectangle(previousGalaxyButtonRect, finger.x, finger.y)) {
+                    previousGalaxyButtonSound.play();
                     // We can assume that if the player can go back that they beat the previous galaxies
                         ChangeToGalaxy(-1);
                         message = "Now entering the "+game.galaxyName[game.currentGalaxy]+" Galaxy";
@@ -248,10 +263,12 @@ public class LevelSelectScreen implements Screen {
 
                     // If it's a playable level, then set that as the current level and load that bad boy
                     if(level.type == 1 || level.type == 2) {
+                        selectLevelSound.play();
                         game.currentLevel = level.levelNum+(game.currentGalaxy*25);
                         System.out.println("Loading level "+game.currentLevel+"...");
                         PlayLevel(game.currentLevel);
                     } else {
+                        nopeSound.play();
                         message = "You can't play that one yet!";
                         messageAlpha = 1.0f;
 
@@ -328,15 +345,11 @@ public class LevelSelectScreen implements Screen {
 
 
 
-        // The location of the top line should be below the last tile. We can find this easily:
-        float tileHeight = Gdx.graphics.getWidth() / 7;
-        float middle = Gdx.graphics.getHeight() / 2;
-        float startLineY = middle + 3.85f*tileHeight; // So we want to start 3.5*tileHeight from center of screen. That should get us to the bottom.
-        // At 3.85f*tileHeight, we give ourselves a little padding between the text and grid
+
 
         if(messageAlpha > 0.0f) {
             game.regularFont.setColor(1f, 0.5f, 1f, messageAlpha);
-            game.regularFont.draw(game.batch, "" + message, 0, startLineY, this.screenWidth, 1, true);
+            game.regularFont.draw(game.batch, "" + message, 0, screenHeight-(2.5f* game.fontSize), this.screenWidth, 1, true);
             game.regularFont.setColor(1f, 1f, 1f, 1f);  //reset the regularFont color to white
             messageAlpha -= 0.005f;
         }

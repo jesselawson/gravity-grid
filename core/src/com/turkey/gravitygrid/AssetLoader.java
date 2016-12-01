@@ -67,18 +67,19 @@ public final class AssetLoader {
     public void LoadAllAssets() {
 
         // Load all assetmanager assets
-        //getAssetManager().load("consoleBeep.wav", Sound.class);
         getAssetManager().load("sounds/tileDeselectSound.wav", Sound.class);
         getAssetManager().load("sounds/goodMoveSound.wav", Sound.class);
         getAssetManager().load("sounds/cannotMoveSound.wav", Sound.class);
         getAssetManager().load("sounds/mainMenuButton.ogg", Sound.class);
         getAssetManager().load("sounds/levelCompleteSound.ogg", Sound.class);
+        getAssetManager().load("sounds/nope.wav", Sound.class);
 
         // Sound assets
 
         getAssetManager().load("sounds/inGameMenuOpenButtonSound.wav", Sound.class);
-        getAssetManager().load("sounds/inGameMenuButtonSound.wav", Sound.class);
+        //getAssetManager().load("sounds/inGameMenuButtonSound.wav", Sound.class);
         getAssetManager().load("sounds/inGameMenuResetLevelButtonSound.wav", Sound.class);
+        getAssetManager().load("sounds/inGameMenuLevelSelectButtonSound.wav", Sound.class);
         getAssetManager().load("sounds/levelSelectMenuPlayLevelButtonSound.wav", Sound.class);
         getAssetManager().load("sounds/nextGalaxyButtonSound.wav", Sound.class);
         getAssetManager().load("sounds/previousGalaxyButtonSound.wav", Sound.class);
