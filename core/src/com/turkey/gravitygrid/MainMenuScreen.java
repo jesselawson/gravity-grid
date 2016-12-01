@@ -27,7 +27,7 @@ public class MainMenuScreen implements Screen {
 	
 	Rectangle finger; 
 	
-  	private GravityGrid game;
+  	final GravityGrid game;
 	
 	OrthographicCamera camera;
 	
@@ -43,7 +43,7 @@ public class MainMenuScreen implements Screen {
 
 	int mainMenuState; 
 	
-	public MainMenuScreen(GravityGrid game) {
+	public MainMenuScreen(final GravityGrid game) {
 	
 		this.game = game;
 		
