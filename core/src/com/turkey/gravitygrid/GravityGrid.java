@@ -119,12 +119,12 @@ public class GravityGrid extends Game {
 
 	/* Default values for level progress. Stores the <status,total_attempts,total_moves_attempted,moves_to_win,points_earned> of each level */
 	public int[][] levelCompletionInfo = new int[][] { // This will ALWAYS instantiate to zero values
-			{1,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 05
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 10
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 15
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 20
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 25
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 30
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 05
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 10
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 15
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 20
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 25
+			{2,0,0,0,0}, {1,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 30
 			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 35
 			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 40
 			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 45
@@ -155,8 +155,6 @@ public class GravityGrid extends Game {
 			"Great! Just like red planets, blue planets might start in violation of their rules. Only when moving must the rules be followed.",
 			"Who knows how a planetary system will present itself. It's up to you to come up with the smartest solution.",
 			"",
-			"",
-			"",
 			"Sometimes you need to move planets of one color out of the way to make room for planets of a different color.",
 			"Sometimes it seems like you need to make room for different color planets, but there might also be a different solution.",
 			"Here, try to get the red AND blue scores aligned in only three moves. Can you do it?",
@@ -165,17 +163,87 @@ public class GravityGrid extends Game {
 			"Just seven more levels in this galaxy, including this one!",
 			"Six more levels--you're almost there!",
 			"Five levels left!",
-			"Four more levels in this galaxy. Keep going!",
+			"Four more levels in this galaxy. Keep going!", // Level 20
 			"Three levels left!",
 			"Two more levels until you unlock the next galaxy!",
 			"This is the last level in this galaxy! After you beat this level, you can unlock the next galaxy!",
+														// Galaxy 2
 			"Woohoo! You've unlocked the second galaxy, which has ASTEROIDS. Asteroids mean you can't use that tile.",
 			"Asteroids cannot be moved, and no planet can be moved onto a tile that has an asteroid.",
-
+			"", //
 			"",
-			""
-
-	};
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			""};
 
 	// Most levels will be randomly generated. This string holds them all!
 	// Future releases of the game simply need to increase the total number of levels
@@ -719,7 +787,7 @@ public class GravityGrid extends Game {
 		// Manually set the levels with tutorial overlays
 		levelsWithTutorialOverlays[0] = 1;	// level1TutorialOverlay.png on level 1
 		levelsWithTutorialOverlays[1] = 1;	// level2TutorialOverlay.png on level 2
-		levelsWithTutorialOverlays[2] = 1;  // level3TutorialOverlay.png on level 3
+		levelsWithTutorialOverlays[2] = 0;  // [removed] level3TutorialOverlay.png on level 3
 		levelsWithTutorialOverlays[3] = 0;
 		levelsWithTutorialOverlays[4] = 0;
 		levelsWithTutorialOverlays[5] = 0;

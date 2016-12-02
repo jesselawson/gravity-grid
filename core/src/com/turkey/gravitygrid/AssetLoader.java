@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 Jesse Lawson. All Rights Reserved. No part of this code may be redistributed, reused, or otherwise used in any way, shape, or form without written permission from the author.
+ */
+
 package com.turkey.gravitygrid;
 
 import com.badlogic.gdx.assets.AssetManager;
@@ -29,6 +33,7 @@ public final class AssetLoader {
         // Pass over any variables from game we need
         fontSize = game.fontSize;
 
+        // Load initial assets before heading to initial load screen
         // Load initial assets before heading to initial load screen
         //LoadInitialAssets();
 
@@ -164,7 +169,7 @@ public final class AssetLoader {
         getAssetManager().load("levelicons/nextGalaxyButton.png", Texture.class);
 
         // Assets for the in-game menu
-        getAssetManager().load("menu/blackBackground.png", Texture.class);
+        getAssetManager().load("menu/blackBackground.jpg", Texture.class);
         getAssetManager().load("menu/cancelButton.png", Texture.class);
         getAssetManager().load("menu/levelSelectButton.png", Texture.class);
         getAssetManager().load("menu/helpButton.png", Texture.class);

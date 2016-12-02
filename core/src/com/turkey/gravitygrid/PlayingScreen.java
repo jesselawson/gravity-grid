@@ -735,7 +735,7 @@ public class PlayingScreen implements Screen {
         blackHoleRegion = new TextureRegion(blackHoleImage);
 
         inGameMenuActive = false;
-        inGameMenuBackgroundImage= this.game.assets.getAssetManager().get("menu/blackBackground.png", Texture.class);
+        inGameMenuBackgroundImage= this.game.assets.getAssetManager().get("menu/blackBackground.jpg", Texture.class);
         inGameMenuCancelButtonImage= this.game.assets.getAssetManager().get("menu/cancelButton.png", Texture.class);
         inGameMenuResetButtonImage= this.game.assets.getAssetManager().get("menu/resetButton.png", Texture.class);
         inGameMenuLevelSelectButtonImage= this.game.assets.getAssetManager().get("menu/levelSelectButton.png", Texture.class);
