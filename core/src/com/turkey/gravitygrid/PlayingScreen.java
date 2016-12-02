@@ -900,9 +900,19 @@ public class PlayingScreen implements Screen {
 
                     if(theGameState != gameState.IN_GAME_MENU) {
                         if(pointInRectangle(inGameMenuButtonRect, finger.x, finger.y)) {
-                            if(game.getOptions().playSounds()) { inGameMenuOpenButtonSound.play(); }
+                            if (game.getOptions().playSounds()) {
+                                inGameMenuOpenButtonSound.play();
+                            }
                             // Make sure there was a separate touch than the one that caused the menu to appear
-                                theGameState = gameState.IN_GAME_MENU;
+                            theGameState = gameState.IN_GAME_MENU;
+
+                            // If you select a tile, open the menu, then close it, you can select a second time. Whoops!
+                            // Just clear the selected tile when the game menu is open
+                            for (Tile tile : this.tile) {
+                                if (tile.status == TileStatus.SELECTED) {
+                                    tile.status = TileStatus.NONE;
+                                }
+                            }
                         }
                     }
 
@@ -918,7 +928,6 @@ public class PlayingScreen implements Screen {
                         checkTiles:
                         for (Tile tile : this.tile) {
                             // We only care about tiles that are planets. Anything else can't be touched (for now).
-                            // TODO: Add logic for handling input of MENU and HELP buttons outside of the checkTiles section below.
                             if (tile.type == TileType.REDPLANET || tile.type == TileType.BLUEPLANET || tile.type == TileType.GREENPLANET) {
                                 if (pointInRectangle(tile.rect, finger.x, finger.y)) {
 
