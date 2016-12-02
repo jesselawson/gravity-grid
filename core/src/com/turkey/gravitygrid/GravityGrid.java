@@ -47,14 +47,11 @@ public class GravityGrid extends Game {
 		}
 	}
 
-	public class GameOptions {
-		int playSound;
-		GameOptions() {
-			playSound = 1;
-		}
-	}
-
 	GameOptions gameOptions;
+
+	public GameOptions getOptions() {
+		return gameOptions;
+	}
 
 	public int currentLevel;	// The current level
 	public int currentGalaxy; // The current galaxy (currentLevel / 25)
@@ -811,6 +808,13 @@ public class GravityGrid extends Game {
 		if(!gameOptionsValues.isEmpty()) {
 			// If we found data, let's load it up
 			gameOptions = json.fromJson(GameOptions.class, gameOptionsValues);
+
+			// Do something with all our options
+			if(getOptions().playSounds()) {
+				if(this.playSound == false) {
+					toggleSound();
+				}
+			}
 		} // If there is no values, then we simply keep the defaults provided by the class constructor
 	}
 
