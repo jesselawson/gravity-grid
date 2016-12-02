@@ -34,13 +34,9 @@ public class MainMenuScreen implements Screen {
 	
 	Texture mainMenuBackground;
 	TextureRegion mainMenuBackgroundRegion;
-	Texture buttonNewGame;
-	TextureRegion buttonNewGameRegion;
-	Rectangle buttonNewGameRect;
 	Texture buttonContinue;
 	TextureRegion buttonContinueRegion;
 	Rectangle buttonContinueRect;
-	Texture doItNowImage;
 
 	Sound touchSound; // Literally the only sound we have
 
@@ -59,13 +55,9 @@ public class MainMenuScreen implements Screen {
 		
 		mainMenuBackground = game.assets.getAssetManager().get("mainmenubg.png", Texture.class);
 		mainMenuBackgroundRegion = new TextureRegion(mainMenuBackground);
-		buttonNewGame = game.assets.getAssetManager().get("button/newgame.png", Texture.class);
-		buttonNewGameRegion = new TextureRegion(buttonNewGame);
 		buttonContinue = game.assets.getAssetManager().get("button/continue.png", Texture.class);
 		buttonContinueRegion = new TextureRegion(buttonContinue);
-		doItNowImage = game.assets.getAssetManager().get("doitnow.png", Texture.class);
 
-		buttonNewGameRect = new Rectangle((Gdx.graphics.getWidth()/4)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
 
 		buttonContinueRect = new Rectangle((Gdx.graphics.getWidth()/2)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);
 
@@ -98,8 +90,6 @@ public class MainMenuScreen implements Screen {
 			game.batch.draw(mainMenuBackgroundRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 			game.batch.draw(buttonContinueRegion, buttonContinueRect.x, buttonContinueRect.y, buttonContinueRect.width/2, buttonContinueRect.height/2, buttonContinueRect.width, buttonContinueRect.height, 1.0f, 1.0f, 0.0f);
-
-			game.batch.draw(doItNowImage, 0, 10, this.screenWidth, 285.0f);
 
 			//game.batch.draw(buttonNewGameRegion, buttonNewGameRect.x, buttonNewGameRect.y, buttonNewGameRect.width/2, buttonNewGameRect.height/2, buttonNewGameRect.width, buttonNewGameRect.height, 1.0f, 1.0f, 0.0f);
 				

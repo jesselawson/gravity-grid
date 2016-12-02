@@ -98,9 +98,6 @@ public final class AssetLoader {
        // getAssetManager().load("sounds/galaxy2music.mp3", Music.class);
        // getAssetManager().load("sounds/galaxy3music.mp3", Music.class);
 
-        // Tutorial assets
-        getAssetManager().load("tap-here.png", Texture.class);
-
         // Main menu assets
         getAssetManager().load("mainmenubg.png", Texture.class);
 
@@ -117,9 +114,8 @@ public final class AssetLoader {
         getAssetManager().load("asteroid3.png", Texture.class);
         getAssetManager().load("bg0.jpg", Texture.class);
         getAssetManager().load("bg1.jpg", Texture.class);
-        getAssetManager().load("bg2.png", Texture.class);
-        getAssetManager().load("bg3.png", Texture.class);
-        getAssetManager().load("singularity0.png", Texture.class);
+        getAssetManager().load("bg2.jpg", Texture.class);
+        getAssetManager().load("bg3.jpg", Texture.class);
         getAssetManager().load("tile0.png", Texture.class);
         getAssetManager().load("tile1.png", Texture.class);
         getAssetManager().load("tile2.png", Texture.class);
@@ -131,29 +127,17 @@ public final class AssetLoader {
         getAssetManager().load("tile10.png", Texture.class);
         getAssetManager().load("tileSelected.png", Texture.class);
         getAssetManager().load("tileSelected2.png", Texture.class);
-        getAssetManager().load("tileOverlayAnim0.png", Texture.class);
-        getAssetManager().load("tileOverlayAnim1.png", Texture.class);
-        getAssetManager().load("tileOverlayAnim2.png", Texture.class);
-        getAssetManager().load("tileOverlayAnim3.png", Texture.class);
-        getAssetManager().load("tileOverlayAnim4.png", Texture.class);
-        getAssetManager().load("tileOverlayAnim5.png", Texture.class);
-        getAssetManager().load("tileOverlayAnim6.png", Texture.class);
-        getAssetManager().load("buttonFail.png", Texture.class);
         getAssetManager().load("buttonLevelComplete.png", Texture.class);
         getAssetManager().load("levelCompleteTrophy.png", Texture.class);
-        getAssetManager().load("galaxyOverlay.png", Texture.class);
-
-        getAssetManager().load("levelMessageBackground.png", Texture.class);
 
         // Tutorial Overlays
         getAssetManager().load("tutorials/level1TutorialOverlay.png", Texture.class);
         getAssetManager().load("tutorials/level2TutorialOverlay.png", Texture.class);
-        getAssetManager().load("tutorials/level3TutorialOverlay.png", Texture.class);
         getAssetManager().load("tutorials/level7TutorialOverlay.png", Texture.class);
 
         // Buttons
         getAssetManager().load("button/continue.png", Texture.class);
-        getAssetManager().load("button/newgame.png", Texture.class);
+        //getAssetManager().load("button/newgame.png", Texture.class);
 
         // Particle effects
         getAssetManager().load("particles/starfield.p", ParticleEffect.class);
@@ -172,10 +156,12 @@ public final class AssetLoader {
         getAssetManager().load("menu/blackBackground.jpg", Texture.class);
         getAssetManager().load("menu/cancelButton.png", Texture.class);
         getAssetManager().load("menu/levelSelectButton.png", Texture.class);
-        getAssetManager().load("menu/helpButton.png", Texture.class);
+        //getAssetManager().load("menu/helpButton.png", Texture.class);
         getAssetManager().load("menu/resetButton.png", Texture.class);
         getAssetManager().load("menu/menuButton.png", Texture.class);
-        getAssetManager().load("doitnow.png", Texture.class);
+        getAssetManager().load("menu/soundOnButton.png", Texture.class);
+        getAssetManager().load("menu/soundOffButton.png", Texture.class);
+
 
         // Assets for help screen
         //getAssetManager().load("menu/helpScreen0.png", Texture.class);

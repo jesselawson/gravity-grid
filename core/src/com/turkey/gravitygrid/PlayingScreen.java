@@ -677,7 +677,7 @@ public class PlayingScreen implements Screen {
         tutorialOverlayImage = new Texture[8];
         tutorialOverlayImage[0]= this.game.assets.getAssetManager().get("tutorials/level1TutorialOverlay.png", Texture.class);
         tutorialOverlayImage[1]= this.game.assets.getAssetManager().get("tutorials/level2TutorialOverlay.png", Texture.class);
-        tutorialOverlayImage[2]= this.game.assets.getAssetManager().get("tutorials/level3TutorialOverlay.png", Texture.class);
+
         tutorialOverlayImage[6]= this.game.assets.getAssetManager().get("tutorials/level7TutorialOverlay.png", Texture.class);
 
         //levelMessageBackgroundImage= this.game.assets.getAssetManager().get("levelMessageBackground.png", Texture.class);
@@ -699,22 +699,6 @@ public class PlayingScreen implements Screen {
         tileValueImage[9] = null; // We don't actually use this value
         tileValueImage[10]= this.game.assets.getAssetManager().get("tile10.png", Texture.class);
         tileOverlayImage = new Texture[7];
-        tileOverlayRegion = new TextureRegion[7];
-        tileOverlayImage[0]= this.game.assets.getAssetManager().get("tileOverlayAnim0.png", Texture.class);
-        tileOverlayRegion[0] = new TextureRegion(tileOverlayImage[0]);
-        tileOverlayImage[1]= this.game.assets.getAssetManager().get("tileOverlayAnim1.png", Texture.class);
-        tileOverlayRegion[1] = new TextureRegion(tileOverlayImage[1]);
-        tileOverlayImage[2]= this.game.assets.getAssetManager().get("tileOverlayAnim2.png", Texture.class);
-        tileOverlayRegion[2] = new TextureRegion(tileOverlayImage[2]);
-        tileOverlayImage[3]= this.game.assets.getAssetManager().get("tileOverlayAnim3.png", Texture.class);
-        tileOverlayRegion[3] = new TextureRegion(tileOverlayImage[3]);
-        tileOverlayImage[4]= this.game.assets.getAssetManager().get("tileOverlayAnim4.png", Texture.class);
-        tileOverlayRegion[4] = new TextureRegion(tileOverlayImage[4]);
-        tileOverlayImage[5]= this.game.assets.getAssetManager().get("tileOverlayAnim5.png", Texture.class);
-        tileOverlayRegion[5] = new TextureRegion(tileOverlayImage[5]);
-        tileOverlayImage[6]= this.game.assets.getAssetManager().get("tileOverlayAnim6.png", Texture.class);
-        tileOverlayRegion[6] = new TextureRegion(tileOverlayImage[6]);
-        buttonFailImage= this.game.assets.getAssetManager().get("buttonFail.png", Texture.class);
         buttonLevelCompleteImage= this.game.assets.getAssetManager().get("buttonLevelComplete.png", Texture.class);
         levelCompleteRegion = new TextureRegion(buttonLevelCompleteImage);
         levelCompleteTrophyImage= this.game.assets.getAssetManager().get("levelCompleteTrophy.png", Texture.class);
@@ -728,19 +712,15 @@ public class PlayingScreen implements Screen {
         tileSelectedTopRegion = new TextureRegion(tileSelectedTopImage);
         tileSelectedBottomRegion = new TextureRegion(tileSelectedBottomImage);
 
-
         tryingToReset = false;
         inGameMenuButtonRect = new Rectangle((screenWidth/7)*6.0f, screenHeight-(screenWidth/7.0f), screenWidth/7.0f, screenWidth/7.0f); // Draw one tile big in upper-right corner
-
-        blackHoleImage= this.game.assets.getAssetManager().get("galaxyOverlay.png", Texture.class);
-        blackHoleRegion = new TextureRegion(blackHoleImage);
 
         inGameMenuActive = false;
         inGameMenuBackgroundImage= this.game.assets.getAssetManager().get("menu/blackBackground.jpg", Texture.class);
         inGameMenuCancelButtonImage= this.game.assets.getAssetManager().get("menu/cancelButton.png", Texture.class);
         inGameMenuResetButtonImage= this.game.assets.getAssetManager().get("menu/resetButton.png", Texture.class);
         inGameMenuLevelSelectButtonImage= this.game.assets.getAssetManager().get("menu/levelSelectButton.png", Texture.class);
-        inGameMenuHelpButtonImage= this.game.assets.getAssetManager().get("menu/helpButton.png", Texture.class);
+
         inGameMenuButtonImage= this.game.assets.getAssetManager().get("menu/menuButton.png", Texture.class);
         inGameMenuSoundOnButtonImage = this.game.assets.getAssetManager().get("menu/soundOnButton.png", Texture.class);
         inGameMenuSoundOffButtonImage = this.game.assets.getAssetManager().get("menu/soundOffButton.png", Texture.class);
@@ -1638,8 +1618,12 @@ public class PlayingScreen implements Screen {
 
         PlayLevel(delta);
 
-        if(!backgroundMusic.isPlaying()) {
-            if(game.playerWantsSound()) { backgroundMusic.play(); }
+        if(game.playerWantsSound()) {
+            if (!backgroundMusic.isPlaying()) {
+                if (game.playerWantsSound()) {
+                    backgroundMusic.play();
+                }
+            }
         }
     }
 

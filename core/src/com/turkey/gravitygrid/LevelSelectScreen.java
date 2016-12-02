@@ -87,7 +87,7 @@ public class LevelSelectScreen implements Screen {
         nopeSound = game.assets.getAssetManager().get("sounds/nope.wav", Sound.class);
 
         // Get our textures
-        screenBackground = game.assets.getAssetManager().get("menu/blackBackground.png", Texture.class);
+        screenBackground = game.assets.getAssetManager().get("menu/blackBackground.jpg", Texture.class);
         this.levelTileBackground = game.assets.getAssetManager().get("levelicons/background.png", Texture.class);
 
         this.tileWidth = screenWidth / 5; // So it's 7 segments of our screenwidth minus the space we've reserved for the tile labels.
