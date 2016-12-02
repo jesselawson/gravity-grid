@@ -143,21 +143,21 @@ public class GravityGrid extends Game {
 			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 15
 			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 20
 			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 25
-			{2,0,0,0,0}, {1,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 30
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 35
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 40
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 45
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 50
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 55
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 60
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 65
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 70
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 75
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 80
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 85
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 90
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, // 95
-			{0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, {0,0,0,0,0}, //100
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 30
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 35
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 40
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 45
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 50
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 55
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 60
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 65
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 70
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 75
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 80
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 85
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 90
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, // 95
+			{2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {2,0,0,0,0}, {1,0,0,0,0}, //100
 	};
 
 	/* Level messages. Displayed at the bottom of each grid for its associated level */
@@ -179,13 +179,17 @@ public class GravityGrid extends Game {
 			"Here, try to get the red AND blue scores aligned in only three moves. Can you do it?",
 			"Remember that everything in our universe is connected. Could there be multiple ways to solve this problem?",
 			"Each galaxy consists of 25 planetary systems (or levels). When you beat the 25th level of a galaxy, you unlock the next galaxy!",
-			"Just seven more levels in this galaxy, including this one!",
-			"Six more levels--you're almost there!",
-			"Five levels left!",
-			"Four more levels in this galaxy. Keep going!", // Level 20
-			"Three levels left!",
-			"Two more levels until you unlock the next galaxy!",
-			"This is the last level in this galaxy! After you beat this level, you can unlock the next galaxy!",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"", // Level 20
+			"",
+			"",
+			"",
+			"",
+			"",
 														// Galaxy 2
 			"Woohoo! You've unlocked the second galaxy, which has ASTEROIDS. Asteroids mean you can't use that tile.",
 			"Asteroids cannot be moved, and no planet can be moved onto a tile that has an asteroid.",
@@ -211,6 +215,7 @@ public class GravityGrid extends Game {
 			"",
 			"",
 			"",
+			"", // Level 50
 			"",
 			"",
 			"",
@@ -235,6 +240,11 @@ public class GravityGrid extends Game {
 			"",
 			"",
 			"",
+			"", // Level 75
+			"",
+			"",
+			"",
+			"Uranus' blue glow is down to the methane in its atmosphere, which filters out all the red light.",
 			"",
 			"",
 			"",
@@ -255,14 +265,8 @@ public class GravityGrid extends Game {
 			"",
 			"",
 			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			""};
+			""
+	};
 
 	// Most levels will be randomly generated. This string holds them all!
 	// Future releases of the game simply need to increase the total number of levels

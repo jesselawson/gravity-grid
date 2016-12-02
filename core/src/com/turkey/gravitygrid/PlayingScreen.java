@@ -504,7 +504,7 @@ public class PlayingScreen implements Screen {
         thisLevelCurrentGreenTotal = 0;
         thisLevelCurrentAttempts = 0;
         thisLevelCurrentMoves = 0; // Keep track of how many moves we've taken
-        thisLevelBackgroundImageNumber = this.game.currentLevel / 10;
+        thisLevelBackgroundImageNumber = this.game.currentLevel / 25;
 
         // Init our levelComplete particle effects
         levelCompleteFireworks = new ParticleEffect();
@@ -670,8 +670,8 @@ public class PlayingScreen implements Screen {
 
         backgroundImage[0]= this.game.assets.getAssetManager().get("bg0.jpg", Texture.class); // Levels 0-
         backgroundImage[1]= this.game.assets.getAssetManager().get("bg1.jpg", Texture.class);
-        backgroundImage[2]= this.game.assets.getAssetManager().get("bg1.jpg", Texture.class);
-        backgroundImage[3]= this.game.assets.getAssetManager().get("bg1.jpg", Texture.class);
+        backgroundImage[2]= this.game.assets.getAssetManager().get("bg2.jpg", Texture.class);
+        backgroundImage[3]= this.game.assets.getAssetManager().get("bg3.jpg", Texture.class);
 
         // Tutorial overlay images
         tutorialOverlayImage = new Texture[8];

@@ -185,6 +185,7 @@ public class LevelSelectScreen implements Screen {
         }
     }
 
+    // TODO: ADD CHECK FOR LAST LEVEL!
     public void PlayLevel(int levelNum) {
         //game.currentLevel = levelNum;
         //this.playingScreen.RestartLevel();
@@ -192,6 +193,7 @@ public class LevelSelectScreen implements Screen {
         game.setScreen(new PlayingScreen(this.game, this));
     }
 
+    // TODO: ADD CHECK FOR LAST LEVEL! What happens if we are in PlayingScreen and we beat the last available leveL? We should display something on the last available galaxy, like a "Stay tuned!" Button
     public void PlayNextLevel() {
         // This function is called in PlayingScreen and assumes that UpdateLevelCompletionInfo has already been called, which should have updated game.currentLevel
         //this.playingScreen.RestartLevel();
@@ -227,9 +229,12 @@ public class LevelSelectScreen implements Screen {
             camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
             // First check if the player is touching one of the prev/next galaxy buttons
-            if(game.currentGalaxy < 5) { // so: 0,1,2,3,4
+            if(game.currentGalaxy < game.levelCompletionInfo.length/25) { // /25 will give us whole numbers ever 25 levels
                 // Don't bother with previous button if this is our current galaxy
                 if(game.pointInRectangle(nextGalaxyButtonRect, finger.x, finger.y)) {
+
+                    // TODO: Add a spot here where the player get's a "Coming Soon!" banner to indicate that another galaxy is coming soon
+
                     // Has the player beaten level 25 yet?
                     if(game.levelCompletionInfo[(game.currentGalaxy *25)+24][0] == 2) {
                         if(game.getOptions().playSounds()) { nextGalaxyButtonSound.play(); }

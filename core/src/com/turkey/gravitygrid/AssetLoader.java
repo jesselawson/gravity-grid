@@ -99,7 +99,7 @@ public final class AssetLoader {
        // getAssetManager().load("sounds/galaxy3music.mp3", Music.class);
 
         // Main menu assets
-        getAssetManager().load("mainmenubg.png", Texture.class);
+        getAssetManager().load("mainmenubg.jpg", Texture.class);
 
         // Load the textures
         getAssetManager().load("tileBlankImage.png", Texture.class);

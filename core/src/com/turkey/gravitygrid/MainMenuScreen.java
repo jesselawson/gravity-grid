@@ -53,7 +53,7 @@ public class MainMenuScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, game.screenWidth, game.screenHeight);
 		
-		mainMenuBackground = game.assets.getAssetManager().get("mainmenubg.png", Texture.class);
+		mainMenuBackground = game.assets.getAssetManager().get("mainmenubg.jpg", Texture.class);
 		mainMenuBackgroundRegion = new TextureRegion(mainMenuBackground);
 		buttonContinue = game.assets.getAssetManager().get("button/continue.png", Texture.class);
 		buttonContinueRegion = new TextureRegion(buttonContinue);
