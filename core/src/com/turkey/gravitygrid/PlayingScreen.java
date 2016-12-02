@@ -38,16 +38,6 @@ public class PlayingScreen implements Screen {
 
     public int levelCompleteMultiplier;
 
-    Rectangle inGameMenuResetButtonRect;
-    Rectangle inGameMenuLevelSelectButtonRect;
-    Rectangle inGameMenuHelpButtonRect;
-    Rectangle inGameMenuPrevHelpScreenRect; // turn the page
-    Rectangle inGameMenuNextHelpScreenRect; // turn back a page
-    private int inGameMenuHelpScreenNum;    // Our current help screen
-    private boolean helpScreenMaximized; // If you click on one of the help screens, it fills the screen?
-    // Help screens:
-    // When state = IN_GAME_MENU, player can
-
     // Tutorial overlay
     Texture[] tutorialOverlayImage;
 
@@ -69,6 +59,17 @@ public class PlayingScreen implements Screen {
     public ParticleEffectPool goodMoveStarburstPool;
     public ParticleEffect badMoveStarburst;
     public ParticleEffectPool badMoveStarburstPool;
+
+    // In-game Menu
+    Texture inGameMenuSoundOnButtonImage;
+    TextureRegion inGameMenuSoundOnButtonRegion;
+    Texture inGameMenuSoundOffButtonImage;
+    TextureRegion inGameMenuSoundOffButtonRegion;
+    Rectangle inGameMenuToggleSoundRect;
+
+    Rectangle inGameMenuResetButtonRect;
+    Rectangle inGameMenuLevelSelectButtonRect;
+
 
     public boolean inGameMenuActive;
     public Texture inGameMenuButtonImage;
@@ -741,13 +742,14 @@ public class PlayingScreen implements Screen {
         inGameMenuLevelSelectButtonImage= this.game.assets.getAssetManager().get("menu/levelSelectButton.png", Texture.class);
         inGameMenuHelpButtonImage= this.game.assets.getAssetManager().get("menu/helpButton.png", Texture.class);
         inGameMenuButtonImage= this.game.assets.getAssetManager().get("menu/menuButton.png", Texture.class);
+        inGameMenuSoundOnButtonImage = this.game.assets.getAssetManager().get("menu/soundOnButton.png", Texture.class);
+        inGameMenuSoundOffButtonImage = this.game.assets.getAssetManager().get("menu/soundOffButton.png", Texture.class);
 
         float buttonWidth = this.screenWidth/3.0f;
 
         inGameMenuResetButtonRect = new Rectangle(0.66f*this.screenWidth-buttonWidth-(this.screenWidth/6.0f), this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
         inGameMenuLevelSelectButtonRect = new Rectangle(0.33f*this.screenWidth+(this.screenWidth/6.0f), this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
-        //inGameMenuHelpButtonRect = new Rectangle((this.screenWidth/3)*2, this.screenHeight/2.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
-
+        inGameMenuToggleSoundRect = new Rectangle((this.screenWidth/2)-(0.5f*buttonWidth), this.screenHeight/4.0f, this.screenWidth/3.0f, this.screenWidth/3.0f);
 
         // Call this once before the level starts so that we have some initial values
 
@@ -859,7 +861,7 @@ public class PlayingScreen implements Screen {
         levelCompleteBackgroundZoom = 100.0f;
         levelCompleteMultiplier = 1;
 
-        restartLevelSound.play();
+        if(game.playerWantsSound()) { restartLevelSound.play(); }
     }
 
     public void OutOfMoves() {
@@ -884,20 +886,25 @@ public class PlayingScreen implements Screen {
 
                     // Did we tap cancel button?
                     if (pointInRectangle(inGameMenuButtonRect, finger.x, finger.y)) {
-                        inGameMenuOpenButtonSound.play();
+                        if(game.playerWantsSound()) { inGameMenuOpenButtonSound.play(); }
                         theGameState = gameState.READY;
                         readyForInput = false;
                     }
 
                     // Did we reset?
                     if (pointInRectangle(inGameMenuResetButtonRect, finger.x, finger.y)) {
-                        inGameMenuResetLevelButtonSound.play();
+                        if(game.playerWantsSound()) { inGameMenuResetLevelButtonSound.play(); }
                         RestartLevel();
                     }
                     // Did we tap level select?
                     if (pointInRectangle(inGameMenuLevelSelectButtonRect, finger.x, finger.y)) {
-                        inGameMenuLevelSelectButtonSound.play();
+                        if(game.playerWantsSound()) { inGameMenuLevelSelectButtonSound.play(); }
                         game.setScreen(this.parentScreen);
+                    }
+
+                    // Did we toggle the sound?
+                    if (pointInRectangle(inGameMenuToggleSoundRect, finger.x, finger.y)) {
+                        game.toggleSound();
                     }
 
 
@@ -913,7 +920,7 @@ public class PlayingScreen implements Screen {
 
                     if(theGameState != gameState.IN_GAME_MENU) {
                         if(pointInRectangle(inGameMenuButtonRect, finger.x, finger.y)) {
-                            inGameMenuOpenButtonSound.play();
+                            if(game.playerWantsSound()) { inGameMenuOpenButtonSound.play(); }
                             // Make sure there was a separate touch than the one that caused the menu to appear
                                 theGameState = gameState.IN_GAME_MENU;
                         }
@@ -946,7 +953,7 @@ public class PlayingScreen implements Screen {
                                         // Set the gamestate to handle input after a tile is selected
                                         theGameState = gameState.TILE_SELECTED;
 
-                                        tileSelectSound.play();
+                                        if(game.playerWantsSound()) { tileSelectSound.play(); }
 
                                         readyForInput = false;
 
@@ -990,7 +997,7 @@ public class PlayingScreen implements Screen {
 
                                     // Update game state so we know that both SELECTED and MOVETOHERE have been set.
                                     theGameState = gameState.GOOD_MOVE_ATTEMPT;
-                                    tileSelectSound.play();
+                                    if(game.playerWantsSound()) { tileSelectSound.play(); }
                                     readyForInput = false;
                                     break markDestinationTile;
 
@@ -1003,7 +1010,7 @@ public class PlayingScreen implements Screen {
                                     // And reset the game state
                                     theGameState = gameState.READY;
 
-                                    tileDeselectSound.play();
+                                    if(game.playerWantsSound()) { tileDeselectSound.play(); }
 
 
                                     readyForInput = false;
@@ -1017,7 +1024,7 @@ public class PlayingScreen implements Screen {
                                     // we try to move to that we can't move to.
                                     tile.status = TileStatus.CANNOTMOVE;
 
-                                    cannotMoveSound.play();
+                                    if(game.playerWantsSound()) { cannotMoveSound.play(); }
 
                                     readyForInput = false;
                                     break markDestinationTile;
@@ -1079,7 +1086,7 @@ public class PlayingScreen implements Screen {
                                     // go back to READY.
                                     updateCurrentLevelValueTotals();
 
-                                    goodMoveAttemptSound.play();
+                                    if(game.playerWantsSound()) { goodMoveAttemptSound.play(); }
 
                                     // Create a new particle system at this tile. The system is generated independently of the tile itself; we only need to create it here to
                                     // know the to.rect values (i.e., where the system will originate)
@@ -1116,7 +1123,7 @@ public class PlayingScreen implements Screen {
                                             thisLevelBlueNeeded == thisLevelCurrentBlueTotal &&
                                             thisLevelGreenNeeded == thisLevelCurrentGreenTotal) {
                                         theGameState = gameState.LEVEL_COMPLETE;
-                                        levelCompleteSound.play();
+                                        if(game.playerWantsSound()) { levelCompleteSound.play(); }
 
                                         // Add a group of particle effects on complete level
                                         levelCompleteFireworks.setPosition(0.5f*game.screenWidth, 0.5f*game.screenHeight);
@@ -1126,7 +1133,7 @@ public class PlayingScreen implements Screen {
                                         //if(thisLevelCurrentMoves > thisLevelMaxMoves) {
                                             //theGameState = gameState.OUT_OF_MOVES;
 
-                                            //outOfMovesSound.play();
+                                            //if(game.playerWantsSound()) { outOfMovesSound.play(); }
 
                                         //} else {
                                             // We haven't beaten the level && we haven't maxed out our moves, so
@@ -1146,7 +1153,7 @@ public class PlayingScreen implements Screen {
                                     // Reset the gamestate, too
                                     theGameState = gameState.READY;
 
-                                    cannotMoveSound.play();
+                                    if(game.playerWantsSound()) { cannotMoveSound.play(); }
                                     // Create a new particle system at this tile
                                     ParticleEffectPool.PooledEffect effect = badMoveStarburstPool.obtain();
                                     effect.setPosition(to.rect.x+(0.5f*to.rect.width), to.rect.y+(0.5f*to.rect.height));
@@ -1562,7 +1569,12 @@ public class PlayingScreen implements Screen {
 
             game.batch.draw(inGameMenuResetButtonImage, inGameMenuResetButtonRect.x, inGameMenuResetButtonRect.y, inGameMenuResetButtonRect.width, inGameMenuResetButtonRect.height);
             game.batch.draw(inGameMenuLevelSelectButtonImage, inGameMenuLevelSelectButtonRect.x, inGameMenuLevelSelectButtonRect.y, inGameMenuLevelSelectButtonRect.width, inGameMenuLevelSelectButtonRect.height);
-            //game.batch.draw(inGameMenuHelpButtonImage, inGameMenuHelpButtonRect.x, inGameMenuHelpButtonRect.y, inGameMenuHelpButtonRect.width, inGameMenuHelpButtonRect.height);
+            // Which sound toggle button to show?
+            if (game.playerWantsSound()) {
+                game.batch.draw(inGameMenuSoundOnButtonImage, inGameMenuToggleSoundRect.x, inGameMenuToggleSoundRect.y, inGameMenuToggleSoundRect.width, inGameMenuToggleSoundRect.height);
+            } else {
+                game.batch.draw(inGameMenuSoundOffButtonImage, inGameMenuToggleSoundRect.x, inGameMenuToggleSoundRect.y, inGameMenuToggleSoundRect.width, inGameMenuToggleSoundRect.height);
+            }
 
             game.batch.draw(inGameMenuCancelButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
         }
@@ -1627,7 +1639,7 @@ public class PlayingScreen implements Screen {
         PlayLevel(delta);
 
         if(!backgroundMusic.isPlaying()) {
-            backgroundMusic.play();
+            if(game.playerWantsSound()) { backgroundMusic.play(); }
         }
     }
 
@@ -1639,7 +1651,7 @@ public class PlayingScreen implements Screen {
     public void show() {
         // start the playback of the background music
         // when the screen is shown
-        //scannerHum.play();
+        //if(game.playerWantsSound()) { scannerHum.play(); }
     }
 
     @Override

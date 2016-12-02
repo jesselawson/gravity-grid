@@ -232,13 +232,13 @@ public class LevelSelectScreen implements Screen {
                 if(game.pointInRectangle(nextGalaxyButtonRect, finger.x, finger.y)) {
                     // Has the player beaten level 25 yet?
                     if(game.levelCompletionInfo[(game.currentGalaxy *25)+24][0] == 2) {
-                        nextGalaxyButtonSound.play();
+                        if(game.playerWantsSound()) { nextGalaxyButtonSound.play(); }
                         // Yep, so let's increment our galaxy
                         ChangeToGalaxy(1);
                         message = "Now entering the "+game.galaxyName[game.currentGalaxy]+" Galaxy";
                         messageAlpha = 1.0f;
                     } else {
-                        nopeSound.play();
+                        if(game.playerWantsSound()) { nopeSound.play(); }
                     }
                     break processInput;
                 }
@@ -248,7 +248,7 @@ public class LevelSelectScreen implements Screen {
             if(game.currentGalaxy > 0) { // so: 0,1,2,3,4
                 // Don't bother with previous button if this is our current galaxy
                 if(game.pointInRectangle(previousGalaxyButtonRect, finger.x, finger.y)) {
-                    previousGalaxyButtonSound.play();
+                    if(game.playerWantsSound()) { previousGalaxyButtonSound.play(); }
                     // We can assume that if the player can go back that they beat the previous galaxies
                         ChangeToGalaxy(-1);
                         message = "Now entering the "+game.galaxyName[game.currentGalaxy]+" Galaxy";
@@ -263,12 +263,12 @@ public class LevelSelectScreen implements Screen {
 
                     // If it's a playable level, then set that as the current level and load that bad boy
                     if(level.type == 1 || level.type == 2) {
-                        selectLevelSound.play();
+                        if(game.playerWantsSound()) { selectLevelSound.play(); }
                         game.currentLevel = level.levelNum+(game.currentGalaxy*25);
                         System.out.println("Loading level "+game.currentLevel+"...");
                         PlayLevel(game.currentLevel);
                     } else {
-                        nopeSound.play();
+                        if(game.playerWantsSound()) { nopeSound.play(); }
                         message = "You can't play that one yet!";
                         messageAlpha = 1.0f;
 

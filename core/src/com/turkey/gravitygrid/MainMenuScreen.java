@@ -112,7 +112,7 @@ public class MainMenuScreen implements Screen {
 				Vector3 finger = new Vector3();
 				camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 				if(pointInRectangle(buttonContinueRect, finger.x, finger.y)) {
-					touchSound.play();
+					if(game.playerWantsSound()) { touchSound.play(); }
 					game.setScreen(new LevelSelectScreen(game)); // Will pickup based on what we read from the player files (the ini)
 					// Really, this should be sending us to the LevelSelectScreen
 				}
@@ -129,7 +129,7 @@ public class MainMenuScreen implements Screen {
 	public void show() {
 		// start the playback of the background music
 		// when the screen is shown
-		//scannerHum.play();
+		//if(game.playerWantsSound()) { scannerHum.play(); }
 	}
 
 	@Override

@@ -32,7 +32,29 @@ public class GravityGrid extends Game {
 
 	private Preferences ini;
 
-	public boolean readyForMusicAndAds = false;
+	private boolean playSound;
+
+	// Use this to grab whether the play wants to play sound or not.
+	public boolean playerWantsSound() {
+		return playSound;
+	}
+
+	public void toggleSound() {
+		if(this.playSound) {
+			this.playSound = false;
+		} else {
+			this.playSound = true;
+		}
+	}
+
+	public class GameOptions {
+		int playSound;
+		GameOptions() {
+			playSound = 1;
+		}
+	}
+
+	GameOptions gameOptions;
 
 	public int currentLevel;	// The current level
 	public int currentGalaxy; // The current galaxy (currentLevel / 25)
@@ -322,11 +344,20 @@ public class GravityGrid extends Game {
 					0,0,0,0,0,0,0,
 					16,50,0,5
 			},
-			{0,0,2,0,2,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,2,0,0,0,4,1,2,2,0,0,0,1,1,2,4,0,0,0,0,0,0,26,15,0,3}, // level[26]
+			{0,0,2,0,2,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,2,0,0,0,4,1,2,2,0,0,0,1,1,2,4,0,0,0,0,0,0,26,15,0,3}, // In-game level 27
 			{1,0,4,4,0,2,1,0,4,2,0,2,1,0,2,0,0,0,2,2,0,0,0,0,0,0,1,0,0,4,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,27,0,3},
 			{2,4,0,0,0,0,0,2,0,0,0,0,0,0,2,2,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,4,0,1,1,2,0,0,0,0,2,0,2,0,0,0,4,1,0,14,18,0,3},
 			{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,2,0,0,0,0,0,0,4,2,4,0,1,1,2,2,0,0,0,0,0,0,0,0,2,0,1,0,2,0,0,28,17,0,3},
-			{0,0,0,0,0,0,0,0,0,0,0,1,0,4,0,4,0,1,0,0,4,0,0,0,0,0,0,2,0,0,0,0,4,2,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,15,15,0,4},
+			{
+					0,0,0,0,1,0,0,
+					0,0,0,0,0,0,4,
+					0,4,0,1,0,0,4,
+					0,0,0,0,0,0,2,
+					0,0,0,0,4,2,2,
+					0,0,0,0,0,0,0,
+					0,1,0,0,0,0,0,
+					15,15,0,4
+			},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,1,0,0,0,0,1,0,2,2,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,4,4,0,0,15,11,0,4},
 			{0,0,0,0,2,0,1,1,0,2,0,1,1,0,0,0,0,2,2,0,4,0,4,0,0,0,0,2,0,0,1,0,0,2,0,0,1,0,0,0,4,0,1,0,2,0,0,0,0,22,31,0,4},
 			{1,0,0,0,0,0,0,4,1,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,0,4,0,0,1,0,0,4,0,0,1,0,0,0,1,0,0,0,40,0,0,4},
@@ -723,6 +754,7 @@ public class GravityGrid extends Game {
 
 		// Here we are serializing our array
 		hashTable.put("levelcompletion", json.toJson(levelCompletionInfo));
+		hashTable.put("gameoptions", json.toJson(gameOptions));
 
 		// Store it in the preferences file
 		ini.put(hashTable);
@@ -733,6 +765,7 @@ public class GravityGrid extends Game {
 
 		Json json = new Json();
 
+		// Level Completion Information
 		String serializedValues = ini.getString("levelcompletion");
 
 		if(!serializedValues.isEmpty()) {
@@ -771,6 +804,14 @@ public class GravityGrid extends Game {
 		} else {
 			currentGalaxy = currentLevel / 25;
 		}
+
+		// Game Options
+		String gameOptionsValues = ini.getString("gameoptions");
+
+		if(!gameOptionsValues.isEmpty()) {
+			// If we found data, let's load it up
+			gameOptions = json.fromJson(GameOptions.class, gameOptionsValues);
+		} // If there is no values, then we simply keep the defaults provided by the class constructor
 	}
 
 	public AssetLoader getAssetLoader() {
@@ -778,6 +819,8 @@ public class GravityGrid extends Game {
 	}
 
 	public void create() {
+
+		gameOptions = new GameOptions();
 
 		// Instantiate the tutorial overlays
 		for(int i=0; i<100; i++) {
