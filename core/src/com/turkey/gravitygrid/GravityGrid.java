@@ -838,10 +838,6 @@ public class GravityGrid extends Game {
 		// Manually set the levels with tutorial overlays
 		levelsWithTutorialOverlays[0] = 1;	// level1TutorialOverlay.png on level 1
 		levelsWithTutorialOverlays[1] = 1;	// level2TutorialOverlay.png on level 2
-		levelsWithTutorialOverlays[2] = 0;  // [removed] level3TutorialOverlay.png on level 3
-		levelsWithTutorialOverlays[3] = 0;
-		levelsWithTutorialOverlays[4] = 0;
-		levelsWithTutorialOverlays[5] = 0;
 		levelsWithTutorialOverlays[6] = 1;  // level7TutorialOverlay.png on level 7
 
 

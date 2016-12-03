@@ -53,6 +53,10 @@ public class PlayingScreen implements Screen {
     public int thisLevelCurrentAttempts; // Increased on FAILURE and RESET
     public int thisLevelBackgroundImageNumber; // Computed in the constructor: (int)currentLevel / 10. So lvl 35 would be bg03.png, and lvl 90 would be (you guessed it) bg09.png
 
+    public float blueFlareAlpha;
+    public float redFlareAlpha;
+    public float greenFlareAlpha;
+
     public ParticleEffect levelCompleteFireworks;
     public ParticleEffect backgroundStarfieldParticles;
     public ParticleEffect goodMoveStarburst;
@@ -391,7 +395,7 @@ public class PlayingScreen implements Screen {
                         case 14:
                         case 21:
                         case 28:
-                        case 35: outcome = ( !GoodMoveVerified(destinationTileNum+6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+1,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum)); break;
+                        case 35: outcome = ( !GoodMoveVerified(destinationTileNum+1,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+8,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-8,selectedType,selectedNum)); break;
                         default: break;
                     }
 
@@ -505,6 +509,11 @@ public class PlayingScreen implements Screen {
         thisLevelCurrentAttempts = 0;
         thisLevelCurrentMoves = 0; // Keep track of how many moves we've taken
         thisLevelBackgroundImageNumber = this.game.currentLevel / 25;
+
+        // Init the score flare faders things
+        blueFlareAlpha = 1.0f;
+        redFlareAlpha = 1.0f;
+        greenFlareAlpha = 1.0f;
 
         // Init our levelComplete particle effects
         levelCompleteFireworks = new ParticleEffect();
@@ -1332,7 +1341,7 @@ public class PlayingScreen implements Screen {
             case 1:
                 // Draw checkmark on center numbers regardless of which planet type they're for (since we'll draw the checkmark in the same spot
                 if(redsAreDone || bluesAreDone || greensAreDone) {
-                    game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                    game.batch.setColor(1.0f,1.0f,1.0f,redFlareAlpha);
                     game.batch.draw(doneFlareBackgroundRegion, checkmarkMiddle-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                     game.batch.setColor(game.colorOrange);
@@ -1352,14 +1361,12 @@ public class PlayingScreen implements Screen {
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentGreenTotal + "/" + thisLevelGreenNeeded + "", middleScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
                 }
 
-
-
                 break;
 
             case 2:
                 if (haveRed && haveBlue) {
                     if(redsAreDone) {
-                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.setColor(1.0f,1.0f,1.0f,redFlareAlpha);
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
@@ -1367,7 +1374,7 @@ public class PlayingScreen implements Screen {
                     }
 
                     if(bluesAreDone) {
-                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.setColor(1.0f,1.0f,1.0f,blueFlareAlpha);
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
@@ -1382,7 +1389,7 @@ public class PlayingScreen implements Screen {
                 }
                 if (haveBlue && haveGreen) {
                     if(bluesAreDone) {
-                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.setColor(1.0f,1.0f,1.0f,blueFlareAlpha);
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
@@ -1390,7 +1397,7 @@ public class PlayingScreen implements Screen {
                     }
 
                     if(greensAreDone) {
-                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.setColor(1.0f,1.0f,1.0f,greenFlareAlpha);
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
@@ -1404,7 +1411,7 @@ public class PlayingScreen implements Screen {
                 }
                 if (haveRed && haveGreen) {
                     if(redsAreDone) {
-                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.setColor(1.0f,1.0f,1.0f,redFlareAlpha);
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
@@ -1412,7 +1419,7 @@ public class PlayingScreen implements Screen {
                     }
 
                     if(greensAreDone) {
-                        game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                        game.batch.setColor(1.0f,1.0f,1.0f,greenFlareAlpha);
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
@@ -1429,7 +1436,7 @@ public class PlayingScreen implements Screen {
             case 3:
 
                 if(redsAreDone) {
-                    game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                    game.batch.setColor(1.0f,1.0f,1.0f,redFlareAlpha);
                     game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                     game.batch.setColor(game.colorOrange);
@@ -1437,15 +1444,15 @@ public class PlayingScreen implements Screen {
                 }
 
                 if(bluesAreDone) {
-                    game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                    game.batch.setColor(1.0f,1.0f,1.0f,blueFlareAlpha);
                     game.batch.draw(doneFlareBackgroundRegion, checkmarkMiddle-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                     game.batch.setColor(game.colorOrange);
                     game.batch.draw(doneCheckmarkImage, checkmarkMiddle-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                 }
 
-                if(redsAreDone) {
-                    game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
+                if(greensAreDone) {
+                    game.batch.setColor(1.0f,1.0f,1.0f,greenFlareAlpha);
                     game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                     game.batch.setColor(game.colorOrange);
@@ -1462,6 +1469,32 @@ public class PlayingScreen implements Screen {
             default:
                 break;
         }
+
+        // Update level score flare alphas
+        if(redsAreDone){
+            if(redFlareAlpha > 0.0f) {
+                redFlareAlpha -= 0.01f;
+            }
+        } else {
+            redFlareAlpha = 1.0f;
+        }
+
+        if(bluesAreDone) {
+            if (blueFlareAlpha > 0.0f) {
+                blueFlareAlpha -= 0.01f;
+            }
+        } else {
+            blueFlareAlpha = 1.0f;
+        }
+
+        if(greensAreDone) {
+            if (greenFlareAlpha > 0.0f) {
+                greenFlareAlpha -= 0.01f;
+            }
+        } else {
+            greenFlareAlpha = 1.0f;
+        }
+
 
                 // Draw the menu button
         game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
