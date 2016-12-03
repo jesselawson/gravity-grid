@@ -383,7 +383,7 @@ public class PlayingScreen implements Screen {
                         case 34:
                         case 27:
                         case 20:
-                        case 13: outcome = ( !GoodMoveVerified(destinationTileNum+6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-1,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum)); break;
+                        case 13: outcome = ( !GoodMoveVerified(destinationTileNum+6,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum+7,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-1,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-7,selectedType,selectedNum) && !GoodMoveVerified(destinationTileNum-8,selectedType,selectedNum)); break;
                         case  6: outcome = ( !GoodMoveVerified(5,selectedType,selectedNum) && !GoodMoveVerified(12,selectedType,selectedNum) && !GoodMoveVerified(13,selectedType,selectedNum) ); break;
                         case  5:
                         case  4:
