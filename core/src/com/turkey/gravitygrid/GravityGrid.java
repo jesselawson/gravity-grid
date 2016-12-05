@@ -34,6 +34,8 @@ public class GravityGrid extends Game {
 
 	private boolean playSound;
 
+	private int highestLevelCompleted;
+
 	// Use this to grab whether the play wants to play sound or not.
 	public boolean playerWantsSound() {
 		return playSound;
@@ -244,7 +246,7 @@ public class GravityGrid extends Game {
 			"",
 			"",
 			"",
-			"Uranus' blue glow is down to the methane in its atmosphere, which filters out all the red light.",
+			"Uranus' blue glow is due to the methane in its atmosphere, which filters out all the red light.",
 			"",
 			"",
 			"",
@@ -708,11 +710,26 @@ public class GravityGrid extends Game {
 		// Check if we are marking this level as 1 ("complete"). If we are, then we'll record the moves given as the number of moves
 		// it took to beat this level. If not, we'll keep that at zero, since the level has not been marked complete yet.
 		if(status == 2) {
+			highestLevelCompleted = level;
 			levelCompletionInfo[level][3] = moves; // Number moves used to beat the level during the playthrough where it was beaten
 			levelCompletionInfo[level][4] = points; // Add the number of points we earned by beating this level
-			if(levelCompletionInfo[level+1][0] == 0) {
-				levelCompletionInfo[level+1][0] = 1;
-				// Also mark the next level as ready to play ("1")
+
+			// Check if there's a level past this one. If there is, set its status as "1" (ready to play)
+			if(level+1 < levelCompletionInfo.length) {
+				if (levelCompletionInfo[level + 1][0] == 0) {
+
+					// Also mark the next level as ready to play ("1")
+					levelCompletionInfo[level + 1][0] = 1;
+
+					// Increment our currentLevel counter so we know the next one to load
+					this.currentLevel++; // should also be equal to level+1
+
+				}
+			} else {
+				// If we can't assign a current level to be level+1, then just keep the currentLevel at the maximum
+				// level that the game offers at this time. The currentLevel will also stay as the last level as well.
+				levelCompletionInfo[level][0] = 1;
+
 			}
 
 		} else {
@@ -739,9 +756,6 @@ public class GravityGrid extends Game {
 		}
 
 
-		// Increment our currentLevel counter so we know the next one to load
-		this.currentLevel++;
-
 		// Finally, save the new values to our preferences file
 		this.storeSaveState();
 	}
@@ -756,6 +770,7 @@ public class GravityGrid extends Game {
 		// Here we are serializing our array
 		hashTable.put("levelcompletion", json.toJson(levelCompletionInfo));
 		hashTable.put("gameoptions", json.toJson(gameOptions));
+		hashTable.put("highestlevelcompleted", json.toJson(highestLevelCompleted));
 
 		// Store it in the preferences file
 		ini.put(hashTable);
@@ -820,15 +835,32 @@ public class GravityGrid extends Game {
 				}
 			}
 		} // If there is no values, then we simply keep the defaults provided by the class constructor
+
+		String highestLevelCompletedValue = ini.getString("highestLevelCompleted");
+
+		if(!highestLevelCompletedValue.isEmpty()) {
+			highestLevelCompleted = json.fromJson(int.class, highestLevelCompletedValue);
+		} else {
+			// Default to current level, whatever that may be
+			highestLevelCompleted = currentLevel;
+		}
 	}
 
 	public AssetLoader getAssetLoader() {
 		return this.assets;
 	}
 
+	public boolean playerHasBeatenHighestLevel() {
+		if(highestLevelCompleted == levelCompletionInfo.length-1) {
+			return true;
+		} else {return false;}
+	}
+
 	public void create() {
 
 		gameOptions = new GameOptions();
+
+		highestLevelCompleted = 0; // init
 
 		// Instantiate the tutorial overlays
 		for(int i=0; i<100; i++) {

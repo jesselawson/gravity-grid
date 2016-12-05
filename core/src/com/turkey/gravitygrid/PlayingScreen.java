@@ -1565,7 +1565,7 @@ public class PlayingScreen implements Screen {
             // Draw the trophy
             game.batch.draw(levelCompleteTrophyRegion, 0, 0, 0.5f*screenWidth, 0.5f*screenHeight, screenWidth, screenHeight, 1+(8*(levelCompleteBackgroundZoom/100.0f)), 1+(8*(levelCompleteBackgroundZoom/100.0f)), 0.0f);
 
-            if(Gdx.input.isTouched()) {
+            if(Gdx.input.justTouched()) {
 
                 // This will update our currentLevel
                 // Status type = 2 means we beat the level
@@ -1574,6 +1574,15 @@ public class PlayingScreen implements Screen {
                 // RestartLevel uses game.currentLevel to determine which level to load, so it's imperative that
                 // game.UpdateLevelCompletionInfo is called first!
 
+                // Add check here to go back to levelSelect screen if our currentlevel is = the length of levelCompletionInfo
+                if(this.game.currentLevel == game.levelCompletionInfo.length) {
+                    // If there are 100 levels:
+                    //  If we beat level 100, just go back to the levelSelectScreen
+                    game.setScreen(parentScreen);
+                }
+
+                // Inside PlayNextLevel, we also check to see if we should continue (i.e., if we have more levels/galaxies past this one).
+                // If not, we simply go back to the levelSelectScreen
                 parentScreen.PlayNextLevel();
 
             }

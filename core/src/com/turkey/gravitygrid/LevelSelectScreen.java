@@ -165,21 +165,24 @@ public class LevelSelectScreen implements Screen {
     // Call this to change the currentGalaxy so that we map the game.levelCompletionInfo to the tiles appropriately
     public void ChangeToGalaxy(int direction) {
 
-        game.currentGalaxy += direction;
+        // If we actually have a new galaxy when calling ChangeToGalaxy(1)...
+        if(game.currentGalaxy + direction < game.levelCompletionInfo.length/25) {
+            game.currentGalaxy += direction;
 
-        int levelNum = 0;
+            int levelNum = 0;
 
-        for(int r = 4; r >= 0; r--) {
-            for(int c = 0; c < 5; c++) {
+            for(int r = 4; r >= 0; r--) {
+                for(int c = 0; c < 5; c++) {
 
-                // Get the icon we need
-                int thisLevelIconType = game.levelCompletionInfo[(game.currentGalaxy*25)+levelNum][0];
+                    // Get the icon we need
+                    int thisLevelIconType = game.levelCompletionInfo[(game.currentGalaxy*25)+levelNum][0];
 
-                // set the level icon appropriately
-                levelIcons.get(levelNum).type = thisLevelIconType;
+                    // set the level icon appropriately
+                    levelIcons.get(levelNum).type = thisLevelIconType;
 
-                if(levelNum <= game.levelCompletionInfo.length-1) {
-                    levelNum++; // make sure we aren't going to throw an index out of bounds exception
+                    if(levelNum <= game.levelCompletionInfo.length-1) {
+                        levelNum++; // make sure we aren't going to throw an index out of bounds exception
+                    }
                 }
             }
         }
@@ -187,10 +190,13 @@ public class LevelSelectScreen implements Screen {
 
     // TODO: ADD CHECK FOR LAST LEVEL!
     public void PlayLevel(int levelNum) {
-        //game.currentLevel = levelNum;
-        //this.playingScreen.RestartLevel();
-        //game.setScreen(this.playingScreen);
-        game.setScreen(new PlayingScreen(this.game, this));
+
+        // Check if the level we are trying to go to exists
+        int totalLevels = game.levelCompletionInfo.length;
+
+        if(game.currentGalaxy < game.levelCompletionInfo.length/25) {
+            game.setScreen(new PlayingScreen(this.game, this));
+        }
     }
 
     // TODO: ADD CHECK FOR LAST LEVEL! What happens if we are in PlayingScreen and we beat the last available leveL? We should display something on the last available galaxy, like a "Stay tuned!" Button
@@ -198,10 +204,18 @@ public class LevelSelectScreen implements Screen {
         // This function is called in PlayingScreen and assumes that UpdateLevelCompletionInfo has already been called, which should have updated game.currentLevel
         //this.playingScreen.RestartLevel();
 
-        // Update the levelSelectScreen, too
-        ChangeToGalaxy(0); // This will just force us to redraw all the thisLevelIconType's in the levelIcons so that they reflect our progress. If you get rid of this, the levelIcons wont update unless you go Prev then Next galaxy.
+        if(game.currentGalaxy < game.levelCompletionInfo.length/25
+                && game.levelCompletionInfo[(game.currentGalaxy*25)+24][0] != 2
+                && game.currentLevel+1 < game.levelCompletionInfo.length) {
+            // Update the levelSelectScreen, too
+            ChangeToGalaxy(0); // This will just force us to redraw all the thisLevelIconType's in the levelIcons so that they reflect our progress. If you get rid of this, the levelIcons wont update unless you go Prev then Next galaxy.
 
-        game.setScreen(new PlayingScreen(this.game, this));
+            game.setScreen(new PlayingScreen(this.game, this));
+        } else {
+            // Since the max value of our current galaxy is always dependent on how many level we are tracking with
+            // levelCompletionInfo, here we just stay at levelCompletionScreen if
+            game.setScreen(this);
+        }
     }
 
     @Override
@@ -230,10 +244,8 @@ public class LevelSelectScreen implements Screen {
 
             // First check if the player is touching one of the prev/next galaxy buttons
             if(game.currentGalaxy < game.levelCompletionInfo.length/25) { // /25 will give us whole numbers ever 25 levels
-                // Don't bother with previous button if this is our current galaxy
-                if(game.pointInRectangle(nextGalaxyButtonRect, finger.x, finger.y)) {
 
-                    // TODO: Add a spot here where the player get's a "Coming Soon!" banner to indicate that another galaxy is coming soon
+                if(game.pointInRectangle(nextGalaxyButtonRect, finger.x, finger.y)) {
 
                     // Has the player beaten level 25 yet?
                     if(game.levelCompletionInfo[(game.currentGalaxy *25)+24][0] == 2) {
@@ -337,7 +349,7 @@ public class LevelSelectScreen implements Screen {
         if(game.currentGalaxy > 0) { // dont draw "previous galaxy" on our first galaxy
             game.batch.draw(previousGalaxyButtonImage, previousGalaxyButtonRect.x, previousGalaxyButtonRect.y, previousGalaxyButtonRect.width, previousGalaxyButtonRect.height);
         }
-        if(game.currentGalaxy != 4) { // Don't draw "next galaxy" on our 4th galaxy
+        if(game.currentGalaxy != game.levelCompletionInfo.length/25) { // /25 will give us whole numbers ever 25 levels) { // Don't draw "next galaxy" on our 4th galaxy
             // Now let's lock the "next galaxy" button if we haven't completed the 25th level in oru current galaxy
             if(game.levelCompletionInfo[(game.currentGalaxy*25)+24][0] != 2) {
                 // display a lock icon over the button
@@ -345,12 +357,13 @@ public class LevelSelectScreen implements Screen {
                 game.batch.setColor(0.5f,0.5f,0.5f,0.5f);
             }
             game.batch.draw(nextGalaxyButtonImage, nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
-
         }
 
-
-
-
+        // If the last available level is complete, let us know
+        if(game.playerHasBeatenHighestLevel()) {
+            game.regularFont.setColor(game.colorYellow);
+            game.regularFont.draw(game.batch, "ALL GALAXIES ALIGNED!", 5, screenHeight-(4.5f*game.fontSize), this.screenWidth-10, 1, false);
+        }
 
         if(messageAlpha > 0.0f) {
             game.regularFont.setColor(1f, 0.5f, 1f, messageAlpha);
@@ -360,7 +373,7 @@ public class LevelSelectScreen implements Screen {
         }
 
 
-        game.pixelFont.setColor(0.87f,0.84f,0.22f,1f);
+        game.pixelFont.setColor(game.colorOrange);
         game.pixelFont.draw(game.batch, "GRAVITY GRID", 0, screenHeight, Gdx.graphics.getWidth(), 1, false);
         game.regularFont.draw(game.batch, game.galaxyName[game.currentGalaxy]+" Galaxy", 5, screenHeight-(1.5f* game.fontSize), this.screenWidth-10, 1, false);
         game.regularFont.draw(game.batch, "Select a Planetary System:", 5, screenHeight-(2.5f* game.fontSize), this.screenWidth-10, 1, false);
