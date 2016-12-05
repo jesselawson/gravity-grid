@@ -325,7 +325,12 @@ public class LevelSelectScreen implements Screen {
             game.batch.draw(levelTileBackground, level.rect.x, level.rect.y, level.rect.width, level.rect.height);
 
             // Draw the tile type on top
-            game.batch.setColor(1.0f,1.0f,1.0f,0.75f);
+            // If the player beat the level at or under par, then make the checkmark gold. otherwise, keep it silver.
+            if(game.levelCompletionInfo[level.levelNum][3] >= game.gravityGridLevel[level.levelNum][52]) {
+                game.batch.setColor(game.colorYellow);
+            } else {
+                game.batch.setColor(1.0f,1.0f,1.0f,0.75f);
+            }
             float cornerX = level.rect.x+(level.rect.width-(0.5f*level.rect.width));
             float cornerY = level.rect.y+(level.rect.height-(0.5f*level.rect.height));
             float cornerWH = 0.5f*level.rect.width;
