@@ -1335,7 +1335,6 @@ public class PlayingScreen implements Screen {
         boolean bluesAreDone = (thisLevelCurrentBlueTotal == thisLevelBlueNeeded && thisLevelBlueNeeded != 0 ? true : false);
         boolean greensAreDone = (thisLevelCurrentGreenTotal == thisLevelGreenNeeded && thisLevelGreenNeeded != 0 ? true : false);
 
-
         // Next, since count can only be 1,2,or 3, figure out what pattern we have and display the counters appropriately
         switch(count) {
             case 1:
@@ -1473,26 +1472,26 @@ public class PlayingScreen implements Screen {
         // Update level score flare alphas
         if(redsAreDone){
             if(redFlareAlpha > 0.0f) {
-                redFlareAlpha -= 0.01f;
+                redFlareAlpha -= 0.05f;
             }
         } else {
-            redFlareAlpha = 1.0f;
+            //redFlareAlpha = 1.0f;
         }
 
         if(bluesAreDone) {
             if (blueFlareAlpha > 0.0f) {
-                blueFlareAlpha -= 0.01f;
+                blueFlareAlpha -= 0.05f;
             }
         } else {
-            blueFlareAlpha = 1.0f;
+            //blueFlareAlpha = 1.0f;
         }
 
         if(greensAreDone) {
             if (greenFlareAlpha > 0.0f) {
-                greenFlareAlpha -= 0.01f;
+                greenFlareAlpha -= 0.05f;
             }
         } else {
-            greenFlareAlpha = 1.0f;
+            //greenFlareAlpha = 1.0f;
         }
 
 
@@ -1512,9 +1511,13 @@ public class PlayingScreen implements Screen {
             // Draw a black square behind the text
             //game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             //game.batch.draw(levelMessageBackgroundImage, 0, 0, this.screenWidth, this.whiteSpace);
-            game.regularFont.setColor(1f,0.5f, 1f, 1f);
-            game.regularFont.draw(game.batch, ""+game.levelMessage[game.currentLevel], 40, startLineY, this.screenWidth-40, 1, true);
-            game.regularFont.setColor(1f,1f,1f,1f);  //reset the regularFont color to white
+
+            // Is there a level message?
+            if(game.currentLevel < game.levelMessage.size()) {
+                game.regularFont.setColor(1f, 0.5f, 1f, 1f);
+                game.regularFont.draw(game.batch, "" + game.levelMessage.get(game.currentLevel), 40, startLineY, this.screenWidth - 40, 1, true);
+                game.regularFont.setColor(1f, 1f, 1f, 1f);  //reset the regularFont color to white
+            }
         }
 
         // Let's check to see if this level has a tutorial overlay assigned to it. If it does, then let's display it!

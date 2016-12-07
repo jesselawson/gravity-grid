@@ -208,6 +208,9 @@ public class LevelSelectScreen implements Screen {
                 && game.levelCompletionInfo[(game.currentGalaxy*25)+24][0] != 2
                 && game.currentLevel+1 < game.levelCompletionInfo.length) {
             // Update the levelSelectScreen, too
+
+            game.currentLevel++;
+
             ChangeToGalaxy(0); // This will just force us to redraw all the thisLevelIconType's in the levelIcons so that they reflect our progress. If you get rid of this, the levelIcons wont update unless you go Prev then Next galaxy.
 
             game.setScreen(new PlayingScreen(this.game, this));
@@ -326,10 +329,11 @@ public class LevelSelectScreen implements Screen {
 
             // Draw the tile type on top
             // If the player beat the level at or under par, then make the checkmark gold. otherwise, keep it silver.
-            if(game.levelCompletionInfo[level.levelNum][3] >= game.gravityGridLevel[level.levelNum][52]) {
+            if(game.levelCompletionInfo[level.levelNum][3] <= game.gravityGridLevel[level.levelNum][52]
+                    && game.levelCompletionInfo[level.levelNum][0] == 2) {
                 game.batch.setColor(game.colorYellow);
             } else {
-                game.batch.setColor(1.0f,1.0f,1.0f,0.75f);
+                game.batch.setColor(1.0f,1.0f,1.0f,0.60f);
             }
             float cornerX = level.rect.x+(level.rect.width-(0.5f*level.rect.width));
             float cornerY = level.rect.y+(level.rect.height-(0.5f*level.rect.height));
@@ -368,6 +372,7 @@ public class LevelSelectScreen implements Screen {
         if(game.playerHasBeatenHighestLevel()) {
             game.regularFont.setColor(game.colorYellow);
             game.regularFont.draw(game.batch, "ALL GALAXIES ALIGNED!", 5, screenHeight-(4.5f*game.fontSize), this.screenWidth-10, 1, false);
+
         }
 
         if(messageAlpha > 0.0f) {
