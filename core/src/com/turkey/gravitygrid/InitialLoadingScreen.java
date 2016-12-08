@@ -41,8 +41,9 @@ public class InitialLoadingScreen implements Screen {
         game.getAssetLoader().LoadInitialAssets();
 
         // We can use these now that we have called LoadInitialAssets()
-        this.game.gravityGridSphereLogoImage = game.assets.getAssetManager().get("spaceturkeylogosquare.png", Texture.class);
-        this.game.spaceTurkeyLogoRegion = new TextureRegion(this.game.gravityGridSphereLogoImage);
+        //this.game.gravityGridSphereLogoImage = game.assets.getAssetManager().get("spaceturkeylogosquare.png", Texture.class);
+        this.game.spaceTurkeyLogoImage = game.assets.getAssetManager().get("spaceturkeylogosquare.png", Texture.class);
+        this.game.spaceTurkeyLogoRegion = new TextureRegion(this.game.spaceTurkeyLogoImage);
         this.game.pixelFont = game.assets.getAssetManager().get("agencyfb.ttf", BitmapFont.class);
         this.game.regularFont = game.assets.getAssetManager().get("turkey.ttf", BitmapFont.class);
 
@@ -68,6 +69,7 @@ public class InitialLoadingScreen implements Screen {
         game.batch.begin();
 
         if (game.getAssetLoader().getAssetManager().update()) {
+            game.getAssetLoader().FinalizeAssets();
             game.setScreen(new MainMenuScreen(game));
         } else {
             game.pixelFont.draw(game.batch, "Loading...", 0, Gdx.graphics.getHeight()/3, Gdx.graphics.getWidth(), 1, true);

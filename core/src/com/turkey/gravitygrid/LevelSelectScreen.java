@@ -10,11 +10,9 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
 
@@ -36,13 +34,13 @@ public class LevelSelectScreen implements Screen {
     private int screenWidth = Gdx.graphics.getWidth();
     private int screenHeight = Gdx.graphics.getHeight();
 
-    Texture screenBackground;
-    Texture levelTileBackground;
-    Texture[] levelIcon; // levelIcon[0] corresponds to game.levelCompletionInfo[level].[0] value. see `type` below
+    TextureRegion screenBackgroundRegion;
+    TextureRegion levelTileBackgroundRegion;
+    TextureRegion[] levelIconRegion; // levelIconRegion[0] corresponds to game.levelCompletionInfo[level].[0] value. see `type` below
     ArrayList<LevelIcon> levelIcons; // The tiles for our level selector
 
-    Texture previousGalaxyButtonImage;
-    Texture nextGalaxyButtonImage;
+    TextureRegion previousGalaxyButtonRegion;
+    TextureRegion nextGalaxyButtonRegion;
     Rectangle previousGalaxyButtonRect;
     Rectangle nextGalaxyButtonRect;
 
@@ -78,28 +76,28 @@ public class LevelSelectScreen implements Screen {
 
         // Setup the camera
         camera = new OrthographicCamera();
-        //camera.setToOrtho(false, 1080, 1920); // Hard-set these to control for multiple display sizes
         camera.setToOrtho(false, game.screenWidth, game.screenHeight);
 
+        // Load sounds
         selectLevelSound = game.assets.getAssetManager().get("sounds/levelSelectMenuPlayLevelButtonSound.wav", Sound.class);
         previousGalaxyButtonSound = game.assets.getAssetManager().get("sounds/nextGalaxyButtonSound.wav", Sound.class);
         nextGalaxyButtonSound = game.assets.getAssetManager().get("sounds/previousGalaxyButtonSound.wav", Sound.class);
         nopeSound = game.assets.getAssetManager().get("sounds/nope.wav", Sound.class);
 
-        // Get our textures
-        screenBackground = game.assets.getAssetManager().get("menu/blackBackground.jpg", Texture.class);
-        this.levelTileBackground = game.assets.getAssetManager().get("levelicons/background.png", Texture.class);
+        // Load textures
+        screenBackgroundRegion = game.assets.getAtlas().findRegion("menu/blackBackground");
+        levelTileBackgroundRegion = game.assets.getAtlas().findRegion("levelicons/background");
 
-        this.tileWidth = screenWidth / 5; // So it's 7 segments of our screenwidth minus the space we've reserved for the tile labels.
-        this.tileHeight = screenWidth / 5;
+        tileWidth = screenWidth / 5; // So it's 7 segments of our screenwidth minus the space we've reserved for the tile labels.
+        tileHeight = screenWidth / 5;
 
-        this.levelIcon = new Texture[3];
-        this.levelIcon[0] = game.assets.getAssetManager().get("levelicons/locked.png", Texture.class);
-        this.levelIcon[1] = game.assets.getAssetManager().get("levelicons/play.png", Texture.class);
-        this.levelIcon[2] = game.assets.getAssetManager().get("levelicons/done.png", Texture.class);
+        levelIconRegion = new TextureRegion[3];
+        levelIconRegion[0] = game.assets.getAtlas().findRegion("levelicons/locked");
+        levelIconRegion[1] = game.assets.getAtlas().findRegion("levelicons/play");
+        levelIconRegion[2] = game.assets.getAtlas().findRegion("levelicons/done");
 
-        previousGalaxyButtonImage = game.assets.getAssetManager().get("levelicons/previousGalaxyButton.png", Texture.class);
-        nextGalaxyButtonImage = game.assets.getAssetManager().get("levelicons/nextGalaxyButton.png", Texture.class);
+        previousGalaxyButtonRegion = game.assets.getAtlas().findRegion("levelicons/previousGalaxyButton");
+        nextGalaxyButtonRegion = game.assets.getAtlas().findRegion("levelicons/nextGalaxyButton");
 
         // The whitespace variable sets a modifier for the rect.x values of each tile so that the grid is in the center of the screen.
         this.whiteSpace = (int)(0.5*screenHeight) + (int)(0.33*(screenWidth/5)*5);
@@ -308,7 +306,7 @@ public class LevelSelectScreen implements Screen {
 
         game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
 
-        game.batch.draw(screenBackground, 0, 0, screenWidth, screenHeight);
+        game.batch.draw(screenBackgroundRegion, 0, 0, screenWidth, screenHeight);
 
         // Loop through tiles and draw them
         for (LevelSelectScreen.LevelIcon level : this.levelIcons) {
@@ -325,7 +323,7 @@ public class LevelSelectScreen implements Screen {
             }
 
             // Draw the white icon underneath, then switch the type to figure out what to draw on top
-            game.batch.draw(levelTileBackground, level.rect.x, level.rect.y, level.rect.width, level.rect.height);
+            game.batch.draw(levelTileBackgroundRegion, level.rect.x, level.rect.y, level.rect.width, level.rect.height);
 
             // Draw the tile type on top
             // If the player beat the level at or under par, then make the checkmark gold. otherwise, keep it silver.
@@ -338,7 +336,7 @@ public class LevelSelectScreen implements Screen {
             float cornerX = level.rect.x+(level.rect.width-(0.5f*level.rect.width));
             float cornerY = level.rect.y+(level.rect.height-(0.5f*level.rect.height));
             float cornerWH = 0.5f*level.rect.width;
-            game.batch.draw(levelIcon[level.type], cornerX, cornerY, cornerWH, cornerWH);
+            game.batch.draw(levelIconRegion[level.type], cornerX, cornerY, cornerWH, cornerWH);
             game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
 
             // Draw the level number in the middle
@@ -356,16 +354,16 @@ public class LevelSelectScreen implements Screen {
         // Prev and Next galaxy buttons
         // Check to see if our currentGalaxy*25 level is completed. If it is, we can display the "Next galaxy" button
         if(game.currentGalaxy > 0) { // dont draw "previous galaxy" on our first galaxy
-            game.batch.draw(previousGalaxyButtonImage, previousGalaxyButtonRect.x, previousGalaxyButtonRect.y, previousGalaxyButtonRect.width, previousGalaxyButtonRect.height);
+            game.batch.draw(previousGalaxyButtonRegion, previousGalaxyButtonRect.x, previousGalaxyButtonRect.y, previousGalaxyButtonRect.width, previousGalaxyButtonRect.height);
         }
         if(game.currentGalaxy != game.levelCompletionInfo.length/25) { // /25 will give us whole numbers ever 25 levels) { // Don't draw "next galaxy" on our 4th galaxy
             // Now let's lock the "next galaxy" button if we haven't completed the 25th level in oru current galaxy
             if(game.levelCompletionInfo[(game.currentGalaxy*25)+24][0] != 2) {
                 // display a lock icon over the button
-                game.batch.draw(levelIcon[0], nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
+                game.batch.draw(levelIconRegion[0], nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
                 game.batch.setColor(0.5f,0.5f,0.5f,0.5f);
             }
-            game.batch.draw(nextGalaxyButtonImage, nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
+            game.batch.draw(nextGalaxyButtonRegion, nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
         }
 
         // If the last available level is complete, let us know

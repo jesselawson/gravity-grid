@@ -78,7 +78,7 @@ public class GravityGrid extends Game {
 	SpriteBatch batch;
 	BitmapFont regularFont; // The Roboto Slab font called "turkey.ttf"
 	BitmapFont pixelFont; // The big GravityGridder font used for planet gravity values and special things.
-	Texture gravityGridSphereLogoImage; // Used for our loading screen
+	Texture spaceTurkeyLogoImage; // Used for our loading screen
 	TextureRegion spaceTurkeyLogoRegion;
 	AssetLoader assets;
 
@@ -566,8 +566,7 @@ public class GravityGrid extends Game {
 					// Also mark the next level as ready to play ("1")
 					levelCompletionInfo[level + 1][0] = 1;
 
-					// Increment our currentLevel counter so we know the next one to load
-					this.currentLevel++; // should also be equal to level+1
+
 
 				}
 			} else {
@@ -709,10 +708,10 @@ public class GravityGrid extends Game {
 		levelMessage.add("Remember: Red planets can only be moved to a tile that is diagonal to another red planet."); 
 		levelMessage.add("");
 		levelMessage.add("Fantastic! Now it's time to learn why you're here: In 500 years, the universe will collapse.");
-		levelMessage.add("An ultrastar will explode, causing huge gravity tidal waves. Thankfully, there's a way to prevent it."); 
-		levelMessage.add("Scientists from the future travelled back in time to bring us the Gravity Grid device.");
-		levelMessage.add("The Gravity Grid device seems like a simple smartphone app, but it's actually a wormhole manipulator.");
-		levelMessage.add("Your mission is to realign all the planets in each system's Gravity Grid. Do this, and you will save the universe!");
+		levelMessage.add("An ultrastar will explode, and gravity tidal waves will suck everything we know into oblivion.");
+		levelMessage.add("To prevent this, scientists from the future have traveled back in time to bring us this app.");
+		levelMessage.add("Gravity Grid looks like a simple smartphone app, but it's actually a wormhole manipulator.");
+		levelMessage.add("Each level is a puzzle where you realign gravity systems. Solve the puzzles, save the universe!");
 		levelMessage.add("Remember: Blue planets can only be moved to the top, bottom, left, or right of other blue planets."); 
 		levelMessage.add("Great! Just like red planets, blue planets might start in violation of their rules. Only when moving must the rules be followed."); 
 		levelMessage.add("Who knows how a planetary system will present itself. It's up to you to come up with the smartest solution."); 
@@ -821,8 +820,7 @@ public class GravityGrid extends Game {
 		levelsWithTutorialOverlays[0] = 1;	// level1TutorialOverlay.png on level 1
 		levelsWithTutorialOverlays[1] = 1;	// level2TutorialOverlay.png on level 2
 		levelsWithTutorialOverlays[6] = 1;  // level7TutorialOverlay.png on level 7
-
-
+		levelsWithTutorialOverlays[51] = 1;  // level7TutorialOverlay.png on level 7
 
 		fingerOnScreen = false;
 

@@ -12,6 +12,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -53,10 +54,10 @@ public class MainMenuScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, game.screenWidth, game.screenHeight);
 		
-		mainMenuBackground = game.assets.getAssetManager().get("mainmenubg.jpg", Texture.class);
-		mainMenuBackgroundRegion = new TextureRegion(mainMenuBackground);
-		buttonContinue = game.assets.getAssetManager().get("button/continue.png", Texture.class);
-		buttonContinueRegion = new TextureRegion(buttonContinue);
+		//mainMenuBackground = game.assets.getAssetManager().get("mainmenubg.jpg", Texture.class);
+		mainMenuBackgroundRegion = game.assets.getAtlas().findRegion("mainmenubg");
+		//buttonContinue = game.assets.getAssetManager().get("button/continue.png", Texture.class);
+		buttonContinueRegion = game.assets.getAtlas().findRegion("button/continue");
 
 
 		buttonContinueRect = new Rectangle((Gdx.graphics.getWidth()/2)-200, (Gdx.graphics.getHeight()/3)-200, 400, 400);

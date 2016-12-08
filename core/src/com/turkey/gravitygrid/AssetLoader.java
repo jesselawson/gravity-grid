@@ -4,6 +4,7 @@
 
 package com.turkey.gravitygrid;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
@@ -23,7 +25,8 @@ import com.badlogic.gdx.utils.Json;
 
 public final class AssetLoader {
 
-    AssetManager assets = null;
+    private AssetManager assets;
+    private TextureAtlas atlas;
 
     private int fontSize = 60;
     
@@ -43,6 +46,7 @@ public final class AssetLoader {
     public AssetManager getAssetManager() {
         return this.assets;
     }
+    public TextureAtlas getAtlas() { return this.atlas; }
 
     // Initial assets are those that are required to show a loading screen
     // It always ends with finishLoading();
@@ -72,6 +76,8 @@ public final class AssetLoader {
 
     public void LoadAllAssets() {
 
+        getAssetManager().load("GravityGridAtlas.atlas", TextureAtlas.class);
+
         // Load all assetmanager assets
         getAssetManager().load("sounds/tileDeselectSound.wav", Sound.class);
         getAssetManager().load("sounds/goodMoveSound.wav", Sound.class);
@@ -79,8 +85,6 @@ public final class AssetLoader {
         getAssetManager().load("sounds/mainMenuButton.ogg", Sound.class);
         getAssetManager().load("sounds/levelCompleteSound.ogg", Sound.class);
         getAssetManager().load("sounds/nope.wav", Sound.class);
-
-        getAssetManager().load("flare.png", Texture.class);
 
         // Sound assets
         getAssetManager().load("sounds/inGameMenuOpenButtonSound.wav", Sound.class);
@@ -97,6 +101,15 @@ public final class AssetLoader {
         //getAssetManager().load("sounds/galaxy1music.mp3", Music.class);
        // getAssetManager().load("sounds/galaxy2music.mp3", Music.class);
        // getAssetManager().load("sounds/galaxy3music.mp3", Music.class);
+
+        // Particle effects
+        getAssetManager().load("particles/starfield.p", ParticleEffect.class);
+        getAssetManager().load("particles/goodmovestarburst.p", ParticleEffect.class);
+        getAssetManager().load("particles/badmovestarburst.p", ParticleEffect.class);
+
+        /*
+
+        getAssetManager().load("flare.png", Texture.class);
 
         // Main menu assets
         getAssetManager().load("mainmenubg.jpg", Texture.class);
@@ -139,10 +152,7 @@ public final class AssetLoader {
         getAssetManager().load("button/continue.png", Texture.class);
         //getAssetManager().load("button/newgame.png", Texture.class);
 
-        // Particle effects
-        getAssetManager().load("particles/starfield.p", ParticleEffect.class);
-        getAssetManager().load("particles/goodmovestarburst.p", ParticleEffect.class);
-        getAssetManager().load("particles/badmovestarburst.p", ParticleEffect.class);
+
 
         // Assets for LevelSelectScreen
         getAssetManager().load("levelicons/background.png", Texture.class);
@@ -166,11 +176,13 @@ public final class AssetLoader {
         // Assets for help screen
         //getAssetManager().load("menu/helpScreen0.png", Texture.class);
         //getAssetManager().load("menu/helpScreen1.png", Texture.class);
+
+        */
     }
 
-    // This is called onResume to reload everything
-    public void ReloadAllAssets() {
-
+    // Called AFTER everything is finished in InitialLoadingScreen
+    public void FinalizeAssets() {
+        this.atlas = getAssetManager().get("GravityGridAtlas.atlas", TextureAtlas.class);
     }
 
     public void dispose() {

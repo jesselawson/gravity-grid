@@ -39,7 +39,7 @@ public class PlayingScreen implements Screen {
     public int levelCompleteMultiplier;
 
     // Tutorial overlay
-    Texture[] tutorialOverlayImage;
+    TextureRegion[] tutorialOverlayRegion;
 
     // On create, these are loaded according to the currentLevel that is managed in the GravityGrid class
     public int thisLevelRedNeeded;
@@ -65,24 +65,21 @@ public class PlayingScreen implements Screen {
     public ParticleEffectPool badMoveStarburstPool;
 
     // In-game Menu
-    Texture inGameMenuSoundOnButtonImage;
     TextureRegion inGameMenuSoundOnButtonRegion;
-    Texture inGameMenuSoundOffButtonImage;
     TextureRegion inGameMenuSoundOffButtonRegion;
-    Rectangle inGameMenuToggleSoundRect;
 
+    Rectangle inGameMenuToggleSoundRect;
     Rectangle inGameMenuResetButtonRect;
     Rectangle inGameMenuLevelSelectButtonRect;
 
-
-    public boolean inGameMenuActive;
-    public Texture inGameMenuButtonImage;
-    public Texture inGameMenuBackgroundImage;
-    public Texture inGameMenuCancelButtonImage;
-    public Texture inGameMenuResetButtonImage;
-    public Texture inGameMenuLevelSelectButtonImage;
-    public Texture inGameMenuHelpButtonImage;
-    Texture doneCheckmarkImage;
+    boolean inGameMenuActive;
+    TextureRegion inGameMenuButtonRegion;
+    TextureRegion inGameMenuBackgroundRegion;
+    TextureRegion inGameMenuCancelButtonRegion;
+    TextureRegion inGameMenuResetButtonRegion;
+    TextureRegion inGameMenuLevelSelectButtonRegion;
+    TextureRegion inGameMenuHelpButtonImage;
+    TextureRegion doneCheckmarkRegion;
 
     Music backgroundMusic;
 
@@ -110,11 +107,11 @@ public class PlayingScreen implements Screen {
     // GREENPLANETs go anywhere
     // ASTEROIDs cannot have anything side by side or up and down (you can move planets diagonally)
     // SUNs cannot have anything in any square touching them (even diagonally)
-    public enum TileType {
+    private enum TileType {
         NONE, REDPLANET, BLUEPLANET, GREENPLANET, ASTEROID, SUN, BLOCKED
     }
 
-    public enum TileStatus {
+    private enum TileStatus {
         NONE, // Tile is doing nothing
         SELECTED, // yellow spinner
         MOVETOHERE,
@@ -122,7 +119,7 @@ public class PlayingScreen implements Screen {
         CANNOTMOVE
     }
 
-    public class Tile {
+    private class Tile {
         public TileType type;
         public TileStatus status;
         public Rectangle rect;
@@ -155,7 +152,7 @@ public class PlayingScreen implements Screen {
     }
 
     // Run this at the end of every render iteration to update the scores
-    public void updateCurrentLevelValueTotals() {
+    private void updateCurrentLevelValueTotals() {
 
         // Flush the current scores
         thisLevelCurrentBlueTotal = 0;
@@ -182,7 +179,7 @@ public class PlayingScreen implements Screen {
 
     // GoodMoveVerified is only used so that I don't have to continually write all these checks for the destination
     // tile type being equal to the selectedType and not being the selectedNum
-    public boolean GoodMoveVerified(int tileToCheck, TileType selectedType, int selectedNum) {
+    private boolean GoodMoveVerified(int tileToCheck, TileType selectedType, int selectedNum) {
         if( this.tile.get(tileToCheck).type == selectedType && this.tile.get(tileToCheck).tileNum != selectedNum ) {
             System.out.println("Good tile "+tileToCheck+" found for selected num "+selectedNum);
             return true;
@@ -197,7 +194,7 @@ public class PlayingScreen implements Screen {
     // As of August 2015, the rules are that each planet type must move to a tile according to its rules that touches
     // another planet of the same type. Greens can be touching any way, blues only top,bottom,or size, and red only
     // diagonally.
-    public boolean canMoveAccordingToRules(int destinationTileNum) {
+    private boolean canMoveAccordingToRules(int destinationTileNum) {
 
         // First determine the select tile's tileNum so we can get it's TileType
         TileType selectedType = TileType.NONE; // init'd
@@ -426,47 +423,28 @@ public class PlayingScreen implements Screen {
 
 
     // All the textures we use
-    private Texture tileBlankImage;
-    private Texture tileRedPlanetImage;
-    private Texture tileBluePlanetImage;
-    private Texture tileGreenPlanetImage;
-
-    private TextureRegion tileRedPlanetRegion;
-    private TextureRegion tileBluePlanetRegion;
-    private TextureRegion tileGreenPlanetRegion;
+    TextureRegion tileBlankRegion;
+    TextureRegion tileRedPlanetRegion;
+    TextureRegion tileBluePlanetRegion;
+    TextureRegion tileGreenPlanetRegion;
 
     Rectangle inGameMenuButtonRect;
-    private boolean tryingToReset; // If this is true, user has already pushed the reset button once.
-    private int holdToResetCounter;
+    boolean tryingToReset; // If this is true, user has already pushed the reset button once.
+    int holdToResetCounter;
 
-    private Texture[] backgroundImage;
-    Texture tileSunImage;
-    Texture tileSunFlareImage;
+    private TextureRegion[] backgroundRegion;
     TextureRegion tileSunFlareRegion;
     TextureRegion tileSunRegion;
-    Texture[] tileAsteroidImage;
-    Texture[] tileValueImage;
-    Texture[] tileOverlayImage;
-    TextureRegion[] tileOverlayRegion;
-    Texture blackHoleImage;
-    TextureRegion blackHoleRegion;
-    Texture buttonFailImage;
-    Texture buttonLevelCompleteImage;
+    TextureRegion[] tileAsteroidRegion;
+    TextureRegion[] tileValueRegion;
     TextureRegion levelCompleteRegion;
-    Texture levelCompleteTrophyImage;
     TextureRegion levelCompleteTrophyRegion;
-    Texture singularityImage;
-    Texture backgroundStarfieldImage;
-    TextureRegion backgroundStarfieldRegion;
-    Texture tileSelectedTopImage;
-    Texture tileSelectedBottomImage;
     TextureRegion tileSelectedTopRegion;
     TextureRegion tileSelectedBottomRegion;
-    Texture doneFlareBackgroundImage;
     TextureRegion doneFlareBackgroundRegion;
-    private float doneFlareBackgroundDirection;
-    private int tileSelectedTopDirection;
-    private int tileSelectedBottomDirection;
+    float doneFlareBackgroundDirection;
+    int tileSelectedTopDirection;
+    int tileSelectedBottomDirection;
     Sound tileSelectSound;
     Sound tileDeselectSound;
     Sound goodMoveAttemptSound;
@@ -628,7 +606,6 @@ public class PlayingScreen implements Screen {
             worldRow++; // Iterate our row counter
         }
 
-        // TODO: lOAD ALL OF THESE FROM THE ASSET MANAGER
         // Load the sounds before the textures so the assetmanager isn't busy by the time we're clicking things
         //restartLevelSound= this.game.assets.getAssetManager().get("startup.wav"));
         tileSelectSound= this.game.assets.getAssetManager().get("sounds/tileSelectSound.wav", Sound.class);
@@ -655,84 +632,67 @@ public class PlayingScreen implements Screen {
         9 = blocked*/
 
         // Load the textures
-        tileBlankImage= this.game.assets.getAssetManager().get("tileBlankImage.png", Texture.class);
-        //tilePlanetImage = new Texture[4]; // remember: [4] = [0,1,2,3].
-        //tilePlanetRegion = new TextureRegion[4];
-        tileRedPlanetImage= this.game.assets.getAssetManager().get("planetRed.png", Texture.class);
-        tileRedPlanetRegion = new TextureRegion(tileRedPlanetImage);
-        tileBluePlanetImage= this.game.assets.getAssetManager().get("planetBlue.png", Texture.class);
-        tileBluePlanetRegion = new TextureRegion(tileBluePlanetImage);
-        tileGreenPlanetImage= this.game.assets.getAssetManager().get("planetGreen.png", Texture.class);
-        tileGreenPlanetRegion = new TextureRegion(tileGreenPlanetImage);
-        tileSunImage= this.game.assets.getAssetManager().get("sun.png", Texture.class);
-        tileSunRegion = new TextureRegion(tileSunImage);
-        tileSunFlareImage= this.game.assets.getAssetManager().get("sunflare0.png", Texture.class);
-        tileSunFlareRegion = new TextureRegion(tileSunFlareImage);
-        tileAsteroidImage = new Texture[4];
-        tileAsteroidImage[0]= this.game.assets.getAssetManager().get("asteroid0.png", Texture.class);
-        tileAsteroidImage[1]= this.game.assets.getAssetManager().get("asteroid1.png", Texture.class);
-        tileAsteroidImage[2]= this.game.assets.getAssetManager().get("asteroid2.png", Texture.class);
-        tileAsteroidImage[3]= this.game.assets.getAssetManager().get("asteroid3.png", Texture.class);
+        tileBlankRegion = this.game.assets.getAtlas().findRegion("tileBlankImage");
+        tileRedPlanetRegion = this.game.assets.getAtlas().findRegion("planetRed");
+        tileBluePlanetRegion = this.game.assets.getAtlas().findRegion("planetBlue");
+        tileGreenPlanetRegion = this.game.assets.getAtlas().findRegion("planetGreen");
+        tileSunRegion = this.game.assets.getAtlas().findRegion("sun");
+        tileSunFlareRegion = this.game.assets.getAtlas().findRegion("sunflare0");
+        tileAsteroidRegion = new TextureRegion[4];
+        tileAsteroidRegion[0] = this.game.assets.getAtlas().findRegion("asteroid0");
+        tileAsteroidRegion[1] = this.game.assets.getAtlas().findRegion("asteroid1");
+        tileAsteroidRegion[2] = this.game.assets.getAtlas().findRegion("asteroid2");
+        tileAsteroidRegion[3] = this.game.assets.getAtlas().findRegion("asteroid3");
+        backgroundRegion = new TextureRegion[4];
+        backgroundRegion[0] = this.game.assets.getAtlas().findRegion("bg0");
+        backgroundRegion[1] = this.game.assets.getAtlas().findRegion("bg1");
+        backgroundRegion[2] = this.game.assets.getAtlas().findRegion("bg2");
+        backgroundRegion[3] = this.game.assets.getAtlas().findRegion("bg3");
+        tutorialOverlayRegion = new TextureRegion[51];
+        tutorialOverlayRegion[0] = this.game.assets.getAtlas().findRegion("tutorials/level1TutorialOverlay");
+        tutorialOverlayRegion[1] = this.game.assets.getAtlas().findRegion("tutorials/level2TutorialOverlay");
+        tutorialOverlayRegion[6] = this.game.assets.getAtlas().findRegion("tutorials/level7TutorialOverlay");
+        tutorialOverlayRegion[50] = this.game.assets.getAtlas().findRegion("tutorials/level51TutorialOverlay");
 
-
-        backgroundImage = new Texture[4];
-
-        backgroundImage[0]= this.game.assets.getAssetManager().get("bg0.jpg", Texture.class); // Levels 0-
-        backgroundImage[1]= this.game.assets.getAssetManager().get("bg1.jpg", Texture.class);
-        backgroundImage[2]= this.game.assets.getAssetManager().get("bg2.jpg", Texture.class);
-        backgroundImage[3]= this.game.assets.getAssetManager().get("bg3.jpg", Texture.class);
-
-        // Tutorial overlay images
-        tutorialOverlayImage = new Texture[8];
-        tutorialOverlayImage[0]= this.game.assets.getAssetManager().get("tutorials/level1TutorialOverlay.png", Texture.class);
-        tutorialOverlayImage[1]= this.game.assets.getAssetManager().get("tutorials/level2TutorialOverlay.png", Texture.class);
-
-        tutorialOverlayImage[6]= this.game.assets.getAssetManager().get("tutorials/level7TutorialOverlay.png", Texture.class);
-
-        //levelMessageBackgroundImage= this.game.assets.getAssetManager().get("levelMessageBackground.png", Texture.class);
-        doneCheckmarkImage= this.game.assets.getAssetManager().get("levelicons/done.png", Texture.class);
-        doneFlareBackgroundImage = this.game.assets.getAssetManager().get("flare.png", Texture.class);
-        doneFlareBackgroundRegion = new TextureRegion(doneFlareBackgroundImage);
+        //levelMessageBackgroundImage= this.this.game.assets.getAssetManager().get("levelMessageBackground.png", Texture.class);
+        doneCheckmarkRegion = this.game.assets.getAtlas().findRegion("levelicons/done");
+        doneFlareBackgroundRegion = this.game.assets.getAtlas().findRegion("flare");
         doneFlareBackgroundDirection = 0.0f;
 
-        tileValueImage = new Texture[11];
-        tileValueImage[0]= this.game.assets.getAssetManager().get("tile0.png", Texture.class);
-        tileValueImage[1]= this.game.assets.getAssetManager().get("tile1.png", Texture.class);
-        tileValueImage[2]= this.game.assets.getAssetManager().get("tile2.png", Texture.class);
-        tileValueImage[3]= this.game.assets.getAssetManager().get("tile3.png", Texture.class);
-        tileValueImage[4]= this.game.assets.getAssetManager().get("tile4.png", Texture.class);
-        tileValueImage[5]= this.game.assets.getAssetManager().get("tile5.png", Texture.class);
-        tileValueImage[6]= this.game.assets.getAssetManager().get("tile6.png", Texture.class);
-        tileValueImage[7] = null; // We don't actually use this value
-        tileValueImage[8]= this.game.assets.getAssetManager().get("tile8.png", Texture.class);
-        tileValueImage[9] = null; // We don't actually use this value
-        tileValueImage[10]= this.game.assets.getAssetManager().get("tile10.png", Texture.class);
-        tileOverlayImage = new Texture[7];
-        buttonLevelCompleteImage= this.game.assets.getAssetManager().get("buttonLevelComplete.png", Texture.class);
-        levelCompleteRegion = new TextureRegion(buttonLevelCompleteImage);
-        levelCompleteTrophyImage= this.game.assets.getAssetManager().get("levelCompleteTrophy.png", Texture.class);
-        levelCompleteTrophyRegion = new TextureRegion(levelCompleteTrophyImage);
+        tileValueRegion = new TextureRegion[11];
+        tileValueRegion[0] = this.game.assets.getAtlas().findRegion("tile0");
+        tileValueRegion[1] = this.game.assets.getAtlas().findRegion("tile1");
+        tileValueRegion[2] = this.game.assets.getAtlas().findRegion("tile2");
+        tileValueRegion[3] = this.game.assets.getAtlas().findRegion("tile3");
+        tileValueRegion[4] = this.game.assets.getAtlas().findRegion("tile4");
+        tileValueRegion[5] = this.game.assets.getAtlas().findRegion("tile5");
+        tileValueRegion[6] = this.game.assets.getAtlas().findRegion("tile6");
+        tileValueRegion[7] = null; // We don't actually use this value
+        tileValueRegion[8] = this.game.assets.getAtlas().findRegion("tile8");
+        tileValueRegion[9] = null; // We don't actually use this value
+        tileValueRegion[10] = this.game.assets.getAtlas().findRegion("tile10");
+
+        levelCompleteRegion = this.game.assets.getAtlas().findRegion("buttonLevelComplete");
+        levelCompleteTrophyRegion = this.game.assets.getAtlas().findRegion("levelCompleteTrophy");
         levelCompleteBackgroundZoom = 100.0f;
         levelCompleteTrophyZoom = 100.0f;
         levelCompleteMultiplier = 1;
 
-        tileSelectedBottomImage =  this.game.assets.getAssetManager().get("tileSelected.png", Texture.class);
-        tileSelectedTopImage = this.game.assets.getAssetManager().get("tileSelected2.png", Texture.class);
-        tileSelectedTopRegion = new TextureRegion(tileSelectedTopImage);
-        tileSelectedBottomRegion = new TextureRegion(tileSelectedBottomImage);
+        tileSelectedTopRegion = this.game.assets.getAtlas().findRegion("tileSelected");
+        tileSelectedBottomRegion = this.game.assets.getAtlas().findRegion("tileSelected2");
 
         tryingToReset = false;
         inGameMenuButtonRect = new Rectangle((screenWidth/7)*6.0f, screenHeight-(screenWidth/7.0f), screenWidth/7.0f, screenWidth/7.0f); // Draw one tile big in upper-right corner
 
         inGameMenuActive = false;
-        inGameMenuBackgroundImage= this.game.assets.getAssetManager().get("menu/blackBackground.jpg", Texture.class);
-        inGameMenuCancelButtonImage= this.game.assets.getAssetManager().get("menu/cancelButton.png", Texture.class);
-        inGameMenuResetButtonImage= this.game.assets.getAssetManager().get("menu/resetButton.png", Texture.class);
-        inGameMenuLevelSelectButtonImage= this.game.assets.getAssetManager().get("menu/levelSelectButton.png", Texture.class);
+        inGameMenuBackgroundRegion = this.game.assets.getAtlas().findRegion("menu/blackBackground");
+        inGameMenuCancelButtonRegion = this.game.assets.getAtlas().findRegion("menu/cancelButton");
+        inGameMenuResetButtonRegion = this.game.assets.getAtlas().findRegion("menu/resetButton");
+        inGameMenuLevelSelectButtonRegion = this.game.assets.getAtlas().findRegion("menu/levelSelectButton");
 
-        inGameMenuButtonImage= this.game.assets.getAssetManager().get("menu/menuButton.png", Texture.class);
-        inGameMenuSoundOnButtonImage = this.game.assets.getAssetManager().get("menu/soundOnButton.png", Texture.class);
-        inGameMenuSoundOffButtonImage = this.game.assets.getAssetManager().get("menu/soundOffButton.png", Texture.class);
+        inGameMenuButtonRegion = this.game.assets.getAtlas().findRegion("menu/menuButton");
+        inGameMenuSoundOnButtonRegion = this.game.assets.getAtlas().findRegion("menu/soundOnButton");
+        inGameMenuSoundOffButtonRegion = this.game.assets.getAtlas().findRegion("menu/soundOffButton");
 
         float buttonWidth = this.screenWidth/3.0f;
 
@@ -1172,7 +1132,7 @@ public class PlayingScreen implements Screen {
 
         // Draw the background based on the "galaxy," which is just the level#/10. Every ten levels is a new background (i.e., a new galaxy)
         game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
-        game.batch.draw(backgroundImage[thisLevelBackgroundImageNumber], 0,0,screenWidth, screenHeight);
+        game.batch.draw(backgroundRegion[thisLevelBackgroundImageNumber], 0,0,screenWidth, screenHeight);
 
 
         // The starfield kept rendering at approximately half width and half height. I edited the particle p file to have
@@ -1191,7 +1151,7 @@ public class PlayingScreen implements Screen {
             // Always draw the tile border
             game.batch.setColor(1f,1f,1f,1f);
 
-            // Draw the value (which are just numbers) image, then the border image (tileBlankImage)
+            // Draw the value (which are just numbers) image, then the border image (tileBlankRegion)
 
             // (22-Aug-2015 Jesse) Sami had an idea to have the planets sized according to their
             // tile value. I tried this out a few times but the planets changing sizes continuously 
@@ -1206,29 +1166,29 @@ public class PlayingScreen implements Screen {
                     // Flip these if you want the text brighter. right now it's behind the transparent tileir
                     //game.batch.setColor(0.5f,0.5f,0.5f,0.5f);
                     game.batch.setColor(0.5f,0.5f,0.5f,tile.value/10.0f);
-                    game.batch.draw(tileBlankImage, tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
+                    game.batch.draw(tileBlankRegion, tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     game.batch.setColor(1f,1f,1f,.8f);
-                    game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
+                    game.batch.draw(tileValueRegion[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     game.batch.setColor(1f,1f,1f,1f);
                     break;
                 case REDPLANET:
                     game.batch.draw(tileRedPlanetRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
                     game.batch.setColor(1f,1f,1f,1f);
-                    game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
+                    game.batch.draw(tileValueRegion[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     break;
                 case BLUEPLANET:
                     game.batch.draw(tileBluePlanetRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
                     game.batch.setColor(1f,1f,1f,1f);
-                    game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
+                    game.batch.draw(tileValueRegion[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     break;
                 case GREENPLANET:
                     game.batch.draw(tileGreenPlanetRegion, tile.rect.x, tile.rect.y, tile.rect.width/2, tile.rect.height/2, tile.rect.width, tile.rect.height, sizeMultiplier, sizeMultiplier, 0.0f);
                     game.batch.setColor(1f,1f,1f,1f);
-                    game.batch.draw(tileValueImage[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
+                    game.batch.draw(tileValueRegion[tile.value], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     break;
                 case ASTEROID:
                     game.batch.setColor(1f,1f,1f,1f);
-                    game.batch.draw(tileAsteroidImage[tile.rand], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
+                    game.batch.draw(tileAsteroidRegion[tile.rand], tile.rect.x, tile.rect.y, tile.rect.width, tile.rect.height);
                     break;
                 case SUN:
                     game.batch.setColor(1f,1f,1f,1f);
@@ -1344,7 +1304,7 @@ public class PlayingScreen implements Screen {
                     game.batch.draw(doneFlareBackgroundRegion, checkmarkMiddle-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                     game.batch.setColor(game.colorOrange);
-                    game.batch.draw(doneCheckmarkImage, checkmarkMiddle-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                    game.batch.draw(doneCheckmarkRegion, checkmarkMiddle-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                 }
                 if (haveRed) {
                     game.pixelFont.setColor( game.colorRed );
@@ -1369,7 +1329,7 @@ public class PlayingScreen implements Screen {
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
-                        game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                        game.batch.draw(doneCheckmarkRegion, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
 
                     if(bluesAreDone) {
@@ -1377,7 +1337,7 @@ public class PlayingScreen implements Screen {
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
-                        game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                        game.batch.draw(doneCheckmarkRegion, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
                     game.pixelFont.setColor(game.colorRed);
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentRedTotal + "/" + thisLevelRedNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
@@ -1392,7 +1352,7 @@ public class PlayingScreen implements Screen {
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
-                        game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                        game.batch.draw(doneCheckmarkRegion, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
 
                     if(greensAreDone) {
@@ -1400,7 +1360,7 @@ public class PlayingScreen implements Screen {
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
-                        game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                        game.batch.draw(doneCheckmarkRegion, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
                     game.pixelFont.setColor(game.colorBlue);
                     game.pixelFont.draw(game.batch, "" + thisLevelCurrentBlueTotal + "/" + thisLevelBlueNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
@@ -1414,7 +1374,7 @@ public class PlayingScreen implements Screen {
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
-                        game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                        game.batch.draw(doneCheckmarkRegion, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
 
                     if(greensAreDone) {
@@ -1422,7 +1382,7 @@ public class PlayingScreen implements Screen {
                         game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                         game.batch.setColor(game.colorOrange);
-                        game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                        game.batch.draw(doneCheckmarkRegion, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                     }
 
                     game.pixelFont.setColor(game.colorRed);
@@ -1439,7 +1399,7 @@ public class PlayingScreen implements Screen {
                     game.batch.draw(doneFlareBackgroundRegion, checkmarkLeft-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                     game.batch.setColor(game.colorOrange);
-                    game.batch.draw(doneCheckmarkImage, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                    game.batch.draw(doneCheckmarkRegion, checkmarkLeft-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                 }
 
                 if(bluesAreDone) {
@@ -1447,7 +1407,7 @@ public class PlayingScreen implements Screen {
                     game.batch.draw(doneFlareBackgroundRegion, checkmarkMiddle-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                     game.batch.setColor(game.colorOrange);
-                    game.batch.draw(doneCheckmarkImage, checkmarkMiddle-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                    game.batch.draw(doneCheckmarkRegion, checkmarkMiddle-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                 }
 
                 if(greensAreDone) {
@@ -1455,7 +1415,7 @@ public class PlayingScreen implements Screen {
                     game.batch.draw(doneFlareBackgroundRegion, checkmarkRight-320, screenHeight - (4*this.game.fontSize)-320, 320,320,640,640,1.0f,1.0f,doneFlareBackgroundDirection);
 
                     game.batch.setColor(game.colorOrange);
-                    game.batch.draw(doneCheckmarkImage, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
+                    game.batch.draw(doneCheckmarkRegion, checkmarkRight-80, screenHeight - (4*this.game.fontSize)-80, 160,160);
                 }
                 game.pixelFont.setColor(game.colorRed);
                 game.pixelFont.draw(game.batch, "" + thisLevelCurrentRedTotal + "/" + thisLevelRedNeeded + "", leftScoreStripX, screenHeight - (4 * this.game.fontSize), this.screenWidth - 10, 1, false);
@@ -1497,7 +1457,7 @@ public class PlayingScreen implements Screen {
 
                 // Draw the menu button
         game.batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        game.batch.draw(inGameMenuButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
+        game.batch.draw(inGameMenuButtonRegion, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
 
         // Display the level message if we have one, and only if the gameState is ready or tile selected or good move attempt
         if(theGameState == gameState.READY || theGameState == gameState.TILE_SELECTED || theGameState == gameState.GOOD_MOVE_ATTEMPT || theGameState == gameState.IN_GAME_MENU) {
@@ -1524,7 +1484,7 @@ public class PlayingScreen implements Screen {
         if(game.levelsWithTutorialOverlays[game.currentLevel] == 1) {
             // We do have a tutorial overlay, so let's display it
             game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
-            game.batch.draw(tutorialOverlayImage[game.currentLevel], 0, 0, game.screenWidth, game.screenHeight);
+            game.batch.draw(tutorialOverlayRegion[game.currentLevel], 0, 0, game.screenWidth, game.screenHeight);
         }
 
 
@@ -1597,20 +1557,20 @@ public class PlayingScreen implements Screen {
 
             // Draw the background
             game.batch.setColor(1.0f,1.0f,1.0f,0.5f);
-            game.batch.draw(inGameMenuBackgroundImage, 0, 0, screenWidth, screenHeight);
+            game.batch.draw(inGameMenuBackgroundRegion, 0, 0, screenWidth, screenHeight);
             game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
             // Draw the icons center-line
 
-            game.batch.draw(inGameMenuResetButtonImage, inGameMenuResetButtonRect.x, inGameMenuResetButtonRect.y, inGameMenuResetButtonRect.width, inGameMenuResetButtonRect.height);
-            game.batch.draw(inGameMenuLevelSelectButtonImage, inGameMenuLevelSelectButtonRect.x, inGameMenuLevelSelectButtonRect.y, inGameMenuLevelSelectButtonRect.width, inGameMenuLevelSelectButtonRect.height);
+            game.batch.draw(inGameMenuResetButtonRegion, inGameMenuResetButtonRect.x, inGameMenuResetButtonRect.y, inGameMenuResetButtonRect.width, inGameMenuResetButtonRect.height);
+            game.batch.draw(inGameMenuLevelSelectButtonRegion, inGameMenuLevelSelectButtonRect.x, inGameMenuLevelSelectButtonRect.y, inGameMenuLevelSelectButtonRect.width, inGameMenuLevelSelectButtonRect.height);
             // Which sound toggle button to show?
             if (game.getOptions().playSounds()) {
-                game.batch.draw(inGameMenuSoundOnButtonImage, inGameMenuToggleSoundRect.x, inGameMenuToggleSoundRect.y, inGameMenuToggleSoundRect.width, inGameMenuToggleSoundRect.height);
+                game.batch.draw(inGameMenuSoundOnButtonRegion, inGameMenuToggleSoundRect.x, inGameMenuToggleSoundRect.y, inGameMenuToggleSoundRect.width, inGameMenuToggleSoundRect.height);
             } else {
-                game.batch.draw(inGameMenuSoundOffButtonImage, inGameMenuToggleSoundRect.x, inGameMenuToggleSoundRect.y, inGameMenuToggleSoundRect.width, inGameMenuToggleSoundRect.height);
+                game.batch.draw(inGameMenuSoundOffButtonRegion, inGameMenuToggleSoundRect.x, inGameMenuToggleSoundRect.y, inGameMenuToggleSoundRect.width, inGameMenuToggleSoundRect.height);
             }
 
-            game.batch.draw(inGameMenuCancelButtonImage, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
+            game.batch.draw(inGameMenuCancelButtonRegion, inGameMenuButtonRect.x, inGameMenuButtonRect.y, inGameMenuButtonRect.width, inGameMenuButtonRect.height);
         }
 
         // Draw all particle effects from our array that holds all currently running particle effect systems
