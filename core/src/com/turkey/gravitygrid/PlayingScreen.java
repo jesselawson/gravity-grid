@@ -22,6 +22,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import static com.turkey.gravitygrid.Tile.TileType.BLUEPLANET;
+import static com.turkey.gravitygrid.Tile.TileType.GREENPLANET;
+
 public class PlayingScreen implements Screen {
 
     // A custom point-in-rectangle collision checker
@@ -97,9 +100,7 @@ public class PlayingScreen implements Screen {
         LEVEL_COMPLETE,             // Displays the "level complete button" that jumps you to the score screen
         IN_GAME_MENU               // Open the menu when you're playing a level. Will give you "BACK TO LEVEL SELECT", "HOW TO PLAY", "ABOUT", and "QUIT"
     }
-
-
-
+    
 
     // Run this at the end of every render iteration to update the scores
     private void updateCurrentLevelValueTotals() {
@@ -110,7 +111,7 @@ public class PlayingScreen implements Screen {
         thisLevelCurrentGreenTotal = 0;
 
         // Iterate through each tile and update the current color values
-        for(GravityGrid.Tile tile : this.tile) {
+        for(Tile tile : this.tile) {
             switch(tile.type) {
                 case REDPLANET:
                     thisLevelCurrentRedTotal += tile.value;
@@ -129,7 +130,7 @@ public class PlayingScreen implements Screen {
 
     // GoodMoveVerified is only used so that I don't have to continually write all these checks for the destination
     // tile type being equal to the selectedType and not being the selectedNum
-    private boolean GoodMoveVerified(int tileToCheck, GravityGrid.TileType selectedType, int selectedNum) {
+    private boolean GoodMoveVerified(int tileToCheck, Tile.TileType selectedType, int selectedNum) {
         if( this.tile.get(tileToCheck).type == selectedType && this.tile.get(tileToCheck).tileNum != selectedNum ) {
             System.out.println("Good tile "+tileToCheck+" found for selected num "+selectedNum);
             return true;
@@ -147,7 +148,7 @@ public class PlayingScreen implements Screen {
     private boolean canMoveAccordingToRules(int destinationTileNum) {
 
         // First determine the select tile's tileNum so we can get it's GravityGrid.GravityGrid.TileType
-        GravityGrid.TileType selectedType = GravityGrid.TileType.NONE; // init'd
+        Tile.TileType selectedType = Tile.TileType.NONE; // init'd
         int selectedNum = 0; // init'd
 
         // This `outcome` is what is returned by this function. If outcome = true, then the function has determined
@@ -159,10 +160,10 @@ public class PlayingScreen implements Screen {
 
         // Loop through tiles and find the selected one
         findSelected:
-        for (GravityGrid.Tile tile : this.tile) {
+        for (Tile tile : this.tile) {
 
             // Check for selected tile
-            if (tile.status == GravityGrid.TileStatus.SELECTED) {
+            if (tile.status == Tile.TileStatus.SELECTED) {
                 // Extract the type of the selected tile so we can assign the appropriate rules to the planet type
                 selectedType = tile.type;
                 selectedNum = tile.tileNum;
@@ -356,7 +357,7 @@ public class PlayingScreen implements Screen {
         return outcome;
     }
 
-    private ArrayList<GravityGrid.Tile> tile; // Single array of tiles, instead of multidimensional
+    private ArrayList<Tile> tile; // Single array of tiles, instead of multidimensional
 
     private float backgroundStarfieldPosition; // used to keep track of the background spiral that goes over the background images
 
@@ -483,7 +484,7 @@ public class PlayingScreen implements Screen {
         this.whiteSpace = (int)(0.5*screenHeight) - (int)(0.5*(screenWidth/7)*7);
 
 
-        this.tile = new ArrayList<GravityGrid.Tile>(); // Initialize our grid
+        this.tile = new ArrayList<Tile>(); // Initialize our grid
 
         // Set two counters to count our world rows and columns, which are different from the level ones.
         // These will ensure that we are building the map correctly.
@@ -509,10 +510,10 @@ public class PlayingScreen implements Screen {
                         rcType = Tile.TileType.REDPLANET;
                         break;
                     case 2:
-                        rcType = Tile.TileType.BLUEPLANET;
+                        rcType = BLUEPLANET;
                         break;
                     case 3:
-                        rcType = Tile.TileType.GREENPLANET;
+                        rcType = GREENPLANET;
                         break;
                     case 4:
                         rcType = Tile.TileType.ASTEROID;
@@ -546,7 +547,7 @@ public class PlayingScreen implements Screen {
 
                 // (4-Nov-2016 Jesse) Add a new particle system on each and every tile so that when the level starts, there's a huge burst of stars
                 // (19-Nov-2016 Jesse) Only do this on tiles with planets, otherwise there's lots of lag
-                if(rcType == GravityGrid.TileType.REDPLANET || rcType == BLUEPLANET || rcType == GREENPLANET) {
+                if(rcType == Tile.TileType.REDPLANET || rcType == BLUEPLANET || rcType == GREENPLANET) {
                     ParticleEffectPool.PooledEffect levelStartEffect = goodMoveStarburstPool.obtain();
                     levelStartEffect.setPosition(rect.x + (rect.width / 2), rect.y + (rect.height / 2));
                     particleEffects.add(levelStartEffect);
@@ -690,33 +691,33 @@ public class PlayingScreen implements Screen {
             for(int c = 0; c < 7; c++) {
 
                 // Create a placeholder for the tile type
-                GravityGrid.TileType rcType;
+                Tile.TileType rcType;
 
                 // Determine the tile type
                 switch(game.gravityGridLevel[game.currentLevel][(r*7)+c]) {
                     case 0:
-                        rcType = GravityGrid.TileType.NONE;
+                        rcType = Tile.TileType.NONE;
                         break;
                     case 1:
-                        rcType = GravityGrid.TileType.REDPLANET;
+                        rcType = Tile.TileType.REDPLANET;
                         break;
                     case 2:
-                        rcType = BLUEPLANET;
+                        rcType = Tile.TileType.BLUEPLANET;
                         break;
                     case 3:
-                        rcType = GREENPLANET;
+                        rcType = Tile.TileType.GREENPLANET;
                         break;
                     case 4:
-                        rcType = GravityGrid.TileType.ASTEROID;
+                        rcType = Tile.TileType.ASTEROID;
                         break;
                     case 5:
-                        rcType = GravityGrid.TileType.SUN;
+                        rcType = Tile.TileType.SUN;
                         break;
                     case 9:
-                        rcType = GravityGrid.TileType.BLOCKED;
+                        rcType = Tile.TileType.BLOCKED;
                         break;
                     default:
-                        rcType = GravityGrid.TileType.NONE;
+                        rcType = Tile.TileType.NONE;
                         break;
                 }
 
@@ -739,7 +740,7 @@ public class PlayingScreen implements Screen {
 
                 // (4-Nov-2016 Jesse) Add a new particle system on each and every tile so that when the level starts, there's a huge burst of stars
                 // (19-Nov-2016 Jesse) Only do this on tiles with planets, otherwise there's lots of lag
-                if(rcType == GravityGrid.TileType.REDPLANET || rcType == BLUEPLANET || rcType == GREENPLANET) {
+                if(rcType == Tile.TileType.REDPLANET || rcType == Tile.TileType.BLUEPLANET || rcType == Tile.TileType.GREENPLANET) {
                     ParticleEffectPool.PooledEffect levelStartEffect = goodMoveStarburstPool.obtain();
                     levelStartEffect.setPosition(rect.x + (rect.width / 2), rect.y + (rect.height / 2));
                     particleEffects.add(levelStartEffect);
@@ -828,8 +829,8 @@ public class PlayingScreen implements Screen {
                             // If you select a tile, open the menu, then close it, you can select a second time. Whoops!
                             // Just clear the selected tile when the game menu is open
                             for (Tile tile : this.tile) {
-                                if (tile.status == TileStatus.SELECTED) {
-                                    tile.status = TileStatus.NONE;
+                                if (tile.status == Tile.TileStatus.SELECTED) {
+                                    tile.status = Tile.TileStatus.NONE;
                                 }
                             }
                         }
@@ -847,7 +848,7 @@ public class PlayingScreen implements Screen {
                         checkTiles:
                         for (Tile tile : this.tile) {
                             // We only care about tiles that are planets. Anything else can't be touched (for now).
-                            if (tile.type == GravityGrid.TileType.REDPLANET || tile.type == BLUEPLANET || tile.type == GREENPLANET) {
+                            if (tile.type == Tile.TileType.REDPLANET || tile.type == BLUEPLANET || tile.type == GREENPLANET) {
                                 if (pointInRectangle(tile.rect, finger.x, finger.y)) {
 
                                     // DEBUG:
@@ -855,9 +856,9 @@ public class PlayingScreen implements Screen {
                                     //game.regularFont.draw(game.batch, "Tile "+tile.value, 240,60);
 
                                     // if game state is ready and tile status is none, that means we haven't tried to move yet.
-                                    if (tile.status == TileStatus.NONE) {
+                                    if (tile.status == Tile.TileStatus.NONE) {
                                         // Select this tile
-                                        tile.status = TileStatus.SELECTED;
+                                        tile.status = Tile.TileStatus.SELECTED;
                                         // Set the gamestate to handle input after a tile is selected
                                         theGameState = gameState.TILE_SELECTED;
 
@@ -896,12 +897,12 @@ public class PlayingScreen implements Screen {
                             if (pointInRectangle(tile.rect, finger.x, finger.y)) {
 
                                 // Is this tile blank?
-                                if (tile.type == GravityGrid.TileType.NONE && tile.status == TileStatus.NONE) {
+                                if (tile.type == Tile.TileType.NONE && tile.status == Tile.TileStatus.NONE) {
 
                                     // This is a potential tile to move to. Check if we're touching it
 
                                     // Mark this tile as the move destination
-                                    tile.status = TileStatus.MOVETOHERE;
+                                    tile.status = Tile.TileStatus.MOVETOHERE;
 
                                     // Update game state so we know that both SELECTED and MOVETOHERE have been set.
                                     theGameState = gameState.GOOD_MOVE_ATTEMPT;
@@ -910,10 +911,10 @@ public class PlayingScreen implements Screen {
                                     break markDestinationTile;
 
 
-                                } else if (tile.status == TileStatus.SELECTED) {
+                                } else if (tile.status == Tile.TileStatus.SELECTED) {
 
                                     // We clicked a tile that was marked as selected, so deselect it
-                                    tile.status = TileStatus.NONE;
+                                    tile.status = Tile.TileStatus.NONE;
 
                                     // And reset the game state
                                     theGameState = gameState.READY;
@@ -925,12 +926,12 @@ public class PlayingScreen implements Screen {
                                     break markDestinationTile;
 
                                     // Don't need the below, since the else {} will cover everyone else
-                                    // } else if(tile.type == GravityGrid.TileType.REDPLANET || tile.type == //GravityGrid.TileType.BLUEPLANET || tile.type == GravityGrid.TileType.GREENPLANET) {
+                                    // } else if(tile.type == Tile.TileType.REDPLANET || tile.type == //Tile.TileType.BLUEPLANET || tile.type == Tile.TileType.GREENPLANET) {
 
                                 } else {    // This should cover PLANET, ASTEROID, SUN, and BLOCKED types. (anyone not BLANK)
                                     // (21-Aug-2015 Jesse) Display cannot move animation on any tile
                                     // we try to move to that we can't move to.
-                                    tile.status = TileStatus.CANNOTMOVE;
+                                    tile.status = Tile.TileStatus.CANNOTMOVE;
 
                                     if(game.getOptions().playSounds()) { cannotMoveSound.play(); }
 
@@ -967,22 +968,22 @@ public class PlayingScreen implements Screen {
 
                 moveSelectedTile:
                 for(Tile from : this.tile) {
-                    if(from.status == TileStatus.SELECTED) {
+                    if(from.status == Tile.TileStatus.SELECTED) {
 
                         for(Tile to : this.tile) {
-                            if(to.status == TileStatus.MOVETOHERE) {
+                            if(to.status == Tile.TileStatus.MOVETOHERE) {
 
                                 // If we are here then we have selected a blank tile and not a tile with another planet
                                 // or a tile with an asteriod or sun. Now we check to see if we are moving according to
                                 // our game rules.
                                 if(canMoveAccordingToRules(to.tileNum)) {
 
-                                    to.status = TileStatus.MOVECOMPLETE;
+                                    to.status = Tile.TileStatus.MOVECOMPLETE;
                                     to.type = from.type;
                                     to.rand = from.rand; // This way we get the same planet graphic
 
-                                    from.status = TileStatus.NONE;
-                                    from.type = GravityGrid.TileType.NONE;
+                                    from.status = Tile.TileStatus.NONE;
+                                    from.type = Tile.TileType.NONE;
 
                                     // If we still have moves left, set the gamestate to ready
                                     // Otherwise, set the gamestate to OUT_OF_MOVES
@@ -1054,9 +1055,9 @@ public class PlayingScreen implements Screen {
                                 } else {
                                     // Oops! We violated our rules. Reset selected tile and set the tile
                                     // we were trying to move to to CANNOTMOVE
-                                    to.status = TileStatus.CANNOTMOVE;
+                                    to.status = Tile.TileStatus.CANNOTMOVE;
 
-                                    from.status = TileStatus.NONE;
+                                    from.status = Tile.TileStatus.NONE;
 
                                     // Reset the gamestate, too
                                     theGameState = gameState.READY;
@@ -1191,13 +1192,13 @@ public class PlayingScreen implements Screen {
                         // Reset everything if we're done with our animation
                         tile.overlayFrameNumber = 0;
                         tile.timeSinceLastFrame = 0f;
-                        tile.status = TileStatus.NONE;
+                        tile.status = Tile.TileStatus.NONE;
                     }
 
                     break;
 
                 case CANNOTMOVE:
-                        tile.status = TileStatus.NONE;
+                        tile.status = Tile.TileStatus.NONE;
                     break;
 
                 default: break;
