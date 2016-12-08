@@ -607,17 +607,17 @@ public class PlayingScreen implements Screen {
         }
 
         // Load the sounds before the textures so the assetmanager isn't busy by the time we're clicking things
-        //restartLevelSound= this.game.assets.getAssetManager().get("startup.wav"));
-        tileSelectSound= this.game.assets.getAssetManager().get("sounds/tileSelectSound.wav", Sound.class);
-        tileDeselectSound= this.game.assets.getAssetManager().get("sounds/tileDeselectSound.wav",Sound.class);
-        goodMoveAttemptSound= this.game.assets.getAssetManager().get("sounds/goodMoveSound.wav",Sound.class);
+        //restartLevelSound= this.game.assets.getAssetManager().get("startup.ogg"));
+        tileSelectSound= this.game.assets.getAssetManager().get("sounds/tileSelectSound.ogg", Sound.class);
+        tileDeselectSound= this.game.assets.getAssetManager().get("sounds/tileDeselectSound.ogg",Sound.class);
+        goodMoveAttemptSound= this.game.assets.getAssetManager().get("sounds/goodMoveSound.ogg",Sound.class);
         restartLevelSound = goodMoveAttemptSound;
-        cannotMoveSound= this.game.assets.getAssetManager().get("sounds/cannotMoveSound.wav",Sound.class);
+        cannotMoveSound= this.game.assets.getAssetManager().get("sounds/cannotMoveSound.ogg",Sound.class);
         levelCompleteSound= this.game.assets.getAssetManager().get("sounds/levelCompleteSound.ogg",Sound.class);
 
-        inGameMenuOpenButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuOpenButtonSound.wav", Sound.class);
-        inGameMenuLevelSelectButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuLevelSelectButtonSound.wav", Sound.class);
-        inGameMenuResetLevelButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuResetLevelButtonSound.wav", Sound.class);
+        inGameMenuOpenButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuOpenButtonSound.ogg", Sound.class);
+        inGameMenuLevelSelectButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuLevelSelectButtonSound.ogg", Sound.class);
+        inGameMenuResetLevelButtonSound = this.game.assets.getAssetManager().get("sounds/inGameMenuResetLevelButtonSound.ogg", Sound.class);
 
         backgroundMusic = this.game.assets.getAssetManager().get("sounds/galaxy1music.mp3", Music.class);
         backgroundMusic.setLooping(true);

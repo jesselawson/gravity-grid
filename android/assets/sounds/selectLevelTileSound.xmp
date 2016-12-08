@@ -12,10 +12,10 @@
             xmlns:creatorAtom="http://ns.adobe.com/creatorAtom/1.0/">
          <xmp:CreatorTool>Adobe Audition CS6 (Macintosh)</xmp:CreatorTool>
          <xmp:CreateDate>2011-12-01T15:13:53-08:00</xmp:CreateDate>
-         <xmp:MetadataDate>2016-12-01T10:08:16-08:00</xmp:MetadataDate>
-         <xmp:ModifyDate>2016-12-01T10:08:16-08:00</xmp:ModifyDate>
-         <xmpMM:InstanceID>xmp.iid:7257d1aa-b83a-e64e-8f67-9ebb407ae7cf</xmpMM:InstanceID>
-         <xmpMM:DocumentID>xmp.did:7257d1aa-b83a-e64e-8f67-9ebb407ae7cf</xmpMM:DocumentID>
+         <xmp:MetadataDate>2016-12-08T07:27:48-08:00</xmp:MetadataDate>
+         <xmp:ModifyDate>2016-12-08T07:27:48-08:00</xmp:ModifyDate>
+         <xmpMM:InstanceID>xmp.iid:d548c5a2-5bab-b940-8b45-e8edd1d53619</xmpMM:InstanceID>
+         <xmpMM:DocumentID>xmp.did:d548c5a2-5bab-b940-8b45-e8edd1d53619</xmpMM:DocumentID>
          <xmpMM:OriginalDocumentID>xmp.did:D13536440F206811871F9C027A17AF52</xmpMM:OriginalDocumentID>
          <xmpMM:History>
             <rdf:Seq>
@@ -229,11 +229,25 @@
                   <stEvt:softwareAgent>Adobe Audition CC 2015.2 (Windows)</stEvt:softwareAgent>
                   <stEvt:changed>/</stEvt:changed>
                </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <stEvt:action>saved</stEvt:action>
+                  <stEvt:instanceID>xmp.iid:36e17c42-8fb3-564b-a5a1-1b3cc915da13</stEvt:instanceID>
+                  <stEvt:when>2016-12-08T07:27:48-08:00</stEvt:when>
+                  <stEvt:softwareAgent>Adobe Audition CC 2015.2 (Windows)</stEvt:softwareAgent>
+                  <stEvt:changed>/metadata</stEvt:changed>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <stEvt:action>saved</stEvt:action>
+                  <stEvt:instanceID>xmp.iid:d548c5a2-5bab-b940-8b45-e8edd1d53619</stEvt:instanceID>
+                  <stEvt:when>2016-12-08T07:27:48-08:00</stEvt:when>
+                  <stEvt:softwareAgent>Adobe Audition CC 2015.2 (Windows)</stEvt:softwareAgent>
+                  <stEvt:changed>/</stEvt:changed>
+               </rdf:li>
             </rdf:Seq>
          </xmpMM:History>
          <xmpMM:DerivedFrom rdf:parseType="Resource">
-            <stRef:instanceID>xmp.iid:eadbc134-4fea-094f-9244-515f98820139</stRef:instanceID>
-            <stRef:documentID>xmp.did:eadbc134-4fea-094f-9244-515f98820139</stRef:documentID>
+            <stRef:instanceID>xmp.iid:36e17c42-8fb3-564b-a5a1-1b3cc915da13</stRef:instanceID>
+            <stRef:documentID>xmp.did:7257d1aa-b83a-e64e-8f67-9ebb407ae7cf</stRef:documentID>
             <stRef:originalDocumentID>xmp.did:D13536440F206811871F9C027A17AF52</stRef:originalDocumentID>
          </xmpMM:DerivedFrom>
          <dc:format>audio/ogg; codec="vorbis"</dc:format>

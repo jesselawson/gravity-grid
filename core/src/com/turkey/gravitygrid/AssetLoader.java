@@ -74,30 +74,34 @@ public final class AssetLoader {
         getAssetManager().finishLoading(); // Wait for all the assets to load, then go ahead and get our initial assets for the loading screen
     }
 
+    public void LoadFirstBatchOfAssets() {
+        // Load all assetmanager assets
+        getAssetManager().load("sounds/tileDeselectSound.ogg",Sound.class);
+        getAssetManager().load("sounds/goodMoveSound.ogg",Sound.class);
+        getAssetManager().load("sounds/cannotMoveSound.ogg",Sound.class);
+        getAssetManager().load("sounds/mainMenuButton.ogg", Sound.class);
+        getAssetManager().load("sounds/levelCompleteSound.ogg", Sound.class);
+        getAssetManager().load("sounds/nope.ogg",Sound.class);
+
+        // Sound assets
+        getAssetManager().load("sounds/inGameMenuOpenButtonSound.ogg",Sound.class);
+        //getAssetManager().load("sounds/inGameMenuButtonSound.ogg",Sound.class);
+        getAssetManager().load("sounds/inGameMenuResetLevelButtonSound.ogg",Sound.class);
+        getAssetManager().load("sounds/inGameMenuLevelSelectButtonSound.ogg",Sound.class);
+        getAssetManager().load("sounds/levelSelectMenuPlayLevelButtonSound.ogg",Sound.class);
+        getAssetManager().load("sounds/nextGalaxyButtonSound.ogg",Sound.class);
+        getAssetManager().load("sounds/previousGalaxyButtonSound.ogg",Sound.class);
+        getAssetManager().load("sounds/tileSelectSound.ogg",Sound.class);
+
+        // Music assets
+        getAssetManager().load("sounds/galaxy1music.mp3", Music.class);
+
+    }
+
     public void LoadAllAssets() {
 
         getAssetManager().load("GravityGridAtlas.atlas", TextureAtlas.class);
 
-        // Load all assetmanager assets
-        getAssetManager().load("sounds/tileDeselectSound.wav", Sound.class);
-        getAssetManager().load("sounds/goodMoveSound.wav", Sound.class);
-        getAssetManager().load("sounds/cannotMoveSound.wav", Sound.class);
-        getAssetManager().load("sounds/mainMenuButton.ogg", Sound.class);
-        getAssetManager().load("sounds/levelCompleteSound.ogg", Sound.class);
-        getAssetManager().load("sounds/nope.wav", Sound.class);
-
-        // Sound assets
-        getAssetManager().load("sounds/inGameMenuOpenButtonSound.wav", Sound.class);
-        //getAssetManager().load("sounds/inGameMenuButtonSound.wav", Sound.class);
-        getAssetManager().load("sounds/inGameMenuResetLevelButtonSound.wav", Sound.class);
-        getAssetManager().load("sounds/inGameMenuLevelSelectButtonSound.wav", Sound.class);
-        getAssetManager().load("sounds/levelSelectMenuPlayLevelButtonSound.wav", Sound.class);
-        getAssetManager().load("sounds/nextGalaxyButtonSound.wav", Sound.class);
-        getAssetManager().load("sounds/previousGalaxyButtonSound.wav", Sound.class);
-        getAssetManager().load("sounds/tileSelectSound.wav", Sound.class);
-
-        // Music assets
-        getAssetManager().load("sounds/galaxy1music.mp3", Music.class);
         //getAssetManager().load("sounds/galaxy1music.mp3", Music.class);
        // getAssetManager().load("sounds/galaxy2music.mp3", Music.class);
        // getAssetManager().load("sounds/galaxy3music.mp3", Music.class);

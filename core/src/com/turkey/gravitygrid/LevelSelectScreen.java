@@ -79,10 +79,10 @@ public class LevelSelectScreen implements Screen {
         camera.setToOrtho(false, game.screenWidth, game.screenHeight);
 
         // Load sounds
-        selectLevelSound = game.assets.getAssetManager().get("sounds/levelSelectMenuPlayLevelButtonSound.wav", Sound.class);
-        previousGalaxyButtonSound = game.assets.getAssetManager().get("sounds/nextGalaxyButtonSound.wav", Sound.class);
-        nextGalaxyButtonSound = game.assets.getAssetManager().get("sounds/previousGalaxyButtonSound.wav", Sound.class);
-        nopeSound = game.assets.getAssetManager().get("sounds/nope.wav", Sound.class);
+        selectLevelSound = game.assets.getAssetManager().get("sounds/levelSelectMenuPlayLevelButtonSound.ogg", Sound.class);
+        previousGalaxyButtonSound = game.assets.getAssetManager().get("sounds/nextGalaxyButtonSound.ogg", Sound.class);
+        nextGalaxyButtonSound = game.assets.getAssetManager().get("sounds/previousGalaxyButtonSound.ogg", Sound.class);
+        nopeSound = game.assets.getAssetManager().get("sounds/nope.ogg", Sound.class);
 
         // Load textures
         screenBackgroundRegion = game.assets.getAtlas().findRegion("menu/blackBackground");
@@ -186,7 +186,7 @@ public class LevelSelectScreen implements Screen {
         }
     }
 
-    // TODO: ADD CHECK FOR LAST LEVEL!
+
     public void PlayLevel(int levelNum) {
 
         // Check if the level we are trying to go to exists
@@ -197,14 +197,16 @@ public class LevelSelectScreen implements Screen {
         }
     }
 
-    // TODO: ADD CHECK FOR LAST LEVEL! What happens if we are in PlayingScreen and we beat the last available leveL? We should display something on the last available galaxy, like a "Stay tuned!" Button
+
     public void PlayNextLevel() {
         // This function is called in PlayingScreen and assumes that UpdateLevelCompletionInfo has already been called, which should have updated game.currentLevel
         //this.playingScreen.RestartLevel();
 
-        if(game.currentGalaxy < game.levelCompletionInfo.length/25
-                && game.levelCompletionInfo[(game.currentGalaxy*25)+24][0] != 2
-                && game.currentLevel+1 < game.levelCompletionInfo.length) {
+        if(
+                // (8-Dec-2016 Jesse) Here we'll only see if the next level is outside our bounds. If someone goes back to play the level, we should ensure that the mechanics (forwarding to the next level) does not change.
+                //game.currentGalaxy < game.levelCompletionInfo.length/25
+                //&& game.levelCompletionInfo[(game.currentGalaxy*25)+24][0] != 2
+                game.currentLevel+1 < game.levelCompletionInfo.length) {
             // Update the levelSelectScreen, too
 
             game.currentLevel++;
@@ -283,7 +285,7 @@ public class LevelSelectScreen implements Screen {
                     if(level.type == 1 || level.type == 2) {
                         if(game.getOptions().playSounds()) { selectLevelSound.play(); }
                         game.currentLevel = level.levelNum+(game.currentGalaxy*25);
-                        System.out.println("Loading level "+game.currentLevel+"...");
+                        //System.out.println("Loading level "+game.currentLevel+"...");
                         PlayLevel(game.currentLevel);
                     } else {
                         if(game.getOptions().playSounds()) { nopeSound.play(); }

@@ -702,6 +702,12 @@ public class GravityGrid extends Game {
 
 	public void create() {
 
+		assets = new AssetLoader(this, new AssetManager());
+
+		assets.LoadInitialAssets();
+
+		assets.LoadFirstBatchOfAssets();
+
 		gameOptions = new GameOptions();
 
 		levelMessage = new ArrayList<String>();
@@ -835,8 +841,6 @@ public class GravityGrid extends Game {
 		this.loadSaveState();
 
 		batch = new SpriteBatch(); // Initialize our spritebatch used to draw everything in the world
-
-		assets = new AssetLoader(this, new AssetManager());
 
 		// Head to our InitialLoading screen, which loads all our assets
 		this.setScreen(new InitialLoadingScreen(this));
