@@ -24,6 +24,8 @@ public class LevelSelectScreen implements Screen {
 
     private GravityGrid game;
 
+    LevelHandler levels;
+
     private int tileWidth;
     private int tileHeight;
     private int whiteSpace;
@@ -73,6 +75,8 @@ public class LevelSelectScreen implements Screen {
     // Screen constructor
     public LevelSelectScreen(GravityGrid game) {
         this.game = game;
+
+        levels = new LevelHandler();
 
         // Setup the camera
         camera = new OrthographicCamera();
