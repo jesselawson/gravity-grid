@@ -134,8 +134,8 @@ public class LevelSelectScreen implements Screen {
             for(int c = 0; c < 5; c++) {
 
                 // Figure out the type of this level icon
-                int thisLevelIconType = game.levelCompletionInfo[(game.currentGalaxy*25)+levelNum][0];
-                //System.out.println("Max: "+game.levelCompletionInfo.length+":: At levelNum "+levelNum+" I found "+thisLevelIconType);
+                int thisLevelIconType = game.getLevelHandler().getLevelCompletionInfo().levelData.get((game.currentGalaxy*25)+levelNum)[0];
+                //System.out.println("Max: "+game.getLevelHandler().getLevelCompletionInfo().levelData.size()+":: At levelNum "+levelNum+" I found "+thisLevelIconType);
 
                 // Create a placeholder for the rect values
                 Rectangle rect = new Rectangle();
@@ -151,7 +151,7 @@ public class LevelSelectScreen implements Screen {
                 levelIcons.add(new LevelSelectScreen.LevelIcon(rect, levelNum, thisLevelIconType));
 
                 worldCol++;
-                if(levelNum <= game.levelCompletionInfo.length-1) {
+                if(levelNum <= game.getLevelHandler().getLevelCompletionInfo().levelData.size()-1) {
                     levelNum++; // make sure we aren't going to throw an index out of bounds exception
                 }
             }
@@ -168,7 +168,7 @@ public class LevelSelectScreen implements Screen {
     public void ChangeToGalaxy(int direction) {
 
         // If we actually have a new galaxy when calling ChangeToGalaxy(1)...
-        if(game.currentGalaxy + direction < game.levelCompletionInfo.length/25) {
+        if(game.currentGalaxy + direction < game.getLevelHandler().getLevelCompletionInfo().levelData.size()/25) {
             game.currentGalaxy += direction;
 
             int levelNum = 0;
@@ -177,12 +177,12 @@ public class LevelSelectScreen implements Screen {
                 for(int c = 0; c < 5; c++) {
 
                     // Get the icon we need
-                    int thisLevelIconType = game.levelCompletionInfo[(game.currentGalaxy*25)+levelNum][0];
+                    int thisLevelIconType = game.getLevelHandler().getLevelCompletionInfo().levelData.get((game.currentGalaxy*25)+levelNum)[0];
 
                     // set the level icon appropriately
                     levelIcons.get(levelNum).type = thisLevelIconType;
 
-                    if(levelNum <= game.levelCompletionInfo.length-1) {
+                    if(levelNum <= game.getLevelHandler().getLevelCompletionInfo().levelData.size()-1) {
                         levelNum++; // make sure we aren't going to throw an index out of bounds exception
                     }
                 }
@@ -194,9 +194,9 @@ public class LevelSelectScreen implements Screen {
     public void PlayLevel(int levelNum) {
 
         // Check if the level we are trying to go to exists
-        int totalLevels = game.levelCompletionInfo.length;
+        int totalLevels = game.getLevelHandler().getLevelCompletionInfo().levelData.size();
 
-        if(game.currentGalaxy < game.levelCompletionInfo.length/25) {
+        if(game.currentGalaxy < game.getLevelHandler().getLevelCompletionInfo().levelData.size()/25) {
             game.setScreen(new PlayingScreen(this.game, this));
         }
     }
@@ -208,9 +208,9 @@ public class LevelSelectScreen implements Screen {
 
         if(
                 // (8-Dec-2016 Jesse) Here we'll only see if the next level is outside our bounds. If someone goes back to play the level, we should ensure that the mechanics (forwarding to the next level) does not change.
-                //game.currentGalaxy < game.levelCompletionInfo.length/25
+                //game.currentGalaxy < game.getLevelHandler().getLevelCompletionInfo().levelData.size()/25
                 //&& game.levelCompletionInfo[(game.currentGalaxy*25)+24][0] != 2
-                game.currentLevel+1 < game.levelCompletionInfo.length) {
+                game.currentLevel+1 < game.getLevelHandler().getLevelCompletionInfo().levelData.size()) {
             // Update the levelSelectScreen, too
 
             game.currentLevel++;
@@ -250,12 +250,12 @@ public class LevelSelectScreen implements Screen {
             camera.unproject(finger.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
             // First check if the player is touching one of the prev/next galaxy buttons
-            if(game.currentGalaxy < game.levelCompletionInfo.length/25) { // /25 will give us whole numbers ever 25 levels
+            if(game.currentGalaxy < game.getLevelHandler().getLevelCompletionInfo().levelData.size()/25) { // /25 will give us whole numbers ever 25 levels
 
                 if(game.pointInRectangle(nextGalaxyButtonRect, finger.x, finger.y)) {
 
                     // Has the player beaten level 25 yet?
-                    if(game.levelCompletionInfo[(game.currentGalaxy *25)+24][0] == 2) {
+                    if(game.getLevelHandler().getLevelCompletionInfo().levelData.get((game.currentGalaxy*25)+24)[0] == 2) {
                         if(game.getOptions().playSounds()) { nextGalaxyButtonSound.play(); }
                         // Yep, so let's increment our galaxy
                         ChangeToGalaxy(1);
@@ -333,8 +333,8 @@ public class LevelSelectScreen implements Screen {
 
             // Draw the tile type on top
             // If the player beat the level at or under par, then make the checkmark gold. otherwise, keep it silver.
-            if(game.levelCompletionInfo[level.levelNum][3] <= game.gravityGridLevel[level.levelNum][52]
-                    && game.levelCompletionInfo[level.levelNum][0] == 2) {
+            if(game.getLevelHandler().getLevelCompletionInfo().levelData.get(level.levelNum)[3] <= game.getLevelHandler().getLevel(level.levelNum)[52]
+                    && game.getLevelHandler().getLevelCompletionInfo().levelData.get(level.levelNum)[0] == 2) {
                 game.batch.setColor(game.colorYellow);
             } else {
                 game.batch.setColor(1.0f,1.0f,1.0f,0.60f);
@@ -362,9 +362,9 @@ public class LevelSelectScreen implements Screen {
         if(game.currentGalaxy > 0) { // dont draw "previous galaxy" on our first galaxy
             game.batch.draw(previousGalaxyButtonRegion, previousGalaxyButtonRect.x, previousGalaxyButtonRect.y, previousGalaxyButtonRect.width, previousGalaxyButtonRect.height);
         }
-        if(game.currentGalaxy != game.levelCompletionInfo.length/25) { // /25 will give us whole numbers ever 25 levels) { // Don't draw "next galaxy" on our 4th galaxy
+        if(game.currentGalaxy != game.getLevelHandler().getLevelCompletionInfo().levelData.size()/25) { // /25 will give us whole numbers ever 25 levels) { // Don't draw "next galaxy" on our 4th galaxy
             // Now let's lock the "next galaxy" button if we haven't completed the 25th level in oru current galaxy
-            if(game.levelCompletionInfo[(game.currentGalaxy*25)+24][0] != 2) {
+            if(game.getLevelHandler().getLevelCompletionInfo().levelData.get((game.currentGalaxy*25)+24)[0] != 2) {
                 // display a lock icon over the button
                 game.batch.draw(levelIconRegion[0], nextGalaxyButtonRect.x, nextGalaxyButtonRect.y, nextGalaxyButtonRect.width, nextGalaxyButtonRect.height);
                 game.batch.setColor(0.5f,0.5f,0.5f,0.5f);

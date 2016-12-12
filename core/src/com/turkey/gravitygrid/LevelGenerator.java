@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 Jesse Lawson. All Rights Reserved. No part of this code may be redistributed, reused, or otherwise used in any way, shape, or form without written permission from the author.
+ */
+
 package com.turkey.gravitygrid;
 
 /**
@@ -9,7 +13,7 @@ import com.badlogic.gdx.math.MathUtils;
 
 public class LevelGenerator {
 
-    public boolean debug = false;
+    public boolean debug = true;
 
     /* Board components. Helps differentiate between edges/corners and middle of board. */
     private static final int[] boardMiddle = new int[] { 36,37,38,39,40,29,30,31,32,33,22,23,24,25,26,15,16,17,18,19,8,9,10,11,12 };
@@ -289,32 +293,17 @@ public class LevelGenerator {
     public boolean HistoricValue(ArrayList<Integer> list, int value) {
         boolean result = false;
 
-        theSearch:
-        for(Integer i : list) {
-
-            if(debug) {
-                System.out.print("Checking historic value "+i+" against "+value+"... ");
-            }
-
-            if(i == value){
-                result = true;
-                if(debug) {
-                    System.out.println("Oops! That's a historic value!");
-                }
-                break theSearch;
-            } else {
-                if(debug){
-                    System.out.println("Looks good! Let's continue.");
-                }
-            }
+        if(list.contains(value)) {
+            result = true;
         }
 
         return result;
     }
 
 
-
     public int[] GenerateLevel(int complexity, int redWeight, int blueWeight, int greenWeight, boolean genAsteroids, boolean genSuns) {
+
+
 
         ArrayList<Tile> tile = new ArrayList<Tile>();
 
@@ -513,7 +502,10 @@ public class LevelGenerator {
 
 
         // Now let's move stuff around according to rules to figure out what our required level values will be
-        for(int i=0; i<complexity; i++) {
+        int i=0;
+        boolean goodLevel = false;
+        while(goodLevel == false) {
+
 
             int selectedValue = 0;  // the value of the selected tile
             int selectedNum = 0;    // the tileNum of the selected tile
@@ -619,6 +611,7 @@ public class LevelGenerator {
                         } else {
                             // No good destination found AND lets reverse our decisions
                             tile = temp;
+                            i = i-1;
                             if(debug){
                                 System.out.println("Aborting due to historic value.");
                             }
@@ -649,33 +642,41 @@ public class LevelGenerator {
             } else {
                 if(debug) {
                     System.out.println("Couldn't find a destination after 10 tries, so skipping this one.");
-                    i = i-1;
+
+                    i = i-1; // give us another complexity
+
                 }
             }
 
             // Finally, check to make sure ALL of the values are different from the start. If not, add another complexity
-            if(i >= complexity) {
-                if (thisLevelCurrentRedTotal > 0) {
-                    if (HistoricValue(historicRedValues, thisLevelCurrentRedTotal)) {
-                        extraMoves += 1;
-                        i = i-1;
-                    }
-                }
+            boolean redsAreGood = false;
+            boolean bluesAreGood = false;
+            boolean greensAreGood = false;
 
-                if (thisLevelCurrentBlueTotal > 0) {
-                    if (HistoricValue(historicBlueValues, thisLevelCurrentBlueTotal)) {
-                        extraMoves += 1;
-                        i = i-1;
-                    }
+            if(numRedNeeded > 0) {
+                if(thisLevelCurrentRedTotal != numRedNeeded) {
+                    redsAreGood = true;
                 }
+            } else { redsAreGood = true; }
 
-                if (thisLevelCurrentGreenTotal > 0) {
-                    if (HistoricValue(historicGreenValues, thisLevelCurrentGreenTotal)) {
-                        extraMoves += 1;
-                        i = i-1;
-                    }
+            if(numBlueNeeded > 0) {
+                if(thisLevelCurrentBlueTotal != numBlueNeeded) {
+                    bluesAreGood = true;
                 }
+            } else { bluesAreGood = true; }
+
+            if(numGreenNeeded > 0) {
+                if(thisLevelCurrentGreenTotal != numGreenNeeded) {
+                    greensAreGood = true;
+                }
+            } else { greensAreGood = true; }
+
+            // if we're above our complexity and the values are different, break the loop
+            if(numMovesNeeded >= complexity && redsAreGood && bluesAreGood && greensAreGood){
+                goodLevel = true;
             }
+
+            i++;
         }
 
         // At this point, we have all the things we need for our level. We should go through and look for places to stick an asteroid and
@@ -697,11 +698,11 @@ public class LevelGenerator {
             // Now, every possibleAsteroids element is a tile that can be set to an asteroid if we want
 
             if(possibleAsteroids.size() > 0) {
-                int numAsteroids = MathUtils.random(1, possibleAsteroids.size()); //(int) Math.log((double) MathUtils.random(1, complexity + 1) * (numRedNeeded + numBlueNeeded + numGreenNeeded)); // gen number of asteroids
+                int numAsteroids = MathUtils.random(1, possibleAsteroids.size()-1); //(int) Math.log((double) MathUtils.random(1, complexity + 1) * (numRedNeeded + numBlueNeeded + numGreenNeeded)); // gen number of asteroids
 
                 for (int a = 0; a < numAsteroids; a++) {
 
-                    int rand = possibleAsteroids.get(MathUtils.random(0, possibleAsteroids.size()));
+                    int rand = possibleAsteroids.get(MathUtils.random(0, possibleAsteroids.size()-1));
                     if(debug){
                         System.out.println("Trying to put an asteroid at tile " + rand + "...");
                     }

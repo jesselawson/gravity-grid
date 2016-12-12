@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 Jesse Lawson. All Rights Reserved. No part of this code may be redistributed, reused, or otherwise used in any way, shape, or form without written permission from the author.
+ */
+
 package com.turkey.gravitygrid;
 
 import com.badlogic.gdx.Gdx;
@@ -23,7 +27,10 @@ final class LevelHandler {
 
     public LevelCompletionInfo getLevelCompletionInfo() { return this.levelCompletionInfo; }
 
-    class LevelCompletionInfo {
+    static class LevelCompletionInfo {
+        LevelCompletionInfo() {
+            levelData = new ArrayList<int[]>();
+        }
         ArrayList<int[]> levelData;
     }
 
@@ -35,18 +42,32 @@ final class LevelHandler {
         levels = Gdx.app.getPreferences("levels");
 
         // If levels is empty, then we should probably cry
+        this.levelCompletionInfo = new LevelCompletionInfo();
 
+        if(!LoadLevelCompletionInfo() || this.levelCompletionInfo.levelData.size() < 25) {
+            // We need at least 25 elements for the first galaxy
 
-        if(!LoadLevelCompletionInfo()) {
             // If we're here, then the levelcompletioninfo string in the "levels" file cannot be found. This would only be the case if this is our first time playing this game
             // So we need to build the level completion info, store it, then get on with our lives.
-            this.levelCompletionInfo = new LevelCompletionInfo();
-            this.levelCompletionInfo.levelData.add(new int[]{1,0,0,0,0}); // First level
+
+            int[] temp = new int[]{1,0,0,0,0}; // First one on a new install should be "1" status
+            this.levelCompletionInfo.levelData.add(temp); // First level
+
+            // After charging the levelData with the first level as status "1", make the rest of the galaxy available
+            for(int a=1; a<25; a++) {
+                int[] tmp = new int[]{0,0,0,0,0};
+                this.levelCompletionInfo.levelData.add(tmp); // First level
+            }
 
             // since this is our first data, let's store it
             SaveLevelCompletionInfo();
+
+            // Also might have to put a check to recompute the current chunk of 25 elements in the levels... if the arraylist.get(#) tries to get a future level, the game will crash
         }
+
     }
+
+
 
     int[] getLevel(int levelNum) {
 
@@ -55,16 +76,16 @@ final class LevelHandler {
         // If this is a tutorial level, return the tutorial level.
         // Add any and all tutorial levels right here!
         switch(levelNum) {
-            case 1:
+            case 0: // Level 1
                 level = new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,1}; // Level 1
                 break;
-            case 2:
+            case 1: // Level 2
                 level = new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,32,0,0,2}; // Level 2
                 break;
-            case 7:
+            case 6: // Level 7
                 level = new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,2,0,4,0,1}; // Level 7
                 break;
-            case 51:
+            case 50: // Level 51
                 level = new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,8,1}; // Level 51
                 break;
             default:
@@ -76,6 +97,14 @@ final class LevelHandler {
     }
 
     int[] CreateOrRetrieveLevel(int levelNum) {
+
+        // Make sure we create an entry for levelCompletionInfo as well
+        if(levelNum+1 == getLevelCompletionInfo().levelData.size()) {
+            // So if we were asking for level 5, and levelData.size() was 6, we could return levelData[5] but
+            // we would still need to generate the next levelcompletion info. So let's build it here.
+            int tmp[] = new int[]{0,0,0,0,0};
+            getLevelCompletionInfo().levelData.add(tmp);
+        }
 
         int[] level;
 
@@ -96,13 +125,75 @@ final class LevelHandler {
             // The default is triggered if we're not displaying a tutorial level. This generates a level for us
             levelGenerator = new LevelGenerator();
 
-            int a = MathUtils.random(3, 8);
-            int b = MathUtils.random(0, 11);
-            int c = MathUtils.random(0, 11);
-            int d = MathUtils.random(0, 11);
-            boolean asteroids = (levelNum > 25 ? true : false);
-            boolean suns = (levelNum > 75 ? true : false);
-            level = levelGenerator.GenerateLevel(a, b, c, d, asteroids, suns);
+            int a = 0;
+            int b = 0;
+            int c = 0;
+            int d = 0; // init variables for use in our GenerateLevel() func below
+            boolean e = false;
+            boolean f = false;
+
+            // Figure out our boundaries for random numbers given our current level
+            switch(levelNum) { // Switch here to control the first galaxy
+                case 2: a=1; b=3; break;
+                case 3: a=1; b=4; break;
+                case 4: a=1; b=5; break;
+                case 5: a=1; b=6; break;
+
+                case 7:  a=1; b=0; c=3; break;
+                case 8:  a=1; b=0; c=4; break;
+                case 9:  a=1; b=0; c=5; break;
+                case 10: a=2; b=0; c=6; break;
+                case 11:
+                case 12: a=2; b=4; c=4; break;
+                case 13:
+                case 14:
+                case 15: a=3; b=5; c=5; break;
+                case 16:
+                case 17:
+                case 18: a=3; b=6; c=6; break;
+                case 19:
+                case 20: a=3; b=11; c=4; break;
+                case 21: a=3; b=4; c=11; break;
+                case 22:
+                case 23:
+                case 24:
+                case 25: a=3; b=7; c=7; break;
+                case 26:
+                case 27:
+                case 28:
+                case 29:
+                case 30: a=3; b=MathUtils.random(0, 7); c=MathUtils.random(0,7); e = true;
+
+                case 51:
+                case 52: a=3; b=0;c=0;d=3; e=true;
+                case 53: a=3; b=0;c=0;d=4; e=true;
+                case 54: a=3; b=0;c=0;d=6; e=true;
+
+                default:
+                    // This only triggers after all the above levels have been accounted for:
+                    if(levelNum > 30 && levelNum <= 50) {
+                        a=MathUtils.random(2,4);
+                        b=MathUtils.random(0, 9);
+                        c=MathUtils.random(0,9);
+                        e = true;
+                    } else if(levelNum > 50 && levelNum <= 75) {
+                        a = MathUtils.random(3, 6);
+                        b = MathUtils.random(0, 11);
+                        c = MathUtils.random(0, 11);
+                        d = MathUtils.random(0, 11);
+                        e = true;
+                    } else {
+                        // Anything here has levelNum > 75, so do everything
+                        a = MathUtils.random(3, 8);
+                        b = MathUtils.random(0, 11);
+                        c = MathUtils.random(0, 11);
+                        e = true;
+                        f = true;
+                }
+
+            }
+
+            level = levelGenerator.GenerateLevel(a, b, c, d, e, f);
 
             // Create a hashtable to store our level data.
             Hashtable<String, String> hashTable = new Hashtable<String, String>();
@@ -120,6 +211,9 @@ final class LevelHandler {
     }
 
     public void SaveLevelCompletionInfo() {
+
+        // TODO: Add check here to see if we're on the last level of a galaxy. if we are, let's go ahead
+        // and prepopulate the next 25 levels so that our level select screen doesn't crash.
 
         Hashtable<String, String> hashTable = new Hashtable<String, String>();
 
@@ -141,6 +235,7 @@ final class LevelHandler {
 
         // If the levelcompletion info string exists, then lets populate our level completion info.
         if(!serializedData.isEmpty()) {
+            this.levelCompletionInfo.levelData = new ArrayList<int[]>();
             this.levelCompletionInfo = json.fromJson(LevelCompletionInfo.class, serializedData);
             return true;
         } else {

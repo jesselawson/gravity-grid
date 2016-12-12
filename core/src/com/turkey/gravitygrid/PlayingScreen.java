@@ -428,10 +428,10 @@ public class PlayingScreen implements Screen {
         holdToResetCounter = 0;
 
         // Initialize the required color values and the max moves, which are specific elements in the gravityGridLevel array
-        thisLevelRedNeeded= this.game.gravityGridLevel[game.currentLevel][49];
-        thisLevelBlueNeeded= this.game.gravityGridLevel[game.currentLevel][50];
-        thisLevelGreenNeeded= this.game.gravityGridLevel[game.currentLevel][51];
-        thisLevelMaxMoves= this.game.gravityGridLevel[game.currentLevel][52];
+        thisLevelRedNeeded= this.game.getLevelHandler().getLevel(game.currentLevel)[49];
+        thisLevelBlueNeeded= this.game.getLevelHandler().getLevel(game.currentLevel)[50];
+        thisLevelGreenNeeded= this.game.getLevelHandler().getLevel(game.currentLevel)[51];
+        thisLevelMaxMoves= this.game.getLevelHandler().getLevel(game.currentLevel)[52];
         thisLevelCurrentRedTotal = 0;
         thisLevelCurrentBlueTotal = 0;
         thisLevelCurrentGreenTotal = 0;
@@ -502,7 +502,7 @@ public class PlayingScreen implements Screen {
                 Tile.TileType rcType;
 
                 // Determine the tile type
-                switch(game.gravityGridLevel[this.game.currentLevel][(r*7)+c]) {
+                switch(this.game.getLevelHandler().getLevel(game.currentLevel)[(r*7)+c]) {
                     case 0:
                         rcType = Tile.TileType.NONE;
                         break;
@@ -674,10 +674,10 @@ public class PlayingScreen implements Screen {
         // essentially loading up a new level. 
 
         // Let's reset the value totals needed just in case this is a new level. If we don't do this, the old values from the previous level seep through.
-        thisLevelRedNeeded= this.game.gravityGridLevel[game.currentLevel][49];
-        thisLevelBlueNeeded= this.game.gravityGridLevel[game.currentLevel][50];
-        thisLevelGreenNeeded= this.game.gravityGridLevel[game.currentLevel][51];
-        thisLevelMaxMoves= this.game.gravityGridLevel[game.currentLevel][52];
+        thisLevelRedNeeded= this.game.getLevelHandler().getLevel(game.currentLevel)[49];
+        thisLevelBlueNeeded= this.game.getLevelHandler().getLevel(game.currentLevel)[50];
+        thisLevelGreenNeeded= this.game.getLevelHandler().getLevel(game.currentLevel)[51];
+        thisLevelMaxMoves= this.game.getLevelHandler().getLevel(game.currentLevel)[52];
 
         // Reset the tiles
         int worldRow = 0;
@@ -694,7 +694,7 @@ public class PlayingScreen implements Screen {
                 Tile.TileType rcType;
 
                 // Determine the tile type
-                switch(game.gravityGridLevel[game.currentLevel][(r*7)+c]) {
+                switch(this.game.getLevelHandler().getLevel(game.currentLevel)[(r*7)+c]) {
                     case 0:
                         rcType = Tile.TileType.NONE;
                         break;
@@ -1489,7 +1489,7 @@ public class PlayingScreen implements Screen {
                 // game.UpdateLevelCompletionInfo is called first!
 
                 // Add check here to go back to levelSelect screen if our currentlevel is = the length of levelCompletionInfo
-                if(this.game.currentLevel == game.levelCompletionInfo.length) {
+                if(this.game.currentLevel == game.getLevelHandler().getLevelCompletionInfo().levelData.size()-1) {
                     // If there are 100 levels:
                     //  If we beat level 100, just go back to the levelSelectScreen
                     game.setScreen(parentScreen);
