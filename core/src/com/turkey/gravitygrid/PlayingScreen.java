@@ -655,7 +655,7 @@ public class PlayingScreen implements Screen {
 
         updateCurrentLevelValueTotals();
 
-        //
+        if(game.getOptions().playSounds()) { restartLevelSound.play(); }
 
     }
 
