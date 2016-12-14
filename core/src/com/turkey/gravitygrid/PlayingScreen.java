@@ -1083,7 +1083,14 @@ public class PlayingScreen implements Screen {
 
         // Draw the background based on the "galaxy," which is just the level#/10. Every ten levels is a new background (i.e., a new galaxy)
         game.batch.setColor(1.0f,1.0f,1.0f,1.0f);
-        game.batch.draw(backgroundRegion[thisLevelBackgroundImageNumber], 0,0,screenWidth, screenHeight);
+
+        // Add check to future-proof background. We should probably add more, but this will ensure the game doesn't crash
+        // if the player makes it past our last background number
+        if(thisLevelBackgroundImageNumber > 3) {
+            game.batch.draw(backgroundRegion[0], 0,0,screenWidth, screenHeight);
+        } else {
+            game.batch.draw(backgroundRegion[thisLevelBackgroundImageNumber], 0, 0, screenWidth, screenHeight);
+        }
 
 
         // The starfield kept rendering at approximately half width and half height. I edited the particle p file to have

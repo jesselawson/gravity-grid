@@ -588,19 +588,15 @@ public class GravityGrid extends Game {
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
-		levelMessage.add(""); // Level 20
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		// Galaxy 2
 		levelMessage.add("Woohoo! You've unlocked the second galaxy, which has ASTEROIDS. Asteroids mean you can't use that tile.");
 		levelMessage.add("Asteroids cannot be moved, and no planet can be moved onto a tile that has an asteroid.");
-		levelMessage.add(""); //
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
+		levelMessage.add(""); //30
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
@@ -610,6 +606,7 @@ public class GravityGrid extends Game {
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
+		levelMessage.add(""); //40
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
@@ -619,7 +616,7 @@ public class GravityGrid extends Game {
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
-		levelMessage.add(""); // Level 50
+		levelMessage.add(""); //50
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
@@ -629,6 +626,7 @@ public class GravityGrid extends Game {
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
+		levelMessage.add("");//60
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
@@ -638,37 +636,12 @@ public class GravityGrid extends Game {
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
+		levelMessage.add("");//70
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
 		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add(""); // Level 75
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("Uranus' blue glow is due to the methane in its atmosphere, which filters out all the red light.");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
-		levelMessage.add("");
+		levelMessage.add("Suns are like asteroids, but bigger. You can't move INTO tiles that are covered by a sun.");
 		levelMessage.add("");
 
 		highestLevelCompleted = 0; // init

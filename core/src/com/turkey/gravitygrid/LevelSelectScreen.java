@@ -168,23 +168,28 @@ public class LevelSelectScreen implements Screen {
     public void ChangeToGalaxy(int direction) {
 
         // If we actually have a new galaxy when calling ChangeToGalaxy(1)...
-        if(game.currentGalaxy + direction < game.getLevelHandler().getLevelCompletionInfo().levelData.size()/25) {
-            game.currentGalaxy += direction;
+        if(game.currentGalaxy + direction >= game.getLevelHandler().getLevelCompletionInfo().levelData.size()/25) {
+            // Oops! we're trying to go to a galaxy that we never instantiated! Let's fill up the next 25 levels, shall we?
+            for(int a=0; a<25; a++) {
+                game.getLevelHandler().getLevelCompletionInfo().levelData.add(new int[]{0,0,0,0,0,0});
+            }
+        }
 
-            int levelNum = 0;
+        game.currentGalaxy += direction;
 
-            for(int r = 4; r >= 0; r--) {
-                for(int c = 0; c < 5; c++) {
+        int levelNum = 0;
 
-                    // Get the icon we need
-                    int thisLevelIconType = game.getLevelHandler().getLevelCompletionInfo().levelData.get((game.currentGalaxy*25)+levelNum)[0];
+        for(int r = 4; r >= 0; r--) {
+            for(int c = 0; c < 5; c++) {
 
-                    // set the level icon appropriately
-                    levelIcons.get(levelNum).type = thisLevelIconType;
+                // Get the icon we need
+                int thisLevelIconType = game.getLevelHandler().getLevelCompletionInfo().levelData.get((game.currentGalaxy*25)+levelNum)[0];
 
-                    if(levelNum <= game.getLevelHandler().getLevelCompletionInfo().levelData.size()-1) {
-                        levelNum++; // make sure we aren't going to throw an index out of bounds exception
-                    }
+                // set the level icon appropriately
+                levelIcons.get(levelNum).type = thisLevelIconType;
+
+                if(levelNum <= game.getLevelHandler().getLevelCompletionInfo().levelData.size()-1) {
+                    levelNum++; // make sure we aren't going to throw an index out of bounds exception
                 }
             }
         }

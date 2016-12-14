@@ -68,6 +68,37 @@ final class LevelHandler {
     }
 
 
+    public int[] GenerateLevel(int a, int b, int c, int d, boolean e, boolean f) {
+
+        int[] level = null;
+
+        levelGenerator = new LevelGenerator();
+
+        boolean goodResult = false;
+
+        // TODO: If you can't build a good level in like 10 tries, then return a default level that looks like a smiley face
+        while(!goodResult) {
+            int tmp[][] = levelGenerator._GenerateLevel(a, b, c, d, e, f);
+
+            if(tmp[0][0] == tmp[0][1] && tmp[0][0] > 0){
+
+            } else if(tmp[0][2] == tmp[0][3] && tmp[0][2] > 0) {
+
+            } else if(tmp[0][4] == tmp[0][5] && tmp[0][4] > 0) {
+
+            } else {
+                goodResult = true;
+                //level = new int[52];
+                level = tmp[1].clone();
+                //System.out.println("Generated OK level "+a+": ("+tmp[0]+"/"+tmp[1]+"), ("+tmp[2]+"/"+tmp[3]+"), "+tmp[4]+"/"+tmp[5]+")");
+            }
+            //System.out.println("("+tmp[0]+"/"+tmp[1]+") ("+tmp[2]+"/"+tmp[3]+") ("+tmp[4]+"/"+tmp[5]+")");
+        }
+
+        return level;
+    }
+
+
 
     int[] getLevel(int levelNum) {
 
@@ -156,13 +187,13 @@ final class LevelHandler {
                 case 21: a=3; b=4; c=11; break;
                 case 22:
                 case 23:
-                case 24:
-                case 25: a=3; b=7; c=7; break;
+                case 24: a=3; b=7; c=7; break;
+                case 25:  // Game level 26
                 case 26:
                 case 27:
                 case 28:
                 case 29:
-                case 30: a=3; b=MathUtils.random(0, 7); c=MathUtils.random(0,7); e = true;
+                case 30: a=3; b=MathUtils.random(2, 9); c=MathUtils.random(2,9); e = true;
 
                 case 51:
                 case 52: a=3; b=0;c=0;d=3; e=true;
@@ -193,7 +224,7 @@ final class LevelHandler {
 
             }
 
-            level = levelGenerator.GenerateLevel(a, b, c, d, e, f);
+            level = GenerateLevel(a, b, c, d, e, f);
 
             // Create a hashtable to store our level data.
             Hashtable<String, String> hashTable = new Hashtable<String, String>();
