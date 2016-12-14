@@ -56,20 +56,18 @@ public final class AssetLoader {
         getAssetManager().load("spaceturkeylogosquare.png", Texture.class);
 
         // Setup asset manager for freetype fonts
-        getAssetManager().setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(new InternalFileHandleResolver()));
-        getAssetManager().setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(new InternalFileHandleResolver()));
+        //getAssetManager().setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(new InternalFileHandleResolver()));
+        //getAssetManager().setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(new InternalFileHandleResolver()));
 
         // Generate our regularFont
-        FreetypeFontLoader.FreeTypeFontLoaderParameter regularFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        regularFontParams.fontFileName = "turkey.ttf";
-        regularFontParams.fontParameters.size = fontSize;
-        getAssetManager().load("turkey.ttf", BitmapFont.class, regularFontParams);
+        //FreetypeFontLoader.FreeTypeFontLoaderParameter regularFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        getAssetManager().load("turkey.fnt", BitmapFont.class);
 
         // Generate our pixelFont (Our big fancy one)
-        FreetypeFontLoader.FreeTypeFontLoaderParameter pixelFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        pixelFontParams.fontFileName = "agencyfb.ttf";
-        pixelFontParams.fontParameters.size = fontSize+16;
-        getAssetManager().load("agencyfb.ttf", BitmapFont.class, pixelFontParams);
+        //FreetypeFontLoader.FreeTypeFontLoaderParameter pixelFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        //pixelFontParams.fontFileName = "agencyfb.ttf";
+        //pixelFontParams.fontParameters.size = fontSize+16;
+        getAssetManager().load("agencyfb.fnt", BitmapFont.class);
 
         getAssetManager().finishLoading(); // Wait for all the assets to load, then go ahead and get our initial assets for the loading screen
     }

@@ -14,13 +14,17 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.turkey.gravitygrid.GravityGrid;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
+
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+
 		// Remove the android menu from some android devices
 		config.useImmersiveMode = true;
 
@@ -28,10 +32,14 @@ public class AndroidLauncher extends AndroidApplication {
 
 		RelativeLayout layout = new RelativeLayout(this);
 
+		// Init mobile ads
+		MobileAds.initialize(getApplicationContext(), "ca-app-pub-5404961579733746/4424217711");
+
 		// Create layout parameters for our ad so that it shows up centered at the bottom of our screen
 		RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		adParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		adParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+
 
 		// Create the game view
 		View gameView = initializeForView(new GravityGrid(), config);
@@ -44,18 +52,16 @@ public class AndroidLauncher extends AndroidApplication {
 		// Create an ad request
 		AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
 
+		// Start loading the add
+		theAdView.loadAd(adRequestBuilder.build());
+
 		// Add the game view
 		layout.addView(gameView);
 
 		// Add the AdView to the view hierarchy (comment this out for ad-free version)
 		layout.addView(theAdView, adParams);
 
-		// Start loading the add
-		theAdView.loadAd(adRequestBuilder.build());
-
 		setContentView(layout);
-
-
 
 		//initialize(new GravityGrid(), config);
 	}

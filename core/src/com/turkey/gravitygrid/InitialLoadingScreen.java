@@ -44,8 +44,8 @@ public class InitialLoadingScreen implements Screen {
         //this.game.gravityGridSphereLogoImage = game.assets.getAssetManager().get("spaceturkeylogosquare.png", Texture.class);
         this.game.spaceTurkeyLogoImage = game.assets.getAssetManager().get("spaceturkeylogosquare.png", Texture.class);
         this.game.spaceTurkeyLogoRegion = new TextureRegion(this.game.spaceTurkeyLogoImage);
-        this.game.pixelFont = game.assets.getAssetManager().get("agencyfb.ttf", BitmapFont.class);
-        this.game.regularFont = game.assets.getAssetManager().get("turkey.ttf", BitmapFont.class);
+        this.game.pixelFont = game.assets.getAssetManager().get("agencyfb.fnt", BitmapFont.class);
+        this.game.regularFont = game.assets.getAssetManager().get("turkey.fnt", BitmapFont.class);
 
         game.getAssetLoader().LoadAllAssets();
     }
