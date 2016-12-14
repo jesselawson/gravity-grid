@@ -264,7 +264,11 @@ public class LevelSelectScreen implements Screen {
                         if(game.getOptions().playSounds()) { nextGalaxyButtonSound.play(); }
                         // Yep, so let's increment our galaxy
                         ChangeToGalaxy(1);
-                        message = "Now entering the "+game.galaxyName[game.currentGalaxy]+" Galaxy";
+                        if(game.currentGalaxy < game.galaxyName.length) {
+                            message = "Now entering " + game.galaxyName[game.currentGalaxy] + " Galaxy";
+                        } else {
+                            message = "Now entering ST0" + game.currentGalaxy + " Galaxy";
+                        }
                         messageAlpha = 1.0f;
                     } else {
                         if(game.getOptions().playSounds()) { nopeSound.play(); }

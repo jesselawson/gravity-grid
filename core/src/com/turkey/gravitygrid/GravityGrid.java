@@ -103,7 +103,15 @@ public class GravityGrid extends Game {
 			"Cigar",
 			"Pinwheel",
 			"Sunflower",
-			"Tadpole"
+			"Tadpole",
+			"Guston",
+			"Olivia",
+			"MD-343",
+			"Penguin",
+			"Garret",
+			"Fish",
+			"Interbus",
+			"French Fry"
 	};
 
 	/*
