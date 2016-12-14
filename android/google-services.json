@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "351042142337",
-    "firebase_url": "https://gravity-grid.firebaseio.com",
-    "project_id": "gravity-grid",
-    "storage_bucket": "gravity-grid.appspot.com"
+    "project_number": "104990896073",
+    "firebase_url": "https://gravity-grid-analytics.firebaseio.com",
+    "project_id": "gravity-grid-analytics",
+    "storage_bucket": "gravity-grid-analytics.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:351042142337:android:0d42a78dbb044c06",
+        "mobilesdk_app_id": "1:104990896073:android:0d42a78dbb044c06",
         "android_client_info": {
           "package_name": "com.turkey.gravitygrid"
         }
       },
       "oauth_client": [
         {
-          "client_id": "351042142337-9phoolfdamckeibttul4s1p1rh0v1v5n.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.turkey.gravitygrid",
-            "certificate_hash": "43C86AA73466BC0B090672B8D5DC12611FE0DC9E"
-          }
-        },
-        {
-          "client_id": "351042142337-n97tdm3oe8mmpe6kompt6cjh79nbr48k.apps.googleusercontent.com",
+          "client_id": "104990896073-41hfpjkqcl3b294uo424ne5jcs5sj8o6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCIl2u94IpVVOOWh9XIqhlzlbl91rVHK70"
+          "current_key": "AIzaSyA-yvujEFwFbU_7uYvhWeH9p_MBjF8BVGw"
         }
       ],
       "services": {

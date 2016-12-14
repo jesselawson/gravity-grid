@@ -6,7 +6,6 @@
 <resources>
 
     <string name="app_name">Gravity Grid</string>
-    <string name="banner_ad_unit_id_test">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_ad_unit_id">ca-app-pub-6055960228739102/8160267070</string>
+    <string name="banner_ad_unit_id">ca-app-pub-5404961579733746/4424217711</string>
 
 </resources>
