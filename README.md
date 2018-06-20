@@ -19,3 +19,7 @@ You can play Gravity Grid on your Android device for free on the Google Play sto
 ## Level generator
 
 There's an associate Java CLI application for generating Gravity Grid levels. [Check it out](https://github.com/lawsonry/gravity-grid-level-generator)!
+
+## Development
+
+I used JetBrain's IDEA (the Intellij IDE) to build this, and then eventually Android Studio. At a time I was using both side-by-side. Since gradlew is integrated into this repo, anyone who has used LibGDX and/or IDEA and/or Android Studio before should feel right at home. 
